@@ -43,13 +43,20 @@ jobs:
       - name: Test
         run: dotnet test SegLcd.slnx
 
+      # Release notes: the message of an annotated tag, otherwise the commits since the previous tag.
       - name: Changelog
         run: |
+          # actions/checkout may turn an annotated tag into a lightweight one; fetch the tag object itself.
+          git fetch --force origin "refs/tags/$TAG:refs/tags/$TAG"
           prev=$(git describe --tags --abbrev=0 "$TAG^" 2>/dev/null || true)
           {
-            echo "## Changes"
-            echo
-            git log --no-merges --reverse --pretty='- %s (%h)' ${prev:+$prev..}"$TAG"
+            if [ "$(git cat-file -t "$TAG")" = tag ]; then
+              git tag -l --format='%(contents:subject)%0a%0a%(contents:body)' "$TAG"
+            else
+              echo "## Changes"
+              echo
+              git log --no-merges --reverse --pretty='- %s (%h)' ${prev:+$prev..}"$TAG"
+            fi
             if [ -n "$prev" ]; then
               echo
               echo "**Full changelog:** ${{ github.server_url }}/${{ github.repository }}/compare/$prev...$TAG"

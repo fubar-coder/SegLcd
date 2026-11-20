@@ -51,10 +51,18 @@ CPU package power (optional): install `/usr/share/doc/seglcd/examples/72-rapl-en
 ## Release
 
 Bump `<Version>` in `Directory.Build.props`, `pkgver` (PKGBUILD), `Version`/`%changelog` (spec) and
-`debian/changelog`, commit to `main`, then `git tag v<version> && git push origin v<version>`.
+`debian/changelog`, commit to `main`, then tag and push:
+
+```sh
+git tag -a v<version> -F notes.md --cleanup=verbatim   # message = release notes (Markdown)
+git push origin v<version>
+```
+
+The message of an annotated tag becomes the release notes (`--cleanup=verbatim` keeps `#` headings); a lightweight
+tag (`git tag v<version>`) lists the commits since the previous tag instead.
 
 The tag triggers `.github/workflows/release.yml`: it checks that the tag is on `main` and matches `<Version>`, runs
-the tests, writes the changelog (commits since the previous tag), builds the source tarball and the Arch, RPM and
+the tests, writes the release notes, builds the source tarball and the Arch, RPM and
 Debian packages in containers (`.github/ci/build-*.sh`, x86_64), uploads them as build artifacts and creates a
 **draft release** with changelog and packages. Publish the draft on GitHub after checking it.
 
