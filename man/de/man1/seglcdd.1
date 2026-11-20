@@ -31,10 +31,12 @@ und bietet eine D-Bus-Schnittstelle auf dem Session-Bus.
 Als Systemdienst laufen (so nutzen es die RPM-/DEB-/AUR-Pakete): System-Bus statt Session-Bus und
 .I /etc/seglcd/config.toml
 als Standardkonfiguration. Die Unit aus den Paketen startet ihn als Benutzer
-.BR seglcd ;
-Mitglieder der Gruppe
-.B seglcd
-dürfen ihn per D-Bus steuern, lesen dürfen alle.
+.BR seglcd .
+Lesen dürfen per D-Bus alle; Änderungen brauchen die polkit-Aktion
+.BR io.github.fubar_coder.SegLcd1.control :
+erlaubt für den aktiven lokalen Benutzer, root und die Gruppe
+.BR seglcd ,
+andere brauchen eine Administrator-Authentifizierung.
 .TP
 .BI \-\-config " Pfad"
 Konfigurationsdatei (Standard:
@@ -58,6 +60,9 @@ Sendeintervall, 50\(en400 ms.
 .BR SampleIntervalMs " (u, lesen/schreiben)"
 Einleseintervall, 100\(en10000 ms.
 .TP
+.BR CpuClockMode " (s, lesen/schreiben)"
+CPU-Takt aus den Kernen: avg, max, min oder first.
+.TP
 .BR Connected " (b), " DevicePath " (s), " Model " (s), " ConfigPath " (s)"
 Verbindungsstatus und Pfade.
 .TP
@@ -71,7 +76,7 @@ Feld \(-> aufgelöste Sensorquelle (leer = keine).
 Letzte Werte und letztes Paket; ohne Änderungssignal.
 .PP
 .B PropertiesChanged
-wird für Enabled, die Intervalle, die Verbindungs-Properties, SensorSpecs und Sources gesendet.
+wird für Enabled, die Intervalle, CpuClockMode, die Verbindungs-Properties, SensorSpecs und Sources gesendet.
 Ungültige Werte werden mit org.freedesktop.DBus.Error.InvalidArgs abgelehnt.
 .SS Methoden
 .TP
@@ -106,6 +111,12 @@ Sprache der D-Bus-Fehlermeldungen und der Terminalausgabe.
 .B DBUS_SESSION_BUS_ADDRESS
 Session-Bus; ohne ihn ist die D-Bus-Schnittstelle deaktiviert, das Display läuft weiter.
 .SH DATEIEN
+.TP
+.I /usr/share/polkit-1/actions/io.github.fubar_coder.SegLcd1.policy
+polkit-Aktion für Änderungen per D-Bus;
+.I /usr/share/polkit-1/rules.d/50-seglcd.rules
+erlaubt root und der Gruppe
+.BR seglcd .
 .TP
 .I /etc/seglcd/config.toml
 Konfiguration des Systemdienstes

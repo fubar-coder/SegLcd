@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
+<!--
+  polkit action of the seglcdd system service: changing settings over D-Bus (property Set, SetSensor, ReloadConfig,
+  SaveConfig). Reading needs no authorization. root and the group "seglcd" are allowed by 50-seglcd.rules.
+-->
+<policyconfig>
+  <vendor>SegLcd</vendor>
+  <vendor_url>https://fubar-coder.github.io/SegLcd/</vendor_url>
+  <icon_name>io.github.fubar_coder.SegLcd</icon_name>
+  <action id="io.github.fubar_coder.SegLcd1.control">
+    <description>Change the settings of the SegLcd service</description>
+    <description xml:lang="de">Einstellungen des SegLcd-Dienstes ändern</description>
+    <message>Authentication is required to change the settings of the pump display.</message>
+    <message xml:lang="de">Zum Ändern der Einstellungen des Pumpen-Displays ist eine Authentifizierung nötig.</message>
+    <defaults>
+      <allow_any>auth_admin_keep</allow_any>
+      <allow_inactive>auth_admin_keep</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+    <!-- seglcdd runs as "seglcd" (not root): as owner of the action it may check other callers. -->
+    <annotate key="org.freedesktop.policykit.owner">unix-user:seglcd</annotate>
+  </action>
+</policyconfig>

@@ -35,6 +35,10 @@
     <AdditionalFiles Include="DBus/io.github.fubar_coder.SegLcd1.xml"
                      DBusGeneratorMode="Handler"
                      Namespace="SegLcd.Daemon.DBus" />
+    <!-- polkit authority (client side): authorizes control calls of the system service -->
+    <AdditionalFiles Include="DBus/Polkit/org.freedesktop.PolicyKit1.Authority.xml"
+                     DBusGeneratorMode="Proxy"
+                     Namespace="SegLcd.Daemon.DBus.Polkit" />
   </ItemGroup>
 
 </Project>

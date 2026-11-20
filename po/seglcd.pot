@@ -56,7 +56,7 @@ msgstr ""
 msgid "At most {0} bytes."
 msgstr ""
 
-#: src/SegLcd.Client/DisplayFields.cs:78 src/SegLcd.Gtk/MainWindow.cs:223
+#: src/SegLcd.Client/DisplayFields.cs:78 src/SegLcd.Gtk/MainWindow.cs:207
 msgid "Automatic"
 msgstr ""
 
@@ -64,6 +64,10 @@ msgstr ""
 #: src/SegLcd.Tool/Commands.cs:293
 #, csharp-format
 msgid "Automatic run, {0} s per byte. Ctrl+C stops."
+msgstr ""
+
+#: src/SegLcd.Client/DisplayFields.cs:110
+msgid "Average of all cores"
 msgstr ""
 
 #: src/SegLcd.Tool/Commands.cs:288
@@ -74,7 +78,7 @@ msgstr ""
 msgid "Byte offset in the 64-byte packet (3–63)."
 msgstr ""
 
-#: src/SegLcd.Client/DisplayFields.cs:21
+#: src/SegLcd.Client/DisplayFields.cs:21 src/SegLcd.Gtk/MainWindow.cs:221
 msgid "CPU clock"
 msgstr ""
 
@@ -186,20 +190,20 @@ msgstr ""
 msgid "CPU voltage sensor. Default: zenpower:SVI2_Core."
 msgstr ""
 
-#: src/SegLcd.Gtk/MainWindow.cs:74
-msgid "Changes are active but not saved."
-msgstr ""
-
 #: src/SegLcd.Tool/Commands.cs:544
 msgid "Closing the device."
 msgstr ""
 
-#: src/SegLcd.Gtk/MainWindow.cs:199
+#: src/SegLcd.Gtk/MainWindow.cs:183
 msgid "Configuration"
 msgstr ""
 
 #. Log message SegLcd.Daemon.DisplayController.LogConfigLoaded (event 110). Keep the {Name} placeholders.
 msgid "Configuration loaded: {Path}"
+msgstr ""
+
+#: src/SegLcd.Gtk/MainWindow.cs:449
+msgid "Configuration reloaded"
 msgstr ""
 
 #. Log message SegLcd.Daemon.DisplayController.LogConfigSaved (event 111). Keep the {Name} placeholders.
@@ -225,7 +229,7 @@ msgstr ""
 msgid "Connection lost."
 msgstr ""
 
-#: src/SegLcd.Gtk/MainWindow.cs:283
+#: src/SegLcd.Gtk/MainWindow.cs:280
 msgid "Connection to the service lost"
 msgstr ""
 
@@ -253,7 +257,11 @@ msgstr ""
 msgid "Decode captured packets (hex, one line per packet, e.g. tshark output)."
 msgstr ""
 
-#: src/SegLcd.Gtk/MainWindow.cs:153
+#: src/SegLcd.Gtk/MainWindow.cs:223
+msgid "Derived from"
+msgstr ""
+
+#: src/SegLcd.Gtk/MainWindow.cs:137
 msgid "Device"
 msgstr ""
 
@@ -266,7 +274,7 @@ msgstr ""
 msgid "Device path (e.g. /dev/hidraw5). Default: first segment LCD found."
 msgstr ""
 
-#: src/SegLcd.Gtk/MainWindow.cs:151
+#: src/SegLcd.Gtk/MainWindow.cs:135
 msgid "Display"
 msgstr ""
 
@@ -306,12 +314,20 @@ msgstr ""
 msgid "Fan speed in RPM."
 msgstr ""
 
-#: src/SegLcd.Gtk/MainWindow.cs:157
+#: src/SegLcd.Client/DisplayFields.cs:111
+msgid "Fastest core"
+msgstr ""
+
+#: src/SegLcd.Gtk/MainWindow.cs:141
 msgid "Feed display"
 msgstr ""
 
 #: src/SegLcd.Tool/CliTexts.cs:99
 msgid "File with hex lines; '-' or empty = stdin."
+msgstr ""
+
+#: src/SegLcd.Client/DisplayFields.cs:113
+msgid "First core"
 msgstr ""
 
 #: src/SegLcd.Tool/CliTexts.cs:81
@@ -436,11 +452,11 @@ msgstr ""
 msgid "Manufacturer"
 msgstr ""
 
-#: src/SegLcd.Gtk/MainWindow.cs:186
+#: src/SegLcd.Gtk/MainWindow.cs:170
 msgid "Milliseconds between packets; above 400 ms the display turns off"
 msgstr ""
 
-#: src/SegLcd.Gtk/MainWindow.cs:191
+#: src/SegLcd.Gtk/MainWindow.cs:175
 msgid "Milliseconds between sensor readings"
 msgstr ""
 
@@ -468,8 +484,12 @@ msgstr ""
 msgid "No segment LCD found (VID 0x5131, PID 0x200E/0x2007)."
 msgstr ""
 
-#: src/SegLcd.Gtk/MainWindow.cs:483
-msgid "Not allowed. Add your user to the group \"seglcd\" and log in again."
+#: src/SegLcd.Gtk/MainWindow.cs:466
+msgid "Not allowed: the change was not authorized."
+msgstr ""
+
+#: src/SegLcd.Daemon/DBus/SegmentLcdObject.cs:89
+msgid "Not authorized to control seglcdd."
 msgstr ""
 
 #: src/SegLcd.Tool/Commands.cs:199
@@ -485,7 +505,7 @@ msgstr ""
 msgid "Off ({0} bytes)"
 msgstr ""
 
-#: src/SegLcd.Gtk/MainWindow.cs:158
+#: src/SegLcd.Gtk/MainWindow.cs:142
 msgid "Off: the display goes dark and the device is free for seglcd"
 msgstr ""
 
@@ -553,16 +573,12 @@ msgstr ""
 msgid "Read the device's input reports (meaning unknown so far)."
 msgstr ""
 
-#: src/SegLcd.Gtk/MainWindow.cs:213
+#: src/SegLcd.Gtk/MainWindow.cs:197
 msgid "Read the sensor list again"
 msgstr ""
 
 #: src/SegLcd.Tool/CliTexts.cs:62
 msgid "Read the sensors every N ms."
-msgstr ""
-
-#: src/SegLcd.Gtk/MainWindow.cs:70
-msgid "Reload the configuration file (discards unsaved changes)"
 msgstr ""
 
 #: src/SegLcd.Tool/CliTexts.cs:101
@@ -573,21 +589,13 @@ msgstr ""
 msgid "Report descr."
 msgstr ""
 
-#: src/SegLcd.Gtk/MainWindow.cs:190
+#: src/SegLcd.Gtk/MainWindow.cs:174
 msgid "Sample interval"
 msgstr ""
 
-#: src/SegLcd.Daemon/DisplayController.cs:158
+#: src/SegLcd.Daemon/DisplayController.cs:159
 #, csharp-format
 msgid "SampleIntervalMs must be between {0} and {1}."
-msgstr ""
-
-#: src/SegLcd.Gtk/MainWindow.cs:75
-msgid "Save"
-msgstr ""
-
-#: src/SegLcd.Gtk/MainWindow.cs:64
-msgid "Save the current settings permanently"
 msgstr ""
 
 #. Log message SegLcd.Daemon.DisplayController.LogSavedSettingsApplied (event 115). Keep the {Name} placeholders.
@@ -652,11 +660,11 @@ msgstr ""
 msgid "Sensor '{0}' not found (see 'seglcd sensors')."
 msgstr ""
 
-#: src/SegLcd.Gtk/MainWindow.cs:510
+#: src/SegLcd.Gtk/MainWindow.cs:493
 msgid "Sensor values on the segment LCD of the Thermaltake LB360-S. Not affiliated with Thermaltake."
 msgstr ""
 
-#: src/SegLcd.Gtk/MainWindow.cs:54 src/SegLcd.Gtk/MainWindow.cs:210
+#: src/SegLcd.Gtk/MainWindow.cs:53 src/SegLcd.Gtk/MainWindow.cs:194
 msgid "Sensors"
 msgstr ""
 
@@ -668,20 +676,16 @@ msgstr ""
 msgid "Serial number"
 msgstr ""
 
-#: src/SegLcd.Gtk/MainWindow.cs:197
+#: src/SegLcd.Gtk/MainWindow.cs:181
 msgid "Service"
 msgstr ""
 
-#: src/SegLcd.Gtk/MainWindow.cs:95
+#: src/SegLcd.Gtk/MainWindow.cs:75
 msgid "Service not found"
 msgstr ""
 
 #: src/SegLcd.Tool/CliTexts.cs:66
 msgid "Set single bytes interactively to find out which field the display shows."
-msgstr ""
-
-#: src/SegLcd.Gtk/MainWindow.cs:451
-msgid "Settings saved"
 msgstr ""
 
 #: src/SegLcd.Tool/CliTexts.cs:31
@@ -696,6 +700,10 @@ msgstr ""
 msgid "Show segment LCDs found (or all HID devices with --all) with their descriptors."
 msgstr ""
 
+#: src/SegLcd.Client/DisplayFields.cs:112
+msgid "Slowest core"
+msgstr ""
+
 #. Log message SegLcd.Daemon.DisplayController.LogSource (event 113). Keep the {Name} placeholders.
 msgid "Source {Field}: {Source}"
 msgstr ""
@@ -704,7 +712,7 @@ msgstr ""
 msgid "Start value."
 msgstr ""
 
-#: src/SegLcd.Gtk/MainWindow.cs:53
+#: src/SegLcd.Gtk/MainWindow.cs:52
 msgid "Status"
 msgstr ""
 
@@ -720,7 +728,7 @@ msgstr ""
 msgid "Switch the display off (packet 0x0F)."
 msgstr ""
 
-#: src/SegLcd.Gtk/MainWindow.cs:336
+#: src/SegLcd.Gtk/MainWindow.cs:332
 msgid "System service"
 msgstr ""
 
@@ -728,7 +736,7 @@ msgstr ""
 msgid "Test and analysis tool for the Thermaltake segment LCD (e.g. LB360-S ARGB Sync)."
 msgstr ""
 
-#: src/SegLcd.Gtk/MainWindow.cs:165
+#: src/SegLcd.Gtk/MainWindow.cs:149
 msgid "The LB360-S shows only the CPU and GPU temperature; the other values are sent along."
 msgstr ""
 
@@ -744,7 +752,7 @@ msgstr ""
 msgid "Timeout test: send for N seconds, then stop but keep the device open for M more seconds."
 msgstr ""
 
-#: src/SegLcd.Gtk/MainWindow.cs:183
+#: src/SegLcd.Gtk/MainWindow.cs:167
 msgid "Timing"
 msgstr ""
 
@@ -764,11 +772,11 @@ msgstr ""
 msgid "Update ({0} bytes)"
 msgstr ""
 
-#: src/SegLcd.Gtk/MainWindow.cs:185
+#: src/SegLcd.Gtk/MainWindow.cs:169
 msgid "Update interval"
 msgstr ""
 
-#: src/SegLcd.Daemon/DisplayController.cs:144
+#: src/SegLcd.Daemon/DisplayController.cs:145
 #, csharp-format
 msgid "UpdateIntervalMs must be between {0} and {1}."
 msgstr ""
@@ -777,7 +785,7 @@ msgstr ""
 msgid "Usage: seglcd-gtk [--system | --session]"
 msgstr ""
 
-#: src/SegLcd.Gtk/MainWindow.cs:336
+#: src/SegLcd.Gtk/MainWindow.cs:332
 msgid "User service"
 msgstr ""
 
@@ -790,7 +798,7 @@ msgstr ""
 msgid "Value written into the byte under test."
 msgstr ""
 
-#: src/SegLcd.Gtk/MainWindow.cs:164
+#: src/SegLcd.Gtk/MainWindow.cs:148
 msgid "Values"
 msgstr ""
 
@@ -808,7 +816,7 @@ msgstr ""
 msgid "Warning: {0} does not display °F (the symbol stays °C, values ≥ 100 appear with two digits, e.g. 122 → 22). Send without --fahrenheit."
 msgstr ""
 
-#: src/SegLcd.Gtk/MainWindow.cs:211
+#: src/SegLcd.Gtk/MainWindow.cs:195
 msgid "Which sensor delivers each value. Fan and pump depend on the mainboard header; see the mainboard manual."
 msgstr ""
 
@@ -831,15 +839,15 @@ msgstr ""
 msgid "[required]"
 msgstr ""
 
-#: src/SegLcd.Gtk/MainWindow.cs:125
+#: src/SegLcd.Gtk/MainWindow.cs:109
 msgid "_About SegLcd"
 msgstr ""
 
-#: src/SegLcd.Gtk/MainWindow.cs:62
-msgid "_Save"
+#: src/SegLcd.Gtk/MainWindow.cs:108
+msgid "_Reload Configuration File"
 msgstr ""
 
-#: src/SegLcd.Gtk/MainWindow.cs:97
+#: src/SegLcd.Gtk/MainWindow.cs:77
 msgid "_Try Again"
 msgstr ""
 
@@ -900,12 +908,16 @@ msgstr ""
 msgid "month"
 msgstr ""
 
-#: src/SegLcd.Gtk/MainWindow.cs:388
+#: src/SegLcd.Gtk/MainWindow.cs:386
 msgid "no sensor found"
 msgstr ""
 
-#: src/SegLcd.Gtk/MainWindow.cs:332
+#: src/SegLcd.Gtk/MainWindow.cs:328
 msgid "not connected – waiting for the display"
+msgstr ""
+
+#. Log message SegLcd.Daemon.DBus.PolkitAuthorizer.LogPolkitFailed (event 204). Keep the {Name} placeholders.
+msgid "polkit check failed, access denied: {Reason}"
 msgstr ""
 
 #: src/SegLcd.Tool/FieldTexts.cs:37
@@ -933,16 +945,17 @@ msgstr ""
 msgid "seglcd-gtk: cannot open a display."
 msgstr ""
 
-#: src/SegLcd.Gtk/MainWindow.cs:96
+#: src/SegLcd.Gtk/MainWindow.cs:76
 msgid "seglcdd runs neither as system service nor as user service. Install a SegLcd package, or start the user service with \"systemctl --user start seglcdd\"."
 msgstr ""
 
 #: src/SegLcd.Daemon/DaemonConfig.cs:84
+#: src/SegLcd.Daemon/DisplayController.cs:180
 #, csharp-format
 msgid "sensors.cpu_clock_mode '{0}' is invalid (avg, max, min, first)."
 msgstr ""
 
-#: src/SegLcd.Gtk/MainWindow.cs:171
+#: src/SegLcd.Gtk/MainWindow.cs:155
 msgid "shown on the display"
 msgstr ""
 

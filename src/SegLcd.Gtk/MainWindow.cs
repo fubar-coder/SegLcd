@@ -5,7 +5,7 @@ namespace SegLcd.Gui;
 
 /// <summary>
 /// The main window: connects to seglcdd, shows its state and live values, and edits interval and sensor settings.
-/// Changes apply at once (D-Bus); "Save" makes them permanent (<c>SaveConfig</c>). All methods run on the GTK thread.
+/// Every change is applied and saved at once (D-Bus set + <c>SaveConfig</c>). All methods run on the GTK thread.
 /// </summary>
 internal sealed class MainWindow
 {
@@ -17,8 +17,6 @@ internal sealed class MainWindow
     private readonly Adw.ToastOverlay _toasts;
     private readonly Gtk.Stack _stack;
     private readonly Adw.StatusPage _missing;
-    private readonly Adw.Banner _unsaved;
-    private readonly Gtk.Button _saveButton;
 
     private readonly Adw.ActionRow _modelRow;
     private readonly Adw.ActionRow _serviceRow;
@@ -27,6 +25,7 @@ internal sealed class MainWindow
     private readonly Adw.SpinRow _sampleRow;
     private readonly Dictionary<string, Gtk.Label> _valueLabels = [];
     private readonly Dictionary<string, Adw.ComboRow> _sensorRows = [];
+    private Adw.ComboRow _clockModeRow = null!;
     private readonly Dictionary<string, IReadOnlyList<SensorChoice>> _choices = [];
 
     private SegLcdConnection? _connection;
@@ -59,30 +58,11 @@ internal sealed class MainWindow
         switcher.SetPolicy(Adw.ViewSwitcherPolicy.Wide);
         header.SetTitleWidget(switcher);
 
-        _saveButton = Gtk.Button.NewWithMnemonic(T("_Save"));
-        _saveButton.AddCssClass("suggested-action");
-        _saveButton.SetTooltipText(T("Save the current settings permanently"));
-        _saveButton.SetSensitive(false);
-        _saveButton.OnClicked += (_, _) => Run(SaveAsync);
-        header.PackEnd(_saveButton);
-
-        var reload = Gtk.Button.NewFromIconName("view-refresh-symbolic");
-        reload.SetTooltipText(T("Reload the configuration file (discards unsaved changes)"));
-        reload.OnClicked += (_, _) => Run(ReloadAsync);
-        header.PackStart(reload);
-
-        _unsaved = Adw.Banner.New(T("Changes are active but not saved."));
-        _unsaved.SetButtonLabel(T("Save"));
-        _unsaved.OnButtonClicked += (_, _) => Run(SaveAsync);
-
-        var content = Gtk.Box.New(Gtk.Orientation.Vertical, 0);
-        content.Append(_unsaved);
         views.SetVexpand(true);
-        content.Append(views);
 
         var toolbar = Adw.ToolbarView.New();
         toolbar.AddTopBar(header);
-        toolbar.SetContent(content);
+        toolbar.SetContent(views);
 
         // Connecting / service missing.
         var spinner = Adw.Spinner.New();
@@ -121,7 +101,11 @@ internal sealed class MainWindow
         var about = Gio.SimpleAction.New("about", null);
         about.OnActivate += (_, _) => ShowAbout();
         app.AddAction(about);
+        var reload = Gio.SimpleAction.New("reload", null);
+        reload.OnActivate += (_, _) => Run(ReloadAsync);
+        app.AddAction(reload);
         var menu = Gio.Menu.New();
+        menu.Append(T("_Reload Configuration File"), "app.reload");
         menu.Append(T("_About SegLcd"), "app.about");
         var menuButton = Gtk.MenuButton.New();
         menuButton.SetIconName("open-menu-symbolic");
@@ -222,6 +206,7 @@ internal sealed class MainWindow
             row.SetTitle(field.Title);
             row.SetModel(Gtk.StringList.New([T("Automatic")]));
             var name = field.Name;
+            row.SetListFactory(CreateChoiceFactory(name));
             row.OnNotify += (_, e) =>
             {
                 if (e.Pspec.GetName() == "selected")
@@ -232,7 +217,59 @@ internal sealed class MainWindow
         }
 
         page.Add(group);
+
+        var clock = Adw.PreferencesGroup.New();
+        clock.SetTitle(T("CPU clock"));
+        _clockModeRow = Adw.ComboRow.New();
+        _clockModeRow.SetTitle(T("Derived from"));
+        _clockModeRow.SetModel(Gtk.StringList.New([.. CpuClockModes.All.Select(CpuClockModes.Title)]));
+        _clockModeRow.OnNotify += (_, e) =>
+        {
+            if (e.Pspec.GetName() == "selected")
+                OnClockModeSelected();
+        };
+        clock.Add(_clockModeRow);
+        page.Add(clock);
         return page;
+    }
+
+    /// <summary>
+    /// Popup entries of a sensor selection: the spec, below it value and source in small print, wrapped instead of
+    /// cut off. The row itself shows only the spec (model strings).
+    /// </summary>
+    private Gtk.SignalListItemFactory CreateChoiceFactory(string field)
+    {
+        var factory = Gtk.SignalListItemFactory.New();
+        factory.OnSetup += (_, e) =>
+        {
+            if (e.Object is not Gtk.ListItem item)
+                return;
+            var box = Gtk.Box.New(Gtk.Orientation.Vertical, 2);
+            var title = Gtk.Label.New(null);
+            title.SetXalign(0);
+            var subtitle = Gtk.Label.New(null);
+            subtitle.SetXalign(0);
+            subtitle.SetWrap(true);
+            subtitle.SetMaxWidthChars(56);
+            subtitle.AddCssClass("caption");
+            subtitle.AddCssClass("dim-label");
+            box.Append(title);
+            box.Append(subtitle);
+            item.SetChild(box);
+        };
+        factory.OnBind += (_, e) =>
+        {
+            if (e.Object is not Gtk.ListItem item || item.GetChild() is not Gtk.Box box
+                || box.GetFirstChild() is not Gtk.Label title || title.GetNextSibling() is not Gtk.Label subtitle
+                || !_choices.TryGetValue(field, out var choices))
+                return;
+            var position = (int)item.GetPosition();
+            if (position >= choices.Count)
+                return;
+            title.SetText(choices[position].Title);
+            subtitle.SetText(choices[position].Subtitle);
+        };
+        return factory;
     }
 
     // --- connection -----------------------------------------------------------------------------
@@ -304,7 +341,6 @@ internal sealed class MainWindow
         _connection?.Dispose();
         _connection = null;
         _state = null;
-        SetUnsaved(false);
     }
 
     private static void StopTimer(ref uint id)
@@ -335,6 +371,8 @@ internal sealed class MainWindow
             _sampleRow.SetValue(state.SampleIntervalMs);
             _serviceRow.SetSubtitle((connection.Bus == ServiceBus.System ? T("System service") : T("User service")) + " · " + state.ConfigPath);
             UpdateSensorRows();
+            var mode = CpuClockModes.All.ToList().IndexOf(state.CpuClockMode);
+            _clockModeRow.SetSelected((uint)Math.Max(mode, 0));
         }
         finally
         {
@@ -380,7 +418,7 @@ internal sealed class MainWindow
             if (!_choices.TryGetValue(field.Name, out var old) || !old.SequenceEqual(choices))
             {
                 _choices[field.Name] = choices;
-                row.SetModel(Gtk.StringList.New([.. choices.Select(c => c.Spec.Length == 0 ? c.Title : $"{c.Title}  ({c.Subtitle})")]));
+                row.SetModel(Gtk.StringList.New([.. choices.Select(c => c.Title)]));
             }
 
             row.SetSelected((uint)SensorChoices.IndexOf(choices, spec));
@@ -396,11 +434,7 @@ internal sealed class MainWindow
         if (_updating || e.Pspec.GetName() != "active" || _connection is not { } connection)
             return;
         var value = _enabledRow.GetActive();
-        Run(async () =>
-        {
-            await connection.SetEnabledAsync(value);
-            SetUnsaved(true);
-        });
+        Run(() => ApplyAsync(connection, () => connection.SetEnabledAsync(value)));
     }
 
     private void OnUpdateIntervalChanged(GObject.Object sender, GObject.Object.NotifySignalArgs e)
@@ -408,11 +442,7 @@ internal sealed class MainWindow
         if (_updating || e.Pspec.GetName() != "value" || _connection is not { } connection)
             return;
         var value = (uint)_updateRow.GetValue();
-        Run(async () =>
-        {
-            await connection.SetUpdateIntervalMsAsync(value);
-            SetUnsaved(true);
-        });
+        Run(() => ApplyAsync(connection, () => connection.SetUpdateIntervalMsAsync(value)));
     }
 
     private void OnSampleIntervalChanged(GObject.Object sender, GObject.Object.NotifySignalArgs e)
@@ -420,11 +450,7 @@ internal sealed class MainWindow
         if (_updating || e.Pspec.GetName() != "value" || _connection is not { } connection)
             return;
         var value = (uint)_sampleRow.GetValue();
-        Run(async () =>
-        {
-            await connection.SetSampleIntervalMsAsync(value);
-            SetUnsaved(true);
-        });
+        Run(() => ApplyAsync(connection, () => connection.SetSampleIntervalMsAsync(value)));
     }
 
     private void OnSensorSelected(string field)
@@ -435,20 +461,23 @@ internal sealed class MainWindow
         if (index < 0 || index >= choices.Count)
             return;
         var spec = choices[index].Spec;
-        Run(async () =>
-        {
-            await connection.SetSensorAsync(field, spec);
-            SetUnsaved(true);
-        });
+        Run(() => ApplyAsync(connection, () => connection.SetSensorAsync(field, spec)));
     }
 
-    private async Task SaveAsync()
+    private void OnClockModeSelected()
     {
-        if (_connection is not { } connection)
+        var index = (int)_clockModeRow.GetSelected();
+        if (_updating || _connection is not { } connection || index < 0 || index >= CpuClockModes.All.Count)
             return;
+        var mode = CpuClockModes.All[index];
+        Run(() => ApplyAsync(connection, () => connection.SetCpuClockModeAsync(mode)));
+    }
+
+    /// <summary>Applies a change and saves it right away, so the settings survive a restart.</summary>
+    private static async Task ApplyAsync(SegLcdConnection connection, Func<Task> change)
+    {
+        await change();
         await connection.SaveConfigAsync();
-        SetUnsaved(false);
-        _toasts.AddToast(Adw.Toast.New(T("Settings saved")));
     }
 
     private async Task ReloadAsync()
@@ -456,14 +485,8 @@ internal sealed class MainWindow
         if (_connection is not { } connection)
             return;
         await connection.ReloadConfigAsync();
-        SetUnsaved(false);
         await RefreshStateAsync();
-    }
-
-    private void SetUnsaved(bool unsaved)
-    {
-        _unsaved.SetRevealed(unsaved);
-        _saveButton.SetSensitive(unsaved);
+        _toasts.AddToast(Adw.Toast.New(T("Configuration reloaded")));
     }
 
     // --- helpers --------------------------------------------------------------------------------
@@ -480,7 +503,7 @@ internal sealed class MainWindow
 #pragma warning restore CA1031
         {
             var message = SegLcdConnection.IsAccessDenied(e)
-                ? T("Not allowed. Add your user to the group \"seglcd\" and log in again.")
+                ? T("Not allowed: the change was not authorized.")
                 : SegLcdConnection.ErrorText(e);
             var toast = Adw.Toast.New(message);
             toast.SetTimeout(6);

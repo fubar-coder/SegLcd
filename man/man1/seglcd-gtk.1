@@ -10,13 +10,11 @@ seglcd-gtk \- graphical settings for the SegLcd service
 connects to
 .BR seglcdd (1)
 over D-Bus, shows the display state and the current values, and sets the intervals and the sensor of each value.
-Changes apply at once;
-.B Save
-makes them permanent (D-Bus SaveConfig), the reload button discards unsaved changes.
+Every change is applied and saved at once (D-Bus SaveConfig); the menu can reload the configuration file.
 .PP
 It looks for the system service first, then for the user service, and reconnects when the service restarts.
-Controlling the system service requires membership in the group
-.BR seglcd .
+Changing the system service is allowed for the active local user (polkit); otherwise polkit asks for
+administrator authentication.
 .SH OPTIONS
 .TP
 .B \-\-system

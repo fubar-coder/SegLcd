@@ -1,4 +1,5 @@
 using SegLcd.Linux;
+using SegLcd.Localization;
 
 using Tmds.DBus.Protocol;
 
@@ -13,12 +14,17 @@ internal sealed class SegmentLcdObject : DBusHandler, ISegLcd1Handler, ISegLcd1P
     public const string BusName = "io.github.fubar_coder.SegLcd1";
     public const string ObjectPath = "/io/github/fubar_coder/SegLcd1";
 
-    private readonly DisplayController _controller;
+    private const string AccessDenied = "org.freedesktop.DBus.Error.AccessDenied";
 
-    public SegmentLcdObject(DBusConnection connection, DisplayController controller)
+    private readonly DisplayController _controller;
+    private readonly PolkitAuthorizer? _authorizer;
+
+    /// <param name="authorizer">Checks control calls (system service); <c>null</c> = no check (session bus).</param>
+    public SegmentLcdObject(DBusConnection connection, DisplayController controller, PolkitAuthorizer? authorizer)
         : base(connection, ObjectPath, handlesChildPaths: false, handleOnCapturedContext: false)
     {
         _controller = controller;
+        _authorizer = authorizer;
         _controller.Changed += OnChanged;
     }
 
@@ -40,6 +46,12 @@ internal sealed class SegmentLcdObject : DBusHandler, ISegLcd1Handler, ISegLcd1P
     {
         get => (uint)_controller.SampleIntervalMs;
         set => _controller.SetSampleInterval(checked((int)value));
+    }
+
+    public string CpuClockMode
+    {
+        get => _controller.CpuClockMode;
+        set => _controller.SetCpuClockMode(value);
     }
 
     public bool Connected => _controller.Connected;
@@ -66,6 +78,26 @@ internal sealed class SegmentLcdObject : DBusHandler, ISegLcd1Handler, ISegLcd1P
 
     public ValueTask HandleSetPropertyAsync(ISegLcd1Handler.SetPropertyContext context) => context.Handle(this);
 
+    // --- authorization ----------------------------------------------------------------------
+
+    /// <summary>Control calls (property Set, SetSensor, ReloadConfig, SaveConfig) need polkit's consent on the system bus.</summary>
+    protected override async ValueTask InvokeAsync(DBusMethod method, MethodContext context)
+    {
+        if (_authorizer is not null && IsControl(context)
+            && !await _authorizer.IsAuthorizedAsync(context.Request.SenderAsString ?? string.Empty))
+        {
+            context.ReplyError(AccessDenied, Texts.Current.T("Not authorized to control seglcdd."));
+            return;
+        }
+
+        await base.InvokeAsync(method, context);
+    }
+
+    private static bool IsControl(MethodContext context) =>
+        context.IsPropertiesInterfaceRequest
+            ? context.Request.MemberAsString == "Set"
+            : context.Request.MemberAsString is "SetSensor" or "ReloadConfig" or "SaveConfig";
+
     // --- methods ----------------------------------------------------------------------------
 
     public async ValueTask ReloadConfigAsync() => await _controller.ReloadAsync();
@@ -88,7 +120,7 @@ internal sealed class SegmentLcdObject : DBusHandler, ISegLcd1Handler, ISegLcd1P
 
     private void OnChanged(ControllerChange change)
     {
-        Span<SegLcd1Property> changed = stackalloc SegLcd1Property[9];
+        Span<SegLcd1Property> changed = stackalloc SegLcd1Property[10];
         var n = 0;
         if (change.HasFlag(ControllerChange.Enabled))
             changed[n++] = SegLcd1Property.Enabled;
@@ -96,6 +128,8 @@ internal sealed class SegmentLcdObject : DBusHandler, ISegLcd1Handler, ISegLcd1P
             changed[n++] = SegLcd1Property.UpdateIntervalMs;
         if (change.HasFlag(ControllerChange.SampleInterval))
             changed[n++] = SegLcd1Property.SampleIntervalMs;
+        if (change.HasFlag(ControllerChange.CpuClockMode))
+            changed[n++] = SegLcd1Property.CpuClockMode;
         if (change.HasFlag(ControllerChange.Connection))
         {
             changed[n++] = SegLcd1Property.Connected;

@@ -16,6 +16,7 @@ public enum ControllerChange
     SampleInterval = 4,
     Connection = 8,
     Sources = 16,
+    CpuClockMode = 32,
 }
 
 /// <summary>
@@ -162,6 +163,27 @@ public sealed partial class DisplayController(ConfigStore store, ILogger<Display
         Changed?.Invoke(ControllerChange.SampleInterval);
     }
 
+    /// <summary>How the CPU clock is derived from the cores: <c>avg</c>, <c>max</c>, <c>min</c> or <c>first</c>.</summary>
+    public string CpuClockMode
+    {
+        get
+        {
+            lock (_lock)
+                return _source.Settings.CpuClockMode.ToString().ToLowerInvariant();
+        }
+    }
+
+    /// <exception cref="ArgumentException">Unknown mode.</exception>
+    public void SetCpuClockMode(string mode)
+    {
+        if (!Enum.TryParse<CpuClockMode>(mode, ignoreCase: true, out var parsed) || !Enum.IsDefined(parsed) || int.TryParse(mode, out _))
+            throw new ArgumentException(Texts.Current.T("sensors.cpu_clock_mode '{0}' is invalid (avg, max, min, first).", mode));
+        lock (_lock)
+            _source = new LinuxFrameSource(_source.Settings with { CpuClockMode = parsed });
+        WakeSampler();
+        Changed?.Invoke(ControllerChange.CpuClockMode);
+    }
+
     /// <summary>Changes the source of one field; returns the resolved description.</summary>
     /// <exception cref="ArgumentException">Unknown field or sensor not found.</exception>
     public string SetSensor(string field, string spec)
@@ -207,7 +229,7 @@ public sealed partial class DisplayController(ConfigStore store, ILogger<Display
         if (store.StatePath is { } statePath && File.Exists(statePath))
             LogSavedSettingsApplied(statePath);
         Changed?.Invoke(ControllerChange.Enabled | ControllerChange.UpdateInterval | ControllerChange.SampleInterval
-                        | ControllerChange.Sources | ControllerChange.Connection);
+                        | ControllerChange.Sources | ControllerChange.CpuClockMode | ControllerChange.Connection);
     }
 
     /// <summary>Writes the current runtime settings to the config file.</summary>

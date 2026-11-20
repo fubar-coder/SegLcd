@@ -31,10 +31,12 @@ and offers a D-Bus interface on the session bus.
 Run as system service (used by the RPM/DEB/AUR packages): system bus instead of session bus and
 .I /etc/seglcd/config.toml
 as default configuration. The packaged unit runs it as user
-.BR seglcd ;
-members of the group
-.B seglcd
-may control it via D-Bus, everybody may read.
+.BR seglcd .
+Everybody may read over D-Bus; changes need the polkit action
+.BR io.github.fubar_coder.SegLcd1.control :
+allowed for the active local user, root and the group
+.BR seglcd ,
+others need administrator authentication.
 .TP
 .BI \-\-config " path"
 Configuration file (default:
@@ -58,6 +60,9 @@ Packet interval, 50\(en400 ms.
 .BR SampleIntervalMs " (u, read/write)"
 Sensor interval, 100\(en10000 ms.
 .TP
+.BR CpuClockMode " (s, read/write)"
+CPU clock from the cores: avg, max, min or first.
+.TP
 .BR Connected " (b), " DevicePath " (s), " Model " (s), " ConfigPath " (s)"
 Connection state and paths.
 .TP
@@ -71,7 +76,7 @@ Field \(-> resolved sensor source (empty = none).
 Last values and last packet; no change signal.
 .PP
 .B PropertiesChanged
-is emitted for Enabled, the intervals, the connection properties, SensorSpecs and Sources.
+is emitted for Enabled, the intervals, CpuClockMode, the connection properties, SensorSpecs and Sources.
 Invalid values are rejected with org.freedesktop.DBus.Error.InvalidArgs.
 .SS Methods
 .TP
@@ -105,6 +110,12 @@ Language of D-Bus error messages and terminal output.
 .B DBUS_SESSION_BUS_ADDRESS
 Session bus; without it the D-Bus interface is disabled, the display keeps running.
 .SH FILES
+.TP
+.I /usr/share/polkit-1/actions/io.github.fubar_coder.SegLcd1.policy
+polkit action for changes over D-Bus;
+.I /usr/share/polkit-1/rules.d/50-seglcd.rules
+allows root and the group
+.BR seglcd .
 .TP
 .I /etc/seglcd/config.toml
 Configuration of the system service

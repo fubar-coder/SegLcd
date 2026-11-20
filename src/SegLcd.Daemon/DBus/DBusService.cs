@@ -22,7 +22,8 @@ internal sealed partial class DBusService(DisplayController controller, DaemonOp
         try
         {
             await connection.ConnectAsync();
-            obj = new SegmentLcdObject(connection, controller);
+            var authorizer = options.Mode == DaemonMode.System ? new PolkitAuthorizer(connection, log) : null;
+            obj = new SegmentLcdObject(connection, controller, authorizer);
             connection.AddMethodHandler(obj);
             if (!await connection.TryRequestNameAsync(SegmentLcdObject.BusName))
             {

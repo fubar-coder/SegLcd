@@ -16,7 +16,8 @@ Package: seglcd
 Architecture: amd64 arm64
 Depends: ${misc:Depends},
          ${shlibs:Depends},
-         libhidapi-hidraw0
+         libhidapi-hidraw0,
+         polkitd
 Description: tools and service for the Thermaltake LB360-S segment LCD
  SegLcd drives the segment LCD on the pump block of the Thermaltake
  LB360-S ARGB Sync AIO cooler (USB 5131:200e) on Linux.

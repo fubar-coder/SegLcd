@@ -1,7 +1,7 @@
 # Test image for tools/test-package.sh. "seglcd" gets the host UID before the package creates it.
 FROM registry.fedoraproject.org/fedora:latest
 ARG SEGLCD_UID=1000
-RUN dnf -y -q install systemd dbus-broker util-linux shadow-utils procps-ng >/dev/null \
+RUN dnf -y -q install systemd dbus-broker polkit util-linux shadow-utils procps-ng >/dev/null \
  && groupadd -g $SEGLCD_UID seglcd && useradd -r -u $SEGLCD_UID -g seglcd -d / -s /usr/sbin/nologin seglcd \
  && useradd -m member && useradd -m stranger
 CMD ["/sbin/init"]

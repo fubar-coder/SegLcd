@@ -16,7 +16,8 @@ Use only one of them.
 | `install-user.sh`, `uninstall-user.sh` | per-user install/remove (`--help`) |
 | `config.example.toml` | default configuration with all options |
 | `systemd/{system,user}/seglcdd.service` | system unit (hardened, `User=seglcd`) / user unit |
-| `dbus/system/`, `dbus/session/` | D-Bus activation; `system/…conf` is the bus policy (read: all, control: root + group `seglcd`) |
+| `dbus/system/`, `dbus/session/` | D-Bus activation; `system/…conf` is the bus policy (calls open to all) |
+| `polkit/` | polkit action and rules: changes by the active local user, root and group `seglcd`; others after admin authentication |
 | `sysusers/seglcd.conf`, `udev/70-seglcd.rules` | system user and package udev rule |
 | `arch/seglcd`, `arch/seglcd-git` | AUR recipes (release tag / git main) |
 | `rpm/seglcd.spec`, `debian/` | RPM and Debian recipes |
@@ -46,7 +47,7 @@ cp -r packaging/debian debian && dpkg-buildpackage -us -uc
 ```
 
 The service starts automatically when the display is present (udev `SYSTEMD_WANTS`; prevent with
-`sudo systemctl mask seglcdd`). To control it via D-Bus: `sudo usermod -aG seglcd $USER`.
+`sudo systemctl mask seglcdd`). Settings: `seglcd-gtk` or D-Bus (polkit decides who may change them).
 CPU package power (optional): install `/usr/share/doc/seglcd/examples/72-rapl-energy-read.rules` and add
 `SupplementaryGroups=rapl` via `sudo systemctl edit seglcdd`.
 

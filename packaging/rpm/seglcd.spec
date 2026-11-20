@@ -21,6 +21,8 @@ BuildRequires:  desktop-file-utils
 BuildRequires:  libappstream-glib
 # hidapi is loaded at run time (dlopen of libhidapi-hidraw.so.0).
 Requires:       hidapi
+# polkit authorizes changes over D-Bus (packaging/polkit).
+Requires:       polkit
 %{?sysusers_requires_compat}
 
 %description
@@ -72,6 +74,9 @@ install -Dm644 packaging/dbus/system/io.github.fubar_coder.SegLcd1.conf \
     %{buildroot}%{_datadir}/dbus-1/system.d/io.github.fubar_coder.SegLcd1.conf
 install -Dm644 packaging/dbus/system/io.github.fubar_coder.SegLcd1.service \
     %{buildroot}%{_datadir}/dbus-1/system-services/io.github.fubar_coder.SegLcd1.service
+install -Dm644 packaging/polkit/io.github.fubar_coder.SegLcd1.policy \
+    %{buildroot}%{_datadir}/polkit-1/actions/io.github.fubar_coder.SegLcd1.policy
+install -Dm644 packaging/polkit/50-seglcd.rules %{buildroot}%{_datadir}/polkit-1/rules.d/50-seglcd.rules
 install -Dm644 packaging/config.example.toml %{buildroot}%{_sysconfdir}/seglcd/config.toml
 for page in man/man1/seglcd.1 man/man1/seglcdd.1 man/man5/seglcdd.toml.5 \
             man/de/man1/seglcd.1 man/de/man1/seglcdd.1 man/de/man5/seglcdd.toml.5; do
@@ -123,6 +128,8 @@ appstream-util validate-relax --nonet %{buildroot}%{_datadir}/metainfo/io.github
 %{_udevrulesdir}/70-seglcd.rules
 %{_datadir}/dbus-1/system.d/io.github.fubar_coder.SegLcd1.conf
 %{_datadir}/dbus-1/system-services/io.github.fubar_coder.SegLcd1.service
+%{_datadir}/polkit-1/actions/io.github.fubar_coder.SegLcd1.policy
+%{_datadir}/polkit-1/rules.d/50-seglcd.rules
 %{_mandir}/man1/seglcd.1*
 %{_mandir}/man1/seglcdd.1*
 %{_mandir}/man5/seglcdd.toml.5*

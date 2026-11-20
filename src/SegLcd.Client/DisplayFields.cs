@@ -98,3 +98,19 @@ public static class SensorChoices
         return 0;
     }
 }
+
+/// <summary>Ways to derive the CPU clock from the cores (D-Bus <c>CpuClockMode</c>).</summary>
+public static class CpuClockModes
+{
+    /// <summary>D-Bus values in display order.</summary>
+    public static IReadOnlyList<string> All { get; } = ["avg", "max", "min", "first"];
+
+    public static string Title(string mode) => mode switch
+    {
+        "avg" => Texts.Current.T("Average of all cores"),
+        "max" => Texts.Current.T("Fastest core"),
+        "min" => Texts.Current.T("Slowest core"),
+        "first" => Texts.Current.T("First core"),
+        _ => mode,
+    };
+}

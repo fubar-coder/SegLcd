@@ -11,7 +11,7 @@ two instances would send alternately.
 | Start | automatically when the display is present (udev); prevent with `systemctl mask seglcdd` | at login: `systemctl --user enable --now seglcdd` |
 | Runs as | user `seglcd` (`seglcdd --system`) | the logged-in user |
 | Configuration | `/etc/seglcd/config.toml` | `~/.config/seglcd/config.toml` |
-| D-Bus | system bus – read: everybody, control: root + group `seglcd` | session bus |
+| D-Bus | system bus – read: everybody, change: active local user, root, group `seglcd` (polkit; others after admin authentication) | session bus |
 | Log | `journalctl -u seglcdd` | `journalctl --user -u seglcdd` |
 
 Configuration: [Sensors & configuration](../sensors/) and `seglcdd.toml(5)`. Reference: `seglcdd(1)`.
@@ -19,7 +19,7 @@ Configuration: [Sensors & configuration](../sensors/) and `seglcdd.toml(5)`. Ref
 ## Installation
 
 **Packages:** see [`packaging/README.md`](https://github.com/fubar-coder/SegLcd/blob/main/packaging/README.md).
-To control the service: `sudo usermod -aG seglcd $USER` (log in again).
+Settings: [`seglcd-gtk`](../gui/) or D-Bus (below).
 
 **Per user**, without root (requires the .NET SDK, `hidapi` and the [udev rule](../linux/udev/)):
 
@@ -60,6 +60,7 @@ Name and interface `io.github.fubar_coder.SegLcd1`, object `/io/github/fubar_cod
 | `Enabled` | `b` | rw | feed the display; `false` = off packet, device released |
 | `UpdateIntervalMs` | `u` | rw | 50–400 ms |
 | `SampleIntervalMs` | `u` | rw | 100–10000 ms |
+| `CpuClockMode` | `s` | rw | CPU clock from the cores: `avg`, `max`, `min`, `first` |
 | `Connected`, `DevicePath`, `Model`, `ConfigPath` | `b`, `s` | r | state and paths |
 | `SensorSpecs` | `a{ss}` | r | field → configured spec (empty = automatic) |
 | `Sources` | `a{ss}` | r | field → resolved sensor (empty = none) |

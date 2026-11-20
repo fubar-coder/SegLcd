@@ -32,6 +32,9 @@ override_dh_auto_install:
 	    $(PKG)/usr/share/dbus-1/system.d/io.github.fubar_coder.SegLcd1.conf
 	install -Dm644 packaging/dbus/system/io.github.fubar_coder.SegLcd1.service \
 	    $(PKG)/usr/share/dbus-1/system-services/io.github.fubar_coder.SegLcd1.service
+	install -Dm644 packaging/polkit/io.github.fubar_coder.SegLcd1.policy \
+	    $(PKG)/usr/share/polkit-1/actions/io.github.fubar_coder.SegLcd1.policy
+	install -Dm644 packaging/polkit/50-seglcd.rules $(PKG)/usr/share/polkit-1/rules.d/50-seglcd.rules
 	install -Dm644 packaging/config.example.toml $(PKG)/etc/seglcd/config.toml
 	for page in man/man1/seglcd.1 man/man1/seglcdd.1 man/man5/seglcdd.toml.5 \
 	            man/de/man1/seglcd.1 man/de/man1/seglcdd.1 man/de/man5/seglcdd.toml.5; do \

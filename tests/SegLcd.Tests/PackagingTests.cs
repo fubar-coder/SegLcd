@@ -29,6 +29,8 @@ public sealed class PackagingTests
         "packaging/udev/70-seglcd.rules",
         "packaging/dbus/system/io.github.fubar_coder.SegLcd1.conf",
         "packaging/dbus/system/io.github.fubar_coder.SegLcd1.service",
+        "packaging/polkit/io.github.fubar_coder.SegLcd1.policy",
+        "packaging/polkit/50-seglcd.rules",
         "packaging/config.example.toml",
         "man/man1/seglcd.1", "man/man1/seglcdd.1", "man/man5/seglcdd.toml.5",
         "man/de/man1/seglcd.1", "man/de/man1/seglcdd.1", "man/de/man5/seglcdd.toml.5",
@@ -51,6 +53,8 @@ public sealed class PackagingTests
         "usr/lib/udev/rules.d/70-seglcd.rules",
         "usr/share/dbus-1/system.d/io.github.fubar_coder.SegLcd1.conf",
         "usr/share/dbus-1/system-services/io.github.fubar_coder.SegLcd1.service",
+        "usr/share/polkit-1/actions/io.github.fubar_coder.SegLcd1.policy",
+        "usr/share/polkit-1/rules.d/50-seglcd.rules",
         "etc/seglcd/config.toml",
         // seglcd-gtk
         "usr/bin/seglcd-gtk",
@@ -123,7 +127,7 @@ public sealed class PackagingTests
     public async Task Every_system_packaging_file_is_covered()
     {
         // A new file in one of these directories must be added to Sources (and thus to every recipe).
-        string[] dirs = ["packaging/systemd/system", "packaging/sysusers", "packaging/udev", "packaging/dbus/system", "data"];
+        string[] dirs = ["packaging/systemd/system", "packaging/sysusers", "packaging/udev", "packaging/dbus/system", "packaging/polkit", "data"];
         foreach (var dir in dirs)
         {
             foreach (var file in Directory.EnumerateFiles(Path.Combine(Root, dir), "*", SearchOption.AllDirectories))

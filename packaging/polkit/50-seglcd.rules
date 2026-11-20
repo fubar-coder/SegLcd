@@ -1,0 +1,8 @@
+// seglcdd: root and members of the group "seglcd" may change the settings without authentication
+// (e.g. scripts or SSH sessions); the active local user is allowed by the action's defaults.
+polkit.addRule(function(action, subject) {
+    if (action.id == "io.github.fubar_coder.SegLcd1.control" &&
+        (subject.user == "root" || subject.isInGroup("seglcd"))) {
+        return polkit.Result.YES;
+    }
+});

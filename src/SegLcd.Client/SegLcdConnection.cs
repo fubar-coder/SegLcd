@@ -19,6 +19,7 @@ public sealed record ServiceState(
     bool Enabled,
     uint UpdateIntervalMs,
     uint SampleIntervalMs,
+    string CpuClockMode,
     bool Connected,
     string DevicePath,
     string Model,
@@ -105,7 +106,7 @@ public sealed class SegLcdConnection : IDisposable
         }
     }
 
-    /// <summary><c>true</c> if <paramref name="e"/> is the D-Bus policy refusing a control call (not in group <c>seglcd</c>).</summary>
+    /// <summary><c>true</c> if <paramref name="e"/> means the change was not authorized (polkit refused or was cancelled).</summary>
     public static bool IsAccessDenied(Exception e) => e is DBusErrorReplyException { ErrorName: AccessDenied };
 
     /// <summary>Error text sent by the service (D-Bus error message), otherwise the exception message.</summary>
@@ -114,7 +115,7 @@ public sealed class SegLcdConnection : IDisposable
     public async Task<ServiceState> GetStateAsync()
     {
         var p = await _proxy.GetPropertiesAsync().ConfigureAwait(false);
-        return new ServiceState(p.Enabled, p.UpdateIntervalMs, p.SampleIntervalMs, p.Connected, p.DevicePath, p.Model,
+        return new ServiceState(p.Enabled, p.UpdateIntervalMs, p.SampleIntervalMs, p.CpuClockMode, p.Connected, p.DevicePath, p.Model,
             p.ConfigPath, p.SensorSpecs, p.Sources);
     }
 
@@ -129,6 +130,9 @@ public sealed class SegLcdConnection : IDisposable
     public Task SetUpdateIntervalMsAsync(uint value) => _proxy.SetUpdateIntervalMsAsync(value);
 
     public Task SetSampleIntervalMsAsync(uint value) => _proxy.SetSampleIntervalMsAsync(value);
+
+    /// <summary>Sets how the CPU clock is derived: <c>avg</c>, <c>max</c>, <c>min</c> or <c>first</c>.</summary>
+    public Task SetCpuClockModeAsync(string value) => _proxy.SetCpuClockModeAsync(value);
 
     /// <summary>Sets the sensor of <paramref name="field"/> (empty = automatic); returns the resolved source.</summary>
     public Task<string> SetSensorAsync(string field, string spec) => _proxy.SetSensorAsync(field, spec);

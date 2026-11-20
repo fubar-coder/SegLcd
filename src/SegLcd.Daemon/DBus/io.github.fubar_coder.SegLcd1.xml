@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   D-Bus API of seglcdd (Thermaltake segment LCD daemon).
+  System service: control calls (property Set, SetSensor, ReloadConfig, SaveConfig) need the polkit action
+  io.github.fubar_coder.SegLcd1.control; reading is open to everybody.
   Session bus name: io.github.fubar_coder.SegLcd1
   Object path:      /io/github/fubar_coder/SegLcd1
 -->
@@ -42,6 +44,9 @@
 
     <!-- Sensor sampling interval in milliseconds (100 – 10000). -->
     <property name="SampleIntervalMs" type="u" access="readwrite"/>
+
+    <!-- How the CPU clock is derived from the cores: avg, max, min or first. -->
+    <property name="CpuClockMode" type="s" access="readwrite"/>
 
     <property name="Connected" type="b" access="read"/>
     <property name="DevicePath" type="s" access="read"/>

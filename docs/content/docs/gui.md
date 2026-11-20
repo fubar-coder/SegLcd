@@ -9,10 +9,10 @@ values and sets the intervals and the sensor of each value. It talks to the serv
 | Page | Contents |
 |---|---|
 | Status | device, *Feed display* (`Enabled`), all values (the LB360-S shows CPU and GPU temperature), intervals, service and configuration file |
-| Sensors | per value: *Automatic* or a sensor of the matching kind (from `ListSensors`, with current value); below it the sensor in use |
+| Sensors | per value: *Automatic* or a sensor of the matching kind (from `ListSensors`, with current value), below it the sensor in use; how the CPU clock is derived |
 
-Changes apply at once. **Save** makes them permanent (`SaveConfig`; system service: `/var/lib/seglcd/config.toml`),
-the reload button discards unsaved changes.
+Every change applies and is saved at once (`SaveConfig`; system service: `/var/lib/seglcd/config.toml`). The menu
+reloads the configuration file, e.g. after editing it by hand.
 
 ## Installation
 
@@ -24,5 +24,5 @@ the reload button discards unsaved changes.
 The app uses the system service if it runs (or can be started via D-Bus), otherwise the user service, and reconnects
 when the service restarts. `--system` or `--session` restricts it to one bus.
 
-Controlling the system service requires the group `seglcd` (`sudo usermod -aG seglcd $USER`, then log in again);
-otherwise the app can only show values and reports "Not allowed".
+Changing the system service is allowed for the active local user; otherwise (e.g. over SSH) polkit asks for
+administrator authentication.

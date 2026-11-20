@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Subset of the polkit authority interface used by seglcdd (CheckAuthorization only). -->
+<node>
+  <interface name="org.freedesktop.PolicyKit1.Authority">
+    <method name="CheckAuthorization">
+      <arg name="subject" type="(sa{sv})" direction="in"/>
+      <arg name="action_id" type="s" direction="in"/>
+      <arg name="details" type="a{ss}" direction="in"/>
+      <arg name="flags" type="u" direction="in"/>
+      <arg name="cancellation_id" type="s" direction="in"/>
+      <arg name="result" type="(bba{ss})" direction="out"/>
+    </method>
+  </interface>
+</node>

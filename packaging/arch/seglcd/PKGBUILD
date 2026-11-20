@@ -13,7 +13,7 @@ makedepends=('dotnet-sdk>=11' 'clang' 'zlib')
 options=('!debug')
 # No .install script: pacman hooks create the system user (sysusers.d), reload udev rules and systemd units.
 # The service starts automatically when the display is present (udev SYSTEMD_WANTS; opt out: systemctl mask seglcdd).
-# Control via D-Bus: sudo usermod -aG seglcd <user>
+# Changes over D-Bus: the active local user (polkit), root and the group seglcd.
 source=("$pkgbase-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
 sha256sums=('SKIP') # replace with the real checksum once the v$pkgver tag exists (updpkgsums)
 _srcname="SegLcd-$pkgver"
@@ -46,7 +46,8 @@ check() {
 
 package_seglcd() {
     # hidapi is loaded at run time (dlopen of libhidapi-hidraw.so.0), so namcap cannot see the link.
-    depends=('glibc' 'hidapi')
+    # polkit authorizes changes over D-Bus (packaging/polkit).
+    depends=('glibc' 'hidapi' 'polkit')
     optdepends=('nvidia-utils: NVIDIA GPU sensors via NVML'
                 'seglcd-gtk: graphical settings')
     backup=('etc/seglcd/config.toml')
@@ -65,6 +66,9 @@ package_seglcd() {
         "$pkgdir/usr/share/dbus-1/system.d/io.github.fubar_coder.SegLcd1.conf"
     install -Dm644 packaging/dbus/system/io.github.fubar_coder.SegLcd1.service \
         "$pkgdir/usr/share/dbus-1/system-services/io.github.fubar_coder.SegLcd1.service"
+    install -Dm644 packaging/polkit/io.github.fubar_coder.SegLcd1.policy \
+        "$pkgdir/usr/share/polkit-1/actions/io.github.fubar_coder.SegLcd1.policy"
+    install -Dm644 packaging/polkit/50-seglcd.rules "$pkgdir/usr/share/polkit-1/rules.d/50-seglcd.rules"
     install -Dm644 packaging/config.example.toml "$pkgdir/etc/seglcd/config.toml"
 
     local page

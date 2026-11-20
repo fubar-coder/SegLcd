@@ -10,14 +10,11 @@ seglcd-gtk \- grafische Einstellungen für den SegLcd-Dienst
 verbindet sich über D-Bus mit
 .BR seglcdd (1),
 zeigt den Zustand des Displays und die aktuellen Werte und stellt die Intervalle und den Sensor jedes Wertes ein.
-Änderungen wirken sofort;
-.B Speichern
-macht sie dauerhaft (D-Bus SaveConfig), die Schaltfläche zum Neuladen verwirft nicht gespeicherte Änderungen.
+Jede Änderung wirkt sofort und wird gespeichert (D-Bus SaveConfig); über das Menü lässt sich die Konfigurationsdatei neu laden.
 .PP
 Es sucht zuerst den Systemdienst, dann den Benutzerdienst, und verbindet sich neu, wenn der Dienst neu startet.
-Zum Steuern des Systemdienstes ist die Mitgliedschaft in der Gruppe
-.B seglcd
-nötig.
+Änderungen am Systemdienst darf der aktive lokale Benutzer vornehmen (polkit); sonst fragt polkit nach einer
+Administrator-Authentifizierung.
 .SH OPTIONEN
 .TP
 .B \-\-system

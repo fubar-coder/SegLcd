@@ -9,10 +9,10 @@ aktuellen Werte und stellt die Intervalle und den Sensor jedes Wertes ein. Sie s
 | Seite | Inhalt |
 |---|---|
 | Status | Gerät, *Display versorgen* (`Enabled`), alle Werte (die LB360-S zeigt CPU- und GPU-Temperatur), Intervalle, Dienst und Konfigurationsdatei |
-| Sensoren | pro Wert: *Automatisch* oder ein Sensor passender Art (aus `ListSensors`, mit aktuellem Wert); darunter der verwendete Sensor |
+| Sensoren | pro Wert: *Automatisch* oder ein Sensor passender Art (aus `ListSensors`, mit aktuellem Wert), darunter der verwendete Sensor; Ermittlung des CPU-Takts |
 
-Änderungen wirken sofort. **Speichern** macht sie dauerhaft (`SaveConfig`; Systemdienst: `/var/lib/seglcd/config.toml`),
-die Schaltfläche zum Neuladen verwirft nicht gespeicherte Änderungen.
+Jede Änderung wirkt sofort und wird gespeichert (`SaveConfig`; Systemdienst: `/var/lib/seglcd/config.toml`). Über das
+Menü lässt sich die Konfigurationsdatei neu laden, z. B. nach einer Änderung von Hand.
 
 ## Installation
 
@@ -24,5 +24,5 @@ die Schaltfläche zum Neuladen verwirft nicht gespeicherte Änderungen.
 Die App verwendet den Systemdienst, wenn er läuft (oder per D-Bus gestartet werden kann), sonst den Benutzerdienst,
 und verbindet sich neu, wenn der Dienst neu startet. `--system` oder `--session` beschränkt sie auf einen Bus.
 
-Zum Steuern des Systemdienstes ist die Gruppe `seglcd` nötig (`sudo usermod -aG seglcd $USER`, danach neu anmelden);
-sonst kann die App nur Werte anzeigen und meldet „Nicht erlaubt“.
+Änderungen am Systemdienst darf der aktive lokale Benutzer vornehmen; sonst (z. B. per SSH) fragt polkit nach einer
+Administrator-Authentifizierung.
