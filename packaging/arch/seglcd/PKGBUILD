@@ -15,7 +15,7 @@ options=('!debug')
 # The service starts automatically when the display is present (udev SYSTEMD_WANTS; opt out: systemctl mask seglcdd).
 # Changes over D-Bus: the active local user (polkit), root and the group seglcd.
 source=("$pkgbase-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('SKIP') # replace with the real checksum once the v$pkgver tag exists (updpkgsums)
+sha256sums=('151b20b61542b7740c66e15969c02d652566ee926fd5f361a52efe822dd47a24')
 _srcname="SegLcd-$pkgver"
 _version="$pkgver"
 
