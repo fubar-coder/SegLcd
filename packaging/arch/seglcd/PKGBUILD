@@ -2,7 +2,7 @@
 pkgbase=seglcd
 pkgname=('seglcd' 'seglcd-gtk')
 _pkgname=seglcd
-pkgver=0.1.0
+pkgver=0.2.0
 pkgrel=1
 pkgdesc="CLI and D-Bus service for the segment LCD of the Thermaltake LB360-S ARGB Sync AIO cooler"
 arch=('x86_64' 'aarch64')

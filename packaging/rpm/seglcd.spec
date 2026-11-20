@@ -5,7 +5,7 @@
 %global debug_package %{nil}
 
 Name:           seglcd
-Version:        0.1.0
+Version:        0.2.0
 Release:        1%{?dist}
 Summary:        CLI and D-Bus service for the Thermaltake LB360-S segment LCD
 License:        GPL-3.0-or-later
@@ -147,5 +147,10 @@ appstream-util validate-relax --nonet %{buildroot}%{_datadir}/metainfo/io.github
 %lang(de) %{_mandir}/de/man1/seglcd-gtk.1*
 
 %changelog
+* Fri Nov 20 2026 Mark Junker <fubar-coder@live.de> - 0.2.0-1
+- Settings app seglcd-gtk (subpackage)
+- polkit authorization: the active local user may change settings
+- D-Bus: ListSensors, SensorSpecs, CpuClockMode
+
 * Fri Nov 20 2026 Mark Junker <fubar-coder@live.de> - 0.1.0-1
 - Initial package

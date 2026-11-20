@@ -1,3 +1,11 @@
+seglcd (0.2.0-1) unstable; urgency=medium
+
+  * Settings app seglcd-gtk (new binary package).
+  * polkit authorization: the active local user may change settings.
+  * D-Bus: ListSensors, SensorSpecs, CpuClockMode.
+
+ -- Mark Junker <fubar-coder@live.de>  Fri, 20 Nov 2026 16:00:00 +0100
+
 seglcd (0.1.0-1) unstable; urgency=medium
 
   * Initial release.
