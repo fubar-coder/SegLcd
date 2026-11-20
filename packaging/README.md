@@ -43,14 +43,20 @@ spectool -g -R packaging/rpm/seglcd.spec && rpmbuild -ba packaging/rpm/seglcd.sp
 cp -r packaging/debian debian && dpkg-buildpackage -us -uc
 ```
 
-Then: `sudo systemctl enable --now seglcdd`; to control it via D-Bus `sudo usermod -aG seglcd $USER`.
+The service starts automatically when the display is present (udev `SYSTEMD_WANTS`; prevent with
+`sudo systemctl mask seglcdd`). To control it via D-Bus: `sudo usermod -aG seglcd $USER`.
 CPU package power (optional): install `/usr/share/doc/seglcd/examples/72-rapl-energy-read.rules` and add
 `SupplementaryGroups=rapl` via `sudo systemctl edit seglcdd`.
 
 ## Release
 
 Bump `<Version>` in `Directory.Build.props`, `pkgver` (PKGBUILD), `Version`/`%changelog` (spec) and
-`debian/changelog`, then `git tag v<version> && git push origin v<version>`.
+`debian/changelog`, commit to `main`, then `git tag v<version> && git push origin v<version>`.
+
+The tag triggers `.github/workflows/release.yml`: it checks that the tag is on `main` and matches `<Version>`, runs
+the tests, writes the changelog (commits since the previous tag), builds the source tarball and the Arch, RPM and
+Debian packages in containers (`.github/ci/build-*.sh`, x86_64), uploads them as build artifacts and creates a
+**draft release** with changelog and packages. Publish the draft on GitHub after checking it.
 
 ## Tested
 

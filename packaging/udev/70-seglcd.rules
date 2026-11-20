@@ -5,12 +5,14 @@
 #   - members of the group "seglcd",
 #   - the locally logged-in user (uaccess), e.g. for seglcd experiments.
 # The raw USB device additionally gets uaccess for USB passthrough into a VM under qemu:///session.
+# SYSTEMD_WANTS starts seglcdd.service as soon as the display is present (boot, plug-in, package installation) –
+# no "systemctl enable" needed. To prevent this: systemctl mask seglcdd.
 # The file name must sort before 73 for uaccess to work.
 
 # LB360-S ARGB Sync (5131:200e)
-SUBSYSTEM=="hidraw", ATTRS{idVendor}=="5131", ATTRS{idProduct}=="200e", GROUP="seglcd", MODE="0660", TAG+="uaccess"
+SUBSYSTEM=="hidraw", ATTRS{idVendor}=="5131", ATTRS{idProduct}=="200e", GROUP="seglcd", MODE="0660", TAG+="uaccess", TAG+="systemd", ENV{SYSTEMD_WANTS}+="seglcdd.service"
 SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="5131", ATTR{idProduct}=="200e", MODE="0660", TAG+="uaccess"
 
 # LA series (5131:2007)
-SUBSYSTEM=="hidraw", ATTRS{idVendor}=="5131", ATTRS{idProduct}=="2007", GROUP="seglcd", MODE="0660", TAG+="uaccess"
+SUBSYSTEM=="hidraw", ATTRS{idVendor}=="5131", ATTRS{idProduct}=="2007", GROUP="seglcd", MODE="0660", TAG+="uaccess", TAG+="systemd", ENV{SYSTEMD_WANTS}+="seglcdd.service"
 SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="5131", ATTR{idProduct}=="2007", MODE="0660", TAG+="uaccess"

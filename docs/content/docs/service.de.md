@@ -8,7 +8,7 @@ verwenden – zwei Instanzen würden abwechselnd senden.
 
 | | Systemdienst (RPM/DEB/AUR) | Benutzerdienst (`install-user.sh`) |
 |---|---|---|
-| Start | beim Booten: `sudo systemctl enable --now seglcdd` | beim Login: `systemctl --user enable --now seglcdd` |
+| Start | automatisch, sobald das Display vorhanden ist (udev); verhindern mit `systemctl mask seglcdd` | beim Login: `systemctl --user enable --now seglcdd` |
 | Läuft als | Benutzer `seglcd` (`seglcdd --system`) | angemeldeter Benutzer |
 | Konfiguration | `/etc/seglcd/config.toml` | `~/.config/seglcd/config.toml` |
 | D-Bus | System-Bus – lesen: alle, steuern: root + Gruppe `seglcd` | Session-Bus |

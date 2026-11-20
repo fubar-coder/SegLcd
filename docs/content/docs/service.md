@@ -8,7 +8,7 @@ two instances would send alternately.
 
 | | System service (RPM/DEB/AUR) | User service (`install-user.sh`) |
 |---|---|---|
-| Start | at boot: `sudo systemctl enable --now seglcdd` | at login: `systemctl --user enable --now seglcdd` |
+| Start | automatically when the display is present (udev); prevent with `systemctl mask seglcdd` | at login: `systemctl --user enable --now seglcdd` |
 | Runs as | user `seglcd` (`seglcdd --system`) | the logged-in user |
 | Configuration | `/etc/seglcd/config.toml` | `~/.config/seglcd/config.toml` |
 | D-Bus | system bus – read: everybody, control: root + group `seglcd` | session bus |
