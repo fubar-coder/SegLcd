@@ -473,6 +473,10 @@ msgstr "Report-Deskr."
 msgid "SampleIntervalMs must be between {0} and {1}."
 msgstr "SampleIntervalMs muss zwischen {0} und {1} liegen."
 
+#. Log message SegLcd.Daemon.DisplayController.LogSavedSettingsApplied (event 115). Keep the {Name} placeholders.
+msgid "Saved settings applied: {Path}"
+msgstr "Gespeicherte Einstellungen übernommen: {Path}"
+
 #: src/SegLcd.Tool/CliTexts.cs:69
 msgid "Seconds per value of the --values sequence."
 msgstr "Sekunden pro Wert der --values-Folge."
@@ -715,7 +719,7 @@ msgstr "Pumpe RPM mod 100"
 msgid "reserved (always 00)"
 msgstr "reserviert (immer 00)"
 
-#: src/SegLcd.Daemon/DaemonConfig.cs:41
+#: src/SegLcd.Daemon/DaemonConfig.cs:42
 #, csharp-format
 msgid "sample_interval_ms must be between {0} and {1} (is {2})."
 msgstr "sample_interval_ms muss zwischen {0} und {1} liegen (ist {2})."
@@ -724,7 +728,7 @@ msgstr "sample_interval_ms muss zwischen {0} und {1} liegen (ist {2})."
 msgid "second"
 msgstr "Sekunde"
 
-#: src/SegLcd.Daemon/DaemonConfig.cs:83
+#: src/SegLcd.Daemon/DaemonConfig.cs:84
 #, csharp-format
 msgid "sensors.cpu_clock_mode '{0}' is invalid (avg, max, min, first)."
 msgstr "sensors.cpu_clock_mode '{0}' ist ungültig (avg, max, min, first)."
@@ -741,7 +745,7 @@ msgstr "unbekannt (Original-Software LB360-S: immer 5)"
 msgid "unused"
 msgstr "unbenutzt"
 
-#: src/SegLcd.Daemon/DaemonConfig.cs:39
+#: src/SegLcd.Daemon/DaemonConfig.cs:40
 #, csharp-format
 msgid "update_interval_ms must be between {0} and {1} (is {2})."
 msgstr "update_interval_ms muss zwischen {0} und {1} liegen (ist {2})."

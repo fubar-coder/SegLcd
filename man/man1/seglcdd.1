@@ -80,7 +80,12 @@ gpu_power, gpu_clock, fan, pump); empty spec = automatic. Not saved until SaveCo
 Re-read the configuration file; on error the old settings stay active.
 .TP
 .B SaveConfig()
-Write the current settings to the configuration file.
+Write the current settings to the configuration file. With
+.B \-\-system
+only the values that differ from
+.I /etc/seglcd/config.toml
+are written, to
+.IR /var/lib/seglcd/config.toml .
 .SH LOGGING
 Messages go to the journal in English
 .RB ( "journalctl \-\-user \-u seglcdd" ).
@@ -97,6 +102,13 @@ Session bus; without it the D-Bus interface is disabled, the display keeps runni
 .I /etc/seglcd/config.toml
 Configuration of the system service
 .RB ( \-\-system ).
+.TP
+.I /var/lib/seglcd/config.toml
+Settings saved via D-Bus with
+.BR \-\-system ;
+they override
+.IR /etc/seglcd/config.toml .
+Delete the file to go back to it.
 .TP
 .I /usr/lib/systemd/system/seglcdd.service
 System unit (packages).

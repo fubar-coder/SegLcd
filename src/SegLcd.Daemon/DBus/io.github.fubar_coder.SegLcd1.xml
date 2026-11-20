@@ -10,7 +10,8 @@
     <!-- Re-reads the configuration file and applies it. -->
     <method name="ReloadConfig"/>
 
-    <!-- Writes the current runtime settings to the configuration file. -->
+    <!-- Writes the current runtime settings to the configuration file (system service: the values that differ from
+         /etc/seglcd/config.toml to /var/lib/seglcd/config.toml). -->
     <method name="SaveConfig"/>
 
     <!--

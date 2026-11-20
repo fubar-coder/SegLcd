@@ -11,7 +11,7 @@ using SegLcd.Localization;
 
 // seglcdd [--system] [--config <path>]
 //   default (user service): session bus, $XDG_CONFIG_HOME/seglcd/config.toml
-//   --system (system service): system bus, /etc/seglcd/config.toml
+//   --system (system service): system bus, /etc/seglcd/config.toml; SaveConfig writes /var/lib/seglcd/config.toml
 var mode = args.Contains("--system") ? DaemonMode.System : DaemonMode.User;
 args = [.. args.Where(a => a != "--system")];
 
@@ -39,7 +39,9 @@ if (Environment.GetEnvironmentVariable("JOURNAL_STREAM") is null)
 }
 
 builder.Services.AddSingleton(new DaemonOptions(mode));
-builder.Services.AddSingleton(new ConfigStore(builder.Configuration["config"] ?? ConfigStore.DefaultPathFor(mode)));
+builder.Services.AddSingleton(new ConfigStore(
+    builder.Configuration["config"] ?? ConfigStore.DefaultPathFor(mode),
+    mode == DaemonMode.System ? ConfigStore.SystemStatePath(Environment.GetEnvironmentVariable) : null));
 builder.Services.AddSingleton<DisplayController>();
 builder.Services.AddHostedService(sp => sp.GetRequiredService<DisplayController>());
 builder.Services.AddHostedService<DBusService>();

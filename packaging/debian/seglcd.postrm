@@ -1,0 +1,11 @@
+#!/bin/sh
+set -e
+
+# Settings saved via D-Bus (systemd StateDirectory=seglcd).
+if [ "$1" = "purge" ]; then
+    rm -rf /var/lib/seglcd
+fi
+
+#DEBHELPER#
+
+exit 0

@@ -20,7 +20,7 @@ to a systemd service that shows the CPU and GPU temperature live on the display.
 | `udev/70-seglcd.rules` | access without root + USB passthrough under `qemu:///session` |
 | `udev/72-rapl-energy-read.rules` | optional: CPU package power (RAPL) for group `rapl` |
 | `vm/lb360s-usb-hostdev.xml` | libvirt hostdev for a Windows VM |
-| `tools/` | usbmon capture and packet extraction |
+| `tools/` | usbmon capture, packet extraction, package test (`test-package.sh`) |
 | `src/SegLcd.Core` | library (.NET 11, AOT, HidApi.Net → native hidapi) |
 | `src/SegLcd.Linux` | Linux sensors (hwmon, procfs, cpufreq, RAPL, NVML, DRM) |
 | `src/SegLcd.Localization` | gettext localization (`po/`: English → German) |

@@ -194,6 +194,8 @@ public sealed partial class DisplayController(ConfigStore store, ILogger<Display
             LogConfigLoaded(store.Path);
         else
             LogConfigMissing(store.Path);
+        if (store.StatePath is { } statePath && File.Exists(statePath))
+            LogSavedSettingsApplied(statePath);
         Changed?.Invoke(ControllerChange.Enabled | ControllerChange.UpdateInterval | ControllerChange.SampleInterval
                         | ControllerChange.Sources | ControllerChange.Connection);
     }
@@ -215,7 +217,7 @@ public sealed partial class DisplayController(ConfigStore store, ILogger<Display
         }
 
         store.Save(copy);
-        LogConfigSaved(store.Path);
+        LogConfigSaved(store.SavePath);
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -355,6 +357,9 @@ public sealed partial class DisplayController(ConfigStore store, ILogger<Display
 
     [LoggerMessage(EventId = 114, Level = LogLevel.Information, Message = "No configuration file at {Path}, using defaults")]
     private partial void LogConfigMissing(string path);
+
+    [LoggerMessage(EventId = 115, Level = LogLevel.Information, Message = "Saved settings applied: {Path}")]
+    private partial void LogSavedSettingsApplied(string path);
 
     [LoggerMessage(EventId = 111, Level = LogLevel.Information, Message = "Configuration saved: {Path}")]
     private partial void LogConfigSaved(string path);

@@ -1,7 +1,7 @@
 # Maintainer: Mark Junker <fubar-coder at live dot de>
 pkgname=seglcd-git
 _pkgname=seglcd
-pkgver=0.1.0.r7.g5f62fcc
+pkgver=0.1.0.r8.g192093a
 pkgrel=1
 pkgdesc="Library, CLI and D-Bus service for the segment LCD of the Thermaltake LB360-S ARGB Sync AIO cooler (development version)"
 arch=('x86_64' 'aarch64')

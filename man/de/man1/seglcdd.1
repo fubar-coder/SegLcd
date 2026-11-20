@@ -80,7 +80,13 @@ gpu_power, gpu_clock, fan, pump); leere Angabe = automatisch. Erst mit SaveConfi
 Konfigurationsdatei neu lesen; bei Fehlern bleibt die bisherige Einstellung aktiv.
 .TP
 .B SaveConfig()
-Aktuelle Einstellungen in die Konfigurationsdatei schreiben.
+Aktuelle Einstellungen in die Konfigurationsdatei schreiben. Mit
+.B \-\-system
+werden nur die Werte, die von
+.I /etc/seglcd/config.toml
+abweichen, nach
+.I /var/lib/seglcd/config.toml
+geschrieben.
 .SH PROTOKOLL
 Meldungen gehen englisch ins Journal
 .RB ( "journalctl \-\-user \-u seglcdd" ).
@@ -97,6 +103,13 @@ Session-Bus; ohne ihn ist die D-Bus-Schnittstelle deaktiviert, das Display läuf
 .I /etc/seglcd/config.toml
 Konfiguration des Systemdienstes
 .RB ( \-\-system ).
+.TP
+.I /var/lib/seglcd/config.toml
+Mit
+.B \-\-system
+über D-Bus gespeicherte Einstellungen; sie überschreiben
+.IR /etc/seglcd/config.toml .
+Datei löschen, um zu dieser zurückzukehren.
 .TP
 .I /usr/lib/systemd/system/seglcdd.service
 System-Unit (Pakete).

@@ -142,4 +142,103 @@ public class DaemonConfigTests
         await Assert.That(string.IsNullOrEmpty(example.Device)).IsTrue();
         await Assert.That(example.Sensors.ToSettings()).IsEqualTo(defaults.Sensors.ToSettings());
     }
+
+    [Test]
+    public async Task State_file_overrides_config_and_stores_only_differences()
+    {
+        var etc = TempFile();
+        var state = TempFile();
+        await File.WriteAllTextAsync(etc, """
+            update_interval_ms = 200
+
+            [sensors]
+            fan = "it8686_31050607:fan1"
+            pump = "it8686_31050607:fan5"
+            """);
+        try
+        {
+            var store = new ConfigStore(etc, state);
+            var config = store.Load();
+            config.SampleIntervalMs = 500;
+            config.Sensors.Pump = null; // back to automatic
+            config.Sensors.CpuPower = "rapl";
+            store.Save(config);
+
+            var saved = await File.ReadAllTextAsync(state);
+            await Assert.That(saved).Contains("sample_interval_ms = 500");
+            await Assert.That(saved).Contains("pump = \"\"");
+            await Assert.That(saved).Contains("cpu_power = \"rapl\"");
+            await Assert.That(saved).DoesNotContain("update_interval_ms");
+            await Assert.That(saved).DoesNotContain("fan =");
+            await Assert.That(await File.ReadAllTextAsync(etc)).DoesNotContain("rapl");
+
+            // An admin change in /etc still applies to values that were not saved.
+            await File.WriteAllTextAsync(etc, """
+                update_interval_ms = 300
+
+                [sensors]
+                fan = "hwmon5/fan2"
+                pump = "it8686_31050607:fan5"
+                """);
+            var loaded = store.Load();
+            await Assert.That(loaded.UpdateIntervalMs).IsEqualTo(300);
+            await Assert.That(loaded.SampleIntervalMs).IsEqualTo(500);
+            await Assert.That(loaded.Sensors.ToSettings().Fan).IsEqualTo("hwmon5/fan2");
+            await Assert.That(loaded.Sensors.ToSettings().Pump).IsNull();
+            await Assert.That(loaded.Sensors.ToSettings().CpuPower).IsEqualTo("rapl");
+        }
+        finally
+        {
+            File.Delete(etc);
+            File.Delete(state);
+        }
+    }
+
+    [Test]
+    public async Task Saving_the_config_values_removes_the_state_file()
+    {
+        var etc = TempFile();
+        var state = TempFile();
+        await File.WriteAllTextAsync(etc, "update_interval_ms = 200\n");
+        await File.WriteAllTextAsync(state, "update_interval_ms = 300\n");
+        try
+        {
+            var store = new ConfigStore(etc, state);
+            await Assert.That(store.Load().UpdateIntervalMs).IsEqualTo(300);
+
+            store.Save(new DaemonConfig { UpdateIntervalMs = 200 });
+
+            await Assert.That(File.Exists(state)).IsFalse();
+            await Assert.That(store.Load().UpdateIntervalMs).IsEqualTo(200);
+        }
+        finally
+        {
+            File.Delete(etc);
+            File.Delete(state);
+        }
+    }
+
+    [Test]
+    public async Task Invalid_state_file_names_both_files()
+    {
+        var etc = TempFile();
+        var state = TempFile();
+        await File.WriteAllTextAsync(state, "update_interval_ms = 5000\n");
+        try
+        {
+            var e = Assert.Throws<InvalidDataException>(() => new ConfigStore(etc, state).Load());
+            await Assert.That(e.Message).Contains(state);
+        }
+        finally
+        {
+            File.Delete(state);
+        }
+    }
+
+    [Test]
+    public async Task System_state_path_uses_state_directory()
+    {
+        await Assert.That(ConfigStore.SystemStatePath(_ => "/var/lib/seglcd")).IsEqualTo("/var/lib/seglcd/config.toml");
+        await Assert.That(ConfigStore.SystemStatePath(_ => null)).IsEqualTo("/var/lib/seglcd/config.toml");
+    }
 }

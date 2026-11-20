@@ -3,7 +3,7 @@
 | | Packages (AUR, RPM, DEB) | Per user (`install-user.sh`) |
 |---|---|---|
 | Service | system service, user `seglcd`, system bus | `systemctl --user`, session bus |
-| Config | `/etc/seglcd/config.toml` | `~/.config/seglcd/config.toml` |
+| Config | `/etc/seglcd/config.toml`; D-Bus `SaveConfig`: `/var/lib/seglcd/config.toml` | `~/.config/seglcd/config.toml` |
 | Device access | udev rule with group `seglcd` + `uaccess` | udev rule `udev/70-seglcd.rules` (`uaccess`) |
 
 Use only one of them.
@@ -58,10 +58,18 @@ the tests, writes the changelog (commits since the previous tag), builds the sou
 Debian packages in containers (`.github/ci/build-*.sh`, x86_64), uploads them as build artifacts and creates a
 **draft release** with changelog and packages. Publish the draft on GitHub after checking it.
 
-## Tested
+## Testing
 
-- AUR: `makepkg` incl. `check()`; `namcap` only notes the run-time-loaded hidapi.
-- RPM: Fedora 45 container incl. `%check`; `rpmlint` clean; install creates the user.
-- DEB: Debian 13 container (.NET via `dotnet-install.sh`); `lintian` only AppStream hints; install creates the user
-  and enables the unit.
-- Not yet: the installed system service on real hardware.
+`tools/test-package.sh` installs a built DEB or RPM in a Debian 13 or Fedora container with systemd and checks user,
+unit, service start, D-Bus policy, `SaveConfig`, reload and removal. It needs podman and runs without root:
+
+```sh
+tools/test-package.sh seglcd_0.1.0-1_amd64.deb
+tools/test-package.sh seglcd-0.1.0-1.fc45.x86_64.rpm /dev/hidraw5   # also drive the display
+```
+
+With a device, stop the host service first. Inside the container `seglcd` gets your UID and reaches the display
+through your `uaccess` ACL; udev does not run there, so the script starts the service itself. `--keep` leaves the
+container running (`podman exec -it seglcd-deb-test bash`).
+
+Tested on real hardware: AUR, DEB (Debian 13) and RPM (Fedora 45), including the system service.

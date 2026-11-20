@@ -75,7 +75,8 @@ then put them into `config.toml` and run `systemctl --user reload seglcdd`.
 
 ### config.toml
 
-User service: `~/.config/seglcd/config.toml`, system service: `/etc/seglcd/config.toml` (also `seglcdd --config`).
+User service: `~/.config/seglcd/config.toml`, system service: `/etc/seglcd/config.toml` (also `seglcdd --config`);
+values saved via D-Bus are in `/var/lib/seglcd/config.toml` and take precedence – delete it to use `/etc` only.
 A missing file or key means the default; invalid values are logged and replaced by defaults. Complete default file:
 
 {{< include-file path="packaging/config.example.toml" lang="toml" >}}

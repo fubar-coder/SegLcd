@@ -76,7 +76,8 @@ dann in `config.toml` eintragen und `systemctl --user reload seglcdd` ausführen
 
 ### config.toml
 
-Benutzerdienst: `~/.config/seglcd/config.toml`, Systemdienst: `/etc/seglcd/config.toml` (auch `seglcdd --config`).
+Benutzerdienst: `~/.config/seglcd/config.toml`, Systemdienst: `/etc/seglcd/config.toml` (auch `seglcdd --config`);
+über D-Bus gespeicherte Werte liegen in `/var/lib/seglcd/config.toml` und haben Vorrang – löschen, um nur `/etc` zu verwenden.
 Eine fehlende Datei oder ein fehlender Schlüssel bedeutet den Standardwert; ungültige Werte werden protokolliert und
 durch Standardwerte ersetzt. Vollständige Standarddatei:
 

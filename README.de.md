@@ -22,7 +22,7 @@ USB-HID-Protokolls bis zum systemd-Dienst, der CPU- und GPU-Temperatur live aufs
 | `udev/70-seglcd.rules` | Zugriff ohne Root + USB-Passthrough unter `qemu:///session` |
 | `udev/72-rapl-energy-read.rules` | optional: CPU-Paketleistung (RAPL) für Gruppe `rapl` |
 | `vm/lb360s-usb-hostdev.xml` | libvirt-Hostdev für die Windows-VM |
-| `tools/` | usbmon-Mitschnitt und Paket-Extraktion |
+| `tools/` | usbmon-Mitschnitt, Paket-Extraktion, Pakettest (`test-package.sh`) |
 | `src/SegLcd.Core` | Library (.NET 11, AOT, HidApi.Net → native hidapi) |
 | `src/SegLcd.Linux` | Linux-Sensoren (hwmon, procfs, cpufreq, RAPL, NVML, DRM) |
 | `src/SegLcd.Localization` | gettext-Lokalisierung (`po/`: Englisch → Deutsch) |

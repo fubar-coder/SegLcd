@@ -13,9 +13,8 @@ ExecStart=/usr/bin/seglcdd --system
 ExecReload=/usr/bin/busctl --system call io.github.fubar_coder.SegLcd1 /io/github/fubar_coder/SegLcd1 io.github.fubar_coder.SegLcd1 ReloadConfig
 Restart=on-failure
 RestartSec=3
-# /etc/seglcd is owned by the service user, so SaveConfig (D-Bus) can write /etc/seglcd/config.toml.
-ConfigurationDirectory=seglcd
-ConfigurationDirectoryMode=0755
+# /etc/seglcd/config.toml is read only; SaveConfig (D-Bus) writes the differing values to /var/lib/seglcd/config.toml.
+StateDirectory=seglcd
 
 # Hardening. Not used on purpose: PrivateDevices (would hide /dev/hidraw* and /dev/nvidia*).
 NoNewPrivileges=yes

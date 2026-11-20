@@ -478,6 +478,10 @@ msgstr ""
 msgid "SampleIntervalMs must be between {0} and {1}."
 msgstr ""
 
+#. Log message SegLcd.Daemon.DisplayController.LogSavedSettingsApplied (event 115). Keep the {Name} placeholders.
+msgid "Saved settings applied: {Path}"
+msgstr ""
+
 #: src/SegLcd.Tool/CliTexts.cs:69
 msgid "Seconds per value of the --values sequence."
 msgstr ""
@@ -720,7 +724,7 @@ msgstr ""
 msgid "reserved (always 00)"
 msgstr ""
 
-#: src/SegLcd.Daemon/DaemonConfig.cs:41
+#: src/SegLcd.Daemon/DaemonConfig.cs:42
 #, csharp-format
 msgid "sample_interval_ms must be between {0} and {1} (is {2})."
 msgstr ""
@@ -729,7 +733,7 @@ msgstr ""
 msgid "second"
 msgstr ""
 
-#: src/SegLcd.Daemon/DaemonConfig.cs:83
+#: src/SegLcd.Daemon/DaemonConfig.cs:84
 #, csharp-format
 msgid "sensors.cpu_clock_mode '{0}' is invalid (avg, max, min, first)."
 msgstr ""
@@ -746,7 +750,7 @@ msgstr ""
 msgid "unused"
 msgstr ""
 
-#: src/SegLcd.Daemon/DaemonConfig.cs:39
+#: src/SegLcd.Daemon/DaemonConfig.cs:40
 #, csharp-format
 msgid "update_interval_ms must be between {0} and {1} (is {2})."
 msgstr ""

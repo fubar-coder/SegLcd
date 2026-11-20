@@ -69,7 +69,7 @@ Name and interface `io.github.fubar_coder.SegLcd1`, object `/io/github/fubar_cod
 |---|---|
 | `SetSensor(field, spec) → source` | set a sensor ([spec syntax](../sensors/#sensor-specs)); not saved until `SaveConfig` |
 | `ReloadConfig()` | re-read `config.toml`; on error the old settings stay active |
-| `SaveConfig()` | write the current settings (comments in the file are lost) |
+| `SaveConfig()` | write the current settings; user service: `config.toml` (comments are lost), system service: the values that differ from `/etc` to `/var/lib/seglcd/config.toml` |
 
 `PropertiesChanged` is sent for all properties except `CurrentValues` and `LastPacket`. Invalid values are rejected
 with `InvalidArgs`.

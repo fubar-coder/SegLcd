@@ -1,0 +1,8 @@
+# Test image for tools/test-package.sh. "seglcd" gets the host UID before the package creates it.
+FROM docker.io/library/debian:trixie
+# UID of the host user: with --userns=keep-id it maps to the host user, whose uaccess ACL grants access to the display.
+ARG SEGLCD_UID=1000
+RUN apt-get -qq update && DEBIAN_FRONTEND=noninteractive apt-get -qq install -y --no-install-recommends systemd systemd-sysv dbus >/dev/null \
+ && groupadd -g $SEGLCD_UID seglcd && useradd -r -u $SEGLCD_UID -g seglcd -d / -s /usr/sbin/nologin seglcd \
+ && useradd -m member && useradd -m stranger
+CMD ["/sbin/init"]
