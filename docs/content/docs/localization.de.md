@@ -1,6 +1,6 @@
 ---
 title: Lokalisierung
-weight: 9
+weight: 10
 ---
 
 `seglcd` und `seglcdd` sind mit **GNU gettext**-Katalogen lokalisiert. Quellsprache ist **Englisch**; derzeit gibt es

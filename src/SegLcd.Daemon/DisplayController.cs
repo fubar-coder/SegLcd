@@ -80,6 +80,16 @@ public sealed partial class DisplayController(ConfigStore store, ILogger<Display
         }
     }
 
+    /// <summary>Configured spec per field (empty = automatic).</summary>
+    public Dictionary<string, string> SensorSpecs
+    {
+        get
+        {
+            lock (_lock)
+                return LinuxFrameSource.Fields.Configurable.ToDictionary(f => f, f => LinuxFrameSource.GetSpec(_source.Settings, f) ?? string.Empty);
+        }
+    }
+
     /// <summary>Values of the frame sent last (only fields with a value).</summary>
     public Dictionary<string, double> CurrentValues
     {

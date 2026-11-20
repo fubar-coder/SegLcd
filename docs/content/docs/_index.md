@@ -42,6 +42,7 @@ have no visible effect. Details: [Verification & open questions](protocol/verifi
   {{< card link="library" title="Library guide" icon="code" >}}
   {{< card link="tool" title="Test tool seglcd" icon="adjustments" >}}
   {{< card link="service" title="Service seglcdd (systemd, D-Bus)" icon="server" >}}
+  {{< card link="gui" title="Settings app seglcd-gtk" icon="desktop-computer" >}}
   {{< card link="sensors" title="Sensors & configuration" icon="chart-bar" >}}
   {{< card link="localization" title="Localization" icon="translate" >}}
   {{< card link="sources" title="Sources" icon="link" >}}
@@ -62,6 +63,8 @@ have no visible effect. Details: [Verification & open questions](protocol/verifi
       {{< filetree/folder name="SegLcd.Localization" state="closed" >}}{{< /filetree/folder >}}
       {{< filetree/folder name="SegLcd.Tool" state="closed" >}}{{< /filetree/folder >}}
       {{< filetree/folder name="SegLcd.Daemon" state="closed" >}}{{< /filetree/folder >}}
+      {{< filetree/folder name="SegLcd.Client" state="closed" >}}{{< /filetree/folder >}}
+      {{< filetree/folder name="SegLcd.Gtk" state="closed" >}}{{< /filetree/folder >}}
     {{< /filetree/folder >}}
     {{< filetree/folder name="tests/SegLcd.Tests" state="closed" >}}{{< /filetree/folder >}}
     {{< filetree/folder name="udev" >}}

@@ -26,3 +26,17 @@ Description: tools and service for the Thermaltake LB360-S segment LCD
     display, with a D-Bus interface (io.github.fubar_coder.SegLcd1)
  .
  SegLcd is not affiliated with Thermaltake.
+
+Package: seglcd-gtk
+Architecture: amd64 arm64
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+         seglcd (= ${binary:Version}),
+         libgtk-4-1,
+         libadwaita-1-0 (>= 1.6)
+Description: GTK settings app for the SegLcd service
+ seglcd-gtk shows the state of the SegLcd service and the current sensor
+ values of the Thermaltake LB360-S segment LCD, and sets the intervals and
+ the sensor of each value over D-Bus.
+ .
+ SegLcd is not affiliated with Thermaltake.

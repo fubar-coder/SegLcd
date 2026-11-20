@@ -1,6 +1,6 @@
 ---
 title: Localization
-weight: 9
+weight: 10
 ---
 
 `seglcd` and `seglcdd` are localized with **GNU gettext** catalogs. The source language is **English**; currently there is

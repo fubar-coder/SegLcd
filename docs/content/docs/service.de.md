@@ -3,7 +3,7 @@ title: Dienst seglcdd
 weight: 7
 ---
 
-`seglcdd` versorgt das Display mit Sensorwerten und bietet eine D-Bus-Schnittstelle. Nur **eine** der beiden Varianten
+`seglcdd` versorgt das Display mit Sensorwerten und bietet eine D-Bus-Schnittstelle; [`seglcd-gtk`](../gui/) ist die Einstellungs-App dazu. Nur **eine** der beiden Varianten
 verwenden – zwei Instanzen würden abwechselnd senden.
 
 | | Systemdienst (RPM/DEB/AUR) | Benutzerdienst (`install-user.sh`) |
@@ -61,6 +61,7 @@ Name und Interface `io.github.fubar_coder.SegLcd1`, Objekt `/io/github/fubar_cod
 | `UpdateIntervalMs` | `u` | rw | 50–400 ms |
 | `SampleIntervalMs` | `u` | rw | 100–10000 ms |
 | `Connected`, `DevicePath`, `Model`, `ConfigPath` | `b`, `s` | r | Zustand und Pfade |
+| `SensorSpecs` | `a{ss}` | r | Feld → konfigurierte Angabe (leer = automatisch) |
 | `Sources` | `a{ss}` | r | Feld → aufgelöster Sensor (leer = keiner) |
 | `CurrentValues` | `a{sd}` | r | letzte Werte (`cpu_temperature`, `gpu_temperature`, `fan`, …) |
 | `LastPacket` | `ay` | r | letztes 64-Byte-Paket |
@@ -68,6 +69,7 @@ Name und Interface `io.github.fubar_coder.SegLcd1`, Objekt `/io/github/fubar_cod
 | Methode | Bedeutung |
 |---|---|
 | `SetSensor(field, spec) → source` | Sensor setzen ([Spec-Syntax](../sensors/#sensor-angaben)); erst mit `SaveConfig` gespeichert |
+| `ListSensors() → a(sssd)` | nutzbare Sensoren: Angabe, Art (`temperature`, `power`, `fan`, …), Beschreibung, Wert (NaN = nicht lesbar) |
 | `ReloadConfig()` | `config.toml` neu lesen; bei Fehlern bleibt die bisherige Einstellung aktiv |
 | `SaveConfig()` | aktuelle Einstellungen schreiben; Benutzerdienst: `config.toml` (Kommentare gehen verloren), Systemdienst: die von `/etc` abweichenden Werte nach `/var/lib/seglcd/config.toml` |
 

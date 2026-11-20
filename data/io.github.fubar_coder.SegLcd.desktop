@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Application
+Name=SegLcd
+GenericName=Pump Display
+GenericName[de]=Pumpen-Display
+Comment=Show sensor values on the Thermaltake LB360-S pump display
+Comment[de]=Sensorwerte auf dem Pumpen-Display der Thermaltake LB360-S anzeigen
+Exec=seglcd-gtk
+Icon=io.github.fubar_coder.SegLcd
+Terminal=false
+Categories=Settings;HardwareSettings;GTK;
+Keywords=LCD;cooler;pump;AIO;temperature;sensor;
+Keywords[de]=LCD;Kühler;Pumpe;AIO;Temperatur;Sensor;
+StartupNotify=true

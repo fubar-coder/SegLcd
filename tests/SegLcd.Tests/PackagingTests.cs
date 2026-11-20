@@ -34,6 +34,11 @@ public sealed class PackagingTests
         "man/de/man1/seglcd.1", "man/de/man1/seglcdd.1", "man/de/man5/seglcdd.toml.5",
         "README.md", "README.de.md",
         "udev/72-rapl-energy-read.rules", "udev/rapl.sysusers.conf",
+        // seglcd-gtk
+        "data/io.github.fubar_coder.SegLcd.desktop",
+        "data/io.github.fubar_coder.SegLcd.metainfo.xml",
+        "data/icons/hicolor/scalable/apps/io.github.fubar_coder.SegLcd.svg",
+        "man/man1/seglcd-gtk.1", "man/de/man1/seglcd-gtk.1",
     ];
 
     /// <summary>Destinations (relative to the package root) that every recipe must create.</summary>
@@ -47,6 +52,13 @@ public sealed class PackagingTests
         "usr/share/dbus-1/system.d/io.github.fubar_coder.SegLcd1.conf",
         "usr/share/dbus-1/system-services/io.github.fubar_coder.SegLcd1.service",
         "etc/seglcd/config.toml",
+        // seglcd-gtk
+        "usr/bin/seglcd-gtk",
+        "usr/share/applications/io.github.fubar_coder.SegLcd.desktop",
+        "usr/share/metainfo/io.github.fubar_coder.SegLcd.metainfo.xml",
+        "usr/share/icons/hicolor/scalable/apps/io.github.fubar_coder.SegLcd.svg",
+        "usr/share/man/man1/seglcd-gtk.1",
+        "usr/share/man/de/man1/seglcd-gtk.1",
     ];
 
     private static readonly Dictionary<string, string> RpmMacros = new()
@@ -74,7 +86,7 @@ public sealed class PackagingTests
             spec = spec.Replace(macro, value, StringComparison.Ordinal);
         yield return ("RPM", spec);
 
-        yield return ("DEB", Read("packaging/debian/rules").Replace("$(PKG)/", "/", StringComparison.Ordinal)
+        yield return ("DEB", Read("packaging/debian/rules").Replace("$(PKG)/", "/", StringComparison.Ordinal).Replace("$(GTK)/", "/", StringComparison.Ordinal)
                              + Read("packaging/debian/seglcd.docs") + Read("packaging/debian/seglcd.examples"));
     }
 
@@ -111,15 +123,37 @@ public sealed class PackagingTests
     public async Task Every_system_packaging_file_is_covered()
     {
         // A new file in one of these directories must be added to Sources (and thus to every recipe).
-        string[] dirs = ["packaging/systemd/system", "packaging/sysusers", "packaging/udev", "packaging/dbus/system"];
+        string[] dirs = ["packaging/systemd/system", "packaging/sysusers", "packaging/udev", "packaging/dbus/system", "data"];
         foreach (var dir in dirs)
         {
-            foreach (var file in Directory.EnumerateFiles(Path.Combine(Root, dir)))
+            foreach (var file in Directory.EnumerateFiles(Path.Combine(Root, dir), "*", SearchOption.AllDirectories))
             {
                 var relative = Path.GetRelativePath(Root, file).Replace('\\', '/');
                 await Assert.That(Sources.Contains(relative)).IsTrue().Because($"{relative} is not packaged");
             }
         }
+    }
+
+    [Test]
+    public async Task Gui_files_go_into_the_gui_package()
+    {
+        // The GUI is a separate package: its files are installed in the seglcd-gtk part of each recipe only.
+        string[] gui = ["seglcd-gtk", "io.github.fubar_coder.SegLcd.desktop"];
+        var aur = Read("packaging/arch/seglcd/PKGBUILD");
+        var aurGui = aur[aur.IndexOf("package_seglcd-gtk()", StringComparison.Ordinal)..];
+        var aurMain = aur[..aur.IndexOf("package_seglcd-gtk()", StringComparison.Ordinal)];
+        var rpm = Read("packaging/rpm/seglcd.spec");
+        var rpmFiles = rpm[rpm.IndexOf("%files\n", StringComparison.Ordinal)..rpm.IndexOf("%files gtk", StringComparison.Ordinal)];
+        foreach (var name in gui)
+        {
+            await Assert.That(aurGui).Contains(name);
+            await Assert.That(rpmFiles).DoesNotContain(name);
+        }
+
+        await Assert.That(aurMain).DoesNotContain("/usr/bin/seglcd-gtk");
+        await Assert.That(aurMain).DoesNotContain("share/applications");
+
+        await Assert.That(Read("packaging/debian/rules")).Contains("$(GTK)/usr/bin/seglcd-gtk");
     }
 
     [Test]

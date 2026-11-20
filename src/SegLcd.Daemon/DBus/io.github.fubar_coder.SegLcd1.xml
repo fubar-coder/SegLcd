@@ -25,6 +25,15 @@
       <arg name="source" type="s" direction="out"/>
     </method>
 
+    <!--
+      Lists the sensors the service can use: (spec, kind, description, value). kind: temperature, power, voltage,
+      current, clock, usage, fan or other; value: current reading, NaN if not readable (e.g. RAPL without permission).
+      Takes about 0.3 s (RAPL power is measured over that time).
+    -->
+    <method name="ListSensors">
+      <arg name="sensors" type="a(sssd)" direction="out"/>
+    </method>
+
     <!-- true: the display is fed; false: off packet sent, device released (e.g. for seglcd). -->
     <property name="Enabled" type="b" access="readwrite"/>
 
@@ -39,7 +48,10 @@
     <property name="Model" type="s" access="read"/>
     <property name="ConfigPath" type="s" access="read"/>
 
-    <!-- field -> resolved sensor description ("–" if none) -->
+    <!-- field -> configured sensor spec ("" = automatic) -->
+    <property name="SensorSpecs" type="a{ss}" access="read"/>
+
+    <!-- field -> resolved sensor description ("" if none) -->
     <property name="Sources" type="a{ss}" access="read"/>
 
     <!-- Values last sent (field -> value, only available values). No change signal. -->

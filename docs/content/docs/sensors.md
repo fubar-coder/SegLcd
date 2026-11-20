@@ -1,6 +1,6 @@
 ---
 title: Sensors & configuration
-weight: 8
+weight: 9
 ---
 
 `seglcd live` and `seglcdd` read the sensors with the same code (`src/SegLcd.Linux`). The LB360-S only **shows CPU and

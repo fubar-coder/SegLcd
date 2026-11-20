@@ -13,7 +13,8 @@ USB-HID-Protokolls bis zum systemd-Dienst, der CPU- und GPU-Temperatur live aufs
 📖 **Dokumentation:** https://fubar-coder.github.io/SegLcd/de/ ([English](https://fubar-coder.github.io/SegLcd/))
 
 - `seglcd` – CLI zum Testen, Senden und Analysieren (`list`, `send`, `live`, `probe`, `decode`, …)
-- `seglcdd` – systemd-Benutzerdienst mit D-Bus-Schnittstelle und TOML-Konfiguration
+- `seglcdd` – systemd-Dienst mit D-Bus-Schnittstelle und TOML-Konfiguration
+- `seglcd-gtk` – GTK/libadwaita-Einstellungs-App: Werte, Intervalle, Sensorauswahl
 - Sensoren für AMD, Intel und NVIDIA (hwmon, RAPL, NVML, DRM), Native AOT, Deutsch/Englisch
 
 | Pfad | Inhalt |
@@ -27,8 +28,11 @@ USB-HID-Protokolls bis zum systemd-Dienst, der CPU- und GPU-Temperatur live aufs
 | `src/SegLcd.Linux` | Linux-Sensoren (hwmon, procfs, cpufreq, RAPL, NVML, DRM) |
 | `src/SegLcd.Localization` | gettext-Lokalisierung (`po/`: Englisch → Deutsch) |
 | `src/SegLcd.Tool` | CLI `seglcd` (DotMake.CommandLine, Native AOT) |
-| `src/SegLcd.Daemon` | Dienst `seglcdd` (systemd --user, D-Bus, TOML-Konfiguration) |
-| `man/` | Man-Pages `seglcd(1)`, `seglcdd(1)`, `seglcdd.toml(5)` – Englisch und Deutsch (`man/de/`) |
+| `src/SegLcd.Daemon` | Dienst `seglcdd` (systemd, D-Bus, TOML-Konfiguration) |
+| `src/SegLcd.Client` | D-Bus-Client für `seglcdd` (von der GUI genutzt) |
+| `src/SegLcd.Gtk` | Einstellungs-App `seglcd-gtk` (Gir.Core, GTK 4/libadwaita, Native AOT) |
+| `data/` | Desktop-Datei, AppStream-Metadaten und Icon von `seglcd-gtk` |
+| `man/` | Man-Pages `seglcd(1)`, `seglcdd(1)`, `seglcd-gtk(1)`, `seglcdd.toml(5)` – Englisch und Deutsch (`man/de/`) |
 | `packaging/` | Pakete (AUR, RPM, DEB), System-/Benutzer-Units, D-Bus-Policy, Beispielkonfiguration, `install-user.sh` / `uninstall-user.sh` |
 | `tests/SegLcd.Tests` | TUnit-Tests mit den Testvektoren der Doku |
 
@@ -53,7 +57,7 @@ Dienst installieren:
 - **pro Benutzer ohne root** (systemd-Benutzerdienst, Session-Bus):
 
 ```bash
-packaging/install-user.sh          # --help, --reset-config, --no-start
+packaging/install-user.sh          # --help, --reset-config, --no-start, --no-gui
 journalctl --user -u seglcdd -f
 packaging/uninstall-user.sh        # --purge entfernt auch ~/.config/seglcd
 ```

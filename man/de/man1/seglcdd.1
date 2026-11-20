@@ -61,6 +61,9 @@ Einleseintervall, 100\(en10000 ms.
 .BR Connected " (b), " DevicePath " (s), " Model " (s), " ConfigPath " (s)"
 Verbindungsstatus und Pfade.
 .TP
+.BR SensorSpecs " (a{ss})"
+Feld \(-> konfigurierte Sensorangabe (leer = automatisch).
+.TP
 .BR Sources " (a{ss})"
 Feld \(-> aufgelöste Sensorquelle (leer = keine).
 .TP
@@ -68,13 +71,17 @@ Feld \(-> aufgelöste Sensorquelle (leer = keine).
 Letzte Werte und letztes Paket; ohne Änderungssignal.
 .PP
 .B PropertiesChanged
-wird für Enabled, die Intervalle, die Verbindungs-Properties und Sources gesendet.
+wird für Enabled, die Intervalle, die Verbindungs-Properties, SensorSpecs und Sources gesendet.
 Ungültige Werte werden mit org.freedesktop.DBus.Error.InvalidArgs abgelehnt.
 .SS Methoden
 .TP
 .BI SetSensor( Feld ", " Spec ") \(-> " Quelle
 Quelle eines Feldes setzen (cpu_temperature, cpu_power, cpu_voltage, gpu_temperature, gpu_usage,
 gpu_power, gpu_clock, fan, pump); leere Angabe = automatisch. Erst mit SaveConfig gespeichert.
+.TP
+.BI ListSensors() " \(-> a(sssd)"
+Vom Dienst nutzbare Sensoren: Angabe, Art (temperature, power, voltage, current, clock, usage, fan, other),
+Beschreibung und aktueller Wert (NaN = nicht lesbar). Dauert etwa 0,3 s.
 .TP
 .B ReloadConfig()
 Konfigurationsdatei neu lesen; bei Fehlern bleibt die bisherige Einstellung aktiv.

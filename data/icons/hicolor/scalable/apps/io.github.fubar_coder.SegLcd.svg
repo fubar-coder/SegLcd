@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <!-- Pump block with a seven-segment temperature display. -->
+  <defs>
+    <linearGradient id="body" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5e5c64"/>
+      <stop offset="1" stop-color="#241f31"/>
+    </linearGradient>
+  </defs>
+  <circle cx="64" cy="66" r="56" fill="#000" opacity="0.2"/>
+  <circle cx="64" cy="62" r="56" fill="url(#body)"/>
+  <circle cx="64" cy="62" r="46" fill="#11111b"/>
+  <circle cx="64" cy="62" r="46" fill="none" stroke="#62a0ea" stroke-width="3" opacity="0.8"/>
+  <g fill="#8ff0a4">
+    <!-- "4" -->
+    <path d="M36 44h5v15h-5z"/>
+    <path d="M38 60h16v5H38z"/>
+    <path d="M52 44h5v36h-5z"/>
+    <!-- "2" -->
+    <path d="M63 42h18v5H63z"/>
+    <path d="M79 44h5v16h-5z"/>
+    <path d="M63 60h18v5H63z"/>
+    <path d="M60 63h5v16h-5z"/>
+    <path d="M63 77h18v5H63z"/>
+    <!-- degree sign -->
+    <circle cx="92" cy="47" r="4" fill="none" stroke="#8ff0a4" stroke-width="3"/>
+  </g>
+</svg>

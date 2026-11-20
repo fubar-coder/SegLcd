@@ -1,0 +1,35 @@
+.\" -*- coding: UTF-8 -*-
+.TH SEGLCD-GTK 1 "2026-11-20" "seglcd" "Benutzerbefehle"
+.SH BEZEICHNUNG
+seglcd-gtk \- grafische Einstellungen für den SegLcd-Dienst
+.SH ÜBERSICHT
+.B seglcd-gtk
+.RB [ \-\-system | \-\-session ]
+.SH BESCHREIBUNG
+.B seglcd-gtk
+verbindet sich über D-Bus mit
+.BR seglcdd (1),
+zeigt den Zustand des Displays und die aktuellen Werte und stellt die Intervalle und den Sensor jedes Wertes ein.
+Änderungen wirken sofort;
+.B Speichern
+macht sie dauerhaft (D-Bus SaveConfig), die Schaltfläche zum Neuladen verwirft nicht gespeicherte Änderungen.
+.PP
+Es sucht zuerst den Systemdienst, dann den Benutzerdienst, und verbindet sich neu, wenn der Dienst neu startet.
+Zum Steuern des Systemdienstes ist die Mitgliedschaft in der Gruppe
+.B seglcd
+nötig.
+.SH OPTIONEN
+.TP
+.B \-\-system
+Nur den Systemdienst verwenden (System-Bus).
+.TP
+.B \-\-session
+Nur den Benutzerdienst verwenden (Session-Bus).
+.SH RÜCKGABEWERT
+0 bei Erfolg, 2 bei ungültigen Argumenten, 3 wenn kein Display geöffnet werden kann.
+.SH MARKEN
+SegLcd ist ein unabhängiges Projekt und nicht mit Thermaltake verbunden. "Thermaltake" ist eine Marke der Thermaltake Technology Co., Ltd.; der Name wird nur verwendet, um die unterstützte Hardware zu bezeichnen.
+.SH SIEHE AUCH
+.BR seglcd (1),
+.BR seglcdd (1),
+.BR seglcdd.toml (5)

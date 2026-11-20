@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net11.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>seglcd-gtk</AssemblyName>
+    <PackageId>SegLcd.Gtk</PackageId>
+    <RootNamespace>SegLcd.Gui</RootNamespace>
+    <PublishAot>true</PublishAot>
+    <InvariantGlobalization>false</InvariantGlobalization>
+    <!-- Gir.Core's source generator and the native helper need unsafe code. -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <!-- One version for all GirCore.* packages; 0.9.0-preview.1 passes the AOT gate without warnings. -->
+    <GirCoreVersion>0.9.0-preview.1</GirCoreVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GirCore.Adw-1" Version="$(GirCoreVersion)" />
+    <PackageReference Include="GirCore.Gtk-4.0" Version="$(GirCoreVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SegLcd.Client\SegLcd.Client.csproj" />
+    <ProjectReference Include="..\SegLcd.Localization\SegLcd.Localization.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -61,6 +61,9 @@ Sensor interval, 100\(en10000 ms.
 .BR Connected " (b), " DevicePath " (s), " Model " (s), " ConfigPath " (s)"
 Connection state and paths.
 .TP
+.BR SensorSpecs " (a{ss})"
+Field \(-> configured sensor spec (empty = automatic).
+.TP
 .BR Sources " (a{ss})"
 Field \(-> resolved sensor source (empty = none).
 .TP
@@ -68,13 +71,17 @@ Field \(-> resolved sensor source (empty = none).
 Last values and last packet; no change signal.
 .PP
 .B PropertiesChanged
-is emitted for Enabled, the intervals, the connection properties and Sources.
+is emitted for Enabled, the intervals, the connection properties, SensorSpecs and Sources.
 Invalid values are rejected with org.freedesktop.DBus.Error.InvalidArgs.
 .SS Methods
 .TP
 .BI SetSensor( field ", " spec ") \(-> " source
 Set the source of a field (cpu_temperature, cpu_power, cpu_voltage, gpu_temperature, gpu_usage,
 gpu_power, gpu_clock, fan, pump); empty spec = automatic. Not saved until SaveConfig.
+.TP
+.BI ListSensors() " \(-> a(sssd)"
+Sensors the service can use: spec, kind (temperature, power, voltage, current, clock, usage, fan, other),
+description and current value (NaN = not readable). Takes about 0.3 s.
 .TP
 .B ReloadConfig()
 Re-read the configuration file; on error the old settings stay active.

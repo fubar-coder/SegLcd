@@ -5,6 +5,7 @@
 | Service | system service, user `seglcd`, system bus | `systemctl --user`, session bus |
 | Config | `/etc/seglcd/config.toml`; D-Bus `SaveConfig`: `/var/lib/seglcd/config.toml` | `~/.config/seglcd/config.toml` |
 | Device access | udev rule with group `seglcd` + `uaccess` | udev rule `udev/70-seglcd.rules` (`uaccess`) |
+| Settings app | separate package `seglcd-gtk` | installed too (`--no-gui` skips it) |
 
 Use only one of them.
 
@@ -19,6 +20,7 @@ Use only one of them.
 | `sysusers/seglcd.conf`, `udev/70-seglcd.rules` | system user and package udev rule |
 | `arch/seglcd`, `arch/seglcd-git` | AUR recipes (release tag / git main) |
 | `rpm/seglcd.spec`, `debian/` | RPM and Debian recipes |
+| `../data/` | desktop file, AppStream metadata and icon of `seglcd-gtk` |
 | `make-tarball.sh` | source tarball from `HEAD`; `--vendor` bundles NuGet packages for offline builds |
 
 Each recipe spells out its build (`dotnet publish` of `SegLcd.Tool` and `SegLcd.Daemon`, Native AOT) and every

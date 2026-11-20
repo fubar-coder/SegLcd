@@ -3,7 +3,7 @@ title: Service seglcdd
 weight: 7
 ---
 
-`seglcdd` feeds the display with sensor values and offers a D-Bus interface. Use **one** of the two variants –
+`seglcdd` feeds the display with sensor values and offers a D-Bus interface; [`seglcd-gtk`](../gui/) is its settings app. Use **one** of the two variants –
 two instances would send alternately.
 
 | | System service (RPM/DEB/AUR) | User service (`install-user.sh`) |
@@ -61,6 +61,7 @@ Name and interface `io.github.fubar_coder.SegLcd1`, object `/io/github/fubar_cod
 | `UpdateIntervalMs` | `u` | rw | 50–400 ms |
 | `SampleIntervalMs` | `u` | rw | 100–10000 ms |
 | `Connected`, `DevicePath`, `Model`, `ConfigPath` | `b`, `s` | r | state and paths |
+| `SensorSpecs` | `a{ss}` | r | field → configured spec (empty = automatic) |
 | `Sources` | `a{ss}` | r | field → resolved sensor (empty = none) |
 | `CurrentValues` | `a{sd}` | r | last values (`cpu_temperature`, `gpu_temperature`, `fan`, …) |
 | `LastPacket` | `ay` | r | last 64-byte packet |
@@ -68,6 +69,7 @@ Name and interface `io.github.fubar_coder.SegLcd1`, object `/io/github/fubar_cod
 | Method | Meaning |
 |---|---|
 | `SetSensor(field, spec) → source` | set a sensor ([spec syntax](../sensors/#sensor-specs)); not saved until `SaveConfig` |
+| `ListSensors() → a(sssd)` | usable sensors: spec, kind (`temperature`, `power`, `fan`, …), description, value (NaN = not readable) |
 | `ReloadConfig()` | re-read `config.toml`; on error the old settings stay active |
 | `SaveConfig()` | write the current settings; user service: `config.toml` (comments are lost), system service: the values that differ from `/etc` to `/var/lib/seglcd/config.toml` |
 

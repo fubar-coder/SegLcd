@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.fubar_coder.SegLcd</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <name>SegLcd</name>
+  <summary>Sensor values on the Thermaltake LB360-S pump display</summary>
+  <summary xml:lang="de">Sensorwerte auf dem Pumpen-Display der Thermaltake LB360-S</summary>
+  <description>
+    <p>
+      SegLcd shows the CPU and GPU temperature on the segment LCD of the Thermaltake LB360-S ARGB Sync AIO cooler.
+      This application shows the state of the seglcdd service and lets you choose the sensors.
+    </p>
+    <p xml:lang="de">
+      SegLcd zeigt die CPU- und GPU-Temperatur auf dem Segment-LCD der Thermaltake LB360-S ARGB Sync an. Diese
+      Anwendung zeigt den Zustand des Dienstes seglcdd und erlaubt die Auswahl der Sensoren.
+    </p>
+    <p>SegLcd is not affiliated with Thermaltake.</p>
+    <p xml:lang="de">SegLcd steht in keiner Verbindung zu Thermaltake.</p>
+  </description>
+  <launchable type="desktop-id">io.github.fubar_coder.SegLcd.desktop</launchable>
+  <url type="homepage">https://fubar-coder.github.io/SegLcd/</url>
+  <url type="bugtracker">https://github.com/fubar-coder/SegLcd/issues</url>
+  <url type="vcs-browser">https://github.com/fubar-coder/SegLcd</url>
+  <developer id="io.github.fubar_coder">
+    <name>Mark Junker</name>
+  </developer>
+  <provides>
+    <binary>seglcd-gtk</binary>
+  </provides>
+  <requires>
+    <display_length compare="ge">360</display_length>
+  </requires>
+  <supports>
+    <control>pointing</control>
+    <control>keyboard</control>
+  </supports>
+  <content_rating type="oars-1.1"/>
+  <releases>
+    <release version="0.1.0" date="2026-11-20"/>
+  </releases>
+</component>

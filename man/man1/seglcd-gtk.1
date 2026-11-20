@@ -1,0 +1,34 @@
+.\" -*- coding: UTF-8 -*-
+.TH SEGLCD-GTK 1 "2026-11-20" "seglcd" "User Commands"
+.SH NAME
+seglcd-gtk \- graphical settings for the SegLcd service
+.SH SYNOPSIS
+.B seglcd-gtk
+.RB [ \-\-system | \-\-session ]
+.SH DESCRIPTION
+.B seglcd-gtk
+connects to
+.BR seglcdd (1)
+over D-Bus, shows the display state and the current values, and sets the intervals and the sensor of each value.
+Changes apply at once;
+.B Save
+makes them permanent (D-Bus SaveConfig), the reload button discards unsaved changes.
+.PP
+It looks for the system service first, then for the user service, and reconnects when the service restarts.
+Controlling the system service requires membership in the group
+.BR seglcd .
+.SH OPTIONS
+.TP
+.B \-\-system
+Only use the system service (system bus).
+.TP
+.B \-\-session
+Only use the user service (session bus).
+.SH EXIT STATUS
+0 on success, 2 for invalid arguments, 3 if no display can be opened.
+.SH TRADEMARKS
+SegLcd is an independent project and not affiliated with Thermaltake. Thermaltake is a trademark of Thermaltake Technology Co., Ltd.; the name is used only to identify the supported hardware.
+.SH SEE ALSO
+.BR seglcd (1),
+.BR seglcdd (1),
+.BR seglcdd.toml (5)
