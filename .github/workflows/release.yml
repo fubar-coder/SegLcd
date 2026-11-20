@@ -1,0 +1,129 @@
+# Release build for tags v* on main: verifies the version, creates the changelog, builds the source tarball and the
+# Arch, RPM and Debian packages, uploads everything as build artifacts and creates a draft GitHub release.
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing tag to build (e.g. v0.1.0)"
+        required: true
+
+permissions:
+  contents: read
+
+env:
+  TAG: ${{ inputs.tag || github.ref_name }}
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ env.TAG }}
+          fetch-depth: 0
+
+      - name: Check that the tag is on main and matches the version
+        id: version
+        run: |
+          git merge-base --is-ancestor "$TAG^{commit}" origin/main || { echo "::error::$TAG is not on main"; exit 1; }
+          version=$(sed -n 's:.*<Version>\(.*\)</Version>.*:\1:p' Directory.Build.props)
+          [ "v$version" = "$TAG" ] || { echo "::error::tag $TAG does not match <Version>$version"; exit 1; }
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: "11.0.x"
+
+      - name: Test
+        run: dotnet test SegLcd.slnx
+
+      - name: Changelog
+        run: |
+          prev=$(git describe --tags --abbrev=0 "$TAG^" 2>/dev/null || true)
+          {
+            echo "## Changes"
+            echo
+            git log --no-merges --reverse --pretty='- %s (%h)' ${prev:+$prev..}"$TAG"
+            if [ -n "$prev" ]; then
+              echo
+              echo "**Full changelog:** ${{ github.server_url }}/${{ github.repository }}/compare/$prev...$TAG"
+            fi
+          } > CHANGELOG.md
+          cat CHANGELOG.md
+
+      - name: Source tarball
+        run: |
+          git checkout -q "$TAG"
+          packaging/make-tarball.sh
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: source
+          path: |
+            artifacts/dist/SegLcd-*.tar.gz
+            CHANGELOG.md
+
+  package:
+    needs: prepare
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: arch
+            image: archlinux:base-devel
+            script: build-arch.sh
+          - name: rpm
+            image: fedora:latest
+            script: build-rpm.sh
+          - name: deb
+            image: debian:trixie
+            script: build-deb.sh
+    container: ${{ matrix.image }}
+    steps:
+      - name: Install checkout prerequisites
+        run: |
+          if command -v apt-get >/dev/null; then apt-get -qq update && apt-get -qq install -y curl ca-certificates; fi
+          if command -v dnf >/dev/null; then dnf -y -q install curl findutils; fi
+
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ env.TAG }}
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: source
+
+      - name: Build
+        run: .github/ci/${{ matrix.script }} artifacts/dist/SegLcd-${{ needs.prepare.outputs.version }}.tar.gz out
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: package-${{ matrix.name }}
+          path: out/*
+
+  release:
+    needs: [prepare, package]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Create draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ls -lR dist
+          gh release create "$TAG" --repo "${{ github.repository }}" --draft --verify-tag \
+            --title "SegLcd ${{ needs.prepare.outputs.version }}" --notes-file dist/CHANGELOG.md \
+            dist/artifacts/dist/SegLcd-*.tar.gz dist/*.pkg.tar.zst dist/*.rpm dist/*.deb

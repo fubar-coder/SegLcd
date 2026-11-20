@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Creates the source tarball seglcd-<version>.tar.gz from the committed state (HEAD) in artifacts/dist/.
+# Creates the source tarball SegLcd-<version>.tar.gz (same layout as GitHub tag archives) from the committed state (HEAD) in artifacts/dist/.
 #
 #   packaging/make-tarball.sh            source only (the build downloads NuGet packages)
 #   packaging/make-tarball.sh --vendor   additionally bundles all NuGet packages (incl. the Native AOT
@@ -17,7 +17,7 @@ esac
 
 cd "$(dirname "$0")/.."
 version=$(sed -n 's:.*<Version>\(.*\)</Version>.*:\1:p' Directory.Build.props)
-name="seglcd-$version"
+name="SegLcd-$version"
 out="$PWD/artifacts/dist"
 work=$(mktemp -d)
 trap 'rm -rf "$work"' EXIT
