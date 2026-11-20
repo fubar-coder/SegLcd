@@ -1,0 +1,94 @@
+.\" -*- coding: UTF-8 -*-
+.TH SEGLCDD.TOML 5 "2026-11-20" "seglcd" "Dateiformate"
+.SH BEZEICHNUNG
+seglcdd.toml \- Konfigurationsdatei von seglcdd
+.SH ÜBERSICHT
+.I $XDG_CONFIG_HOME/seglcd/config.toml
+(meist
+.IR ~/.config/seglcd/config.toml )
+.SH BESCHREIBUNG
+Die Konfiguration von
+.BR seglcdd (1)
+in TOML 1.1 mit Schlüsseln in snake_case. Eine fehlende Datei oder ein fehlender Schlüssel bedeutet den Standardwert.
+Ungültige Werte werden im Journal gemeldet, dann gelten die Standardwerte.
+Eine vollständig kommentierte Datei mit allen Optionen und Standardwerten wird aus
+.I packaging/config.example.toml
+installiert.
+.SH SCHLÜSSEL DER OBERSTEN EBENE
+.TP
+.BR enabled " = " true
+Display versorgen. false sendet das Aus-Paket und gibt das Gerät frei.
+.TP
+.BR update_interval_ms " = " 250
+Sendeintervall in ms, 50\(en400. Das Display schaltet nach ca. 400\(en500 ms ohne Paket ab.
+.TP
+.BR sample_interval_ms " = " 1000
+Einleseintervall in ms, 100\(en10000. Dazwischen werden die letzten Werte wiederholt.
+.TP
+.BR device " = " \(dq\(dq
+Gerätepfad wie /dev/hidraw5; leer bedeutet das erste gefundene Segment-LCD.
+.SH [sensors]
+Jeder Schlüssel nimmt eine Sensor-Angabe; eine leere Zeichenkette wählt den ersten verfügbaren Standard.
+.TP
+.B cpu_temperature
+Standard: k10temp:Tctl, zenpower:Tdie, zenpower:Tctl, coretemp:Package id 0.
+.TP
+.B cpu_power
+Standard: rapl, zenpower:SVI2_P_Core+zenpower:SVI2_P_SoC.
+.TP
+.B cpu_voltage
+Standard: zenpower:SVI2_Core.
+.TP
+.BR cpu_clock_mode " = " \(dqavg\(dq
+Zusammenfassung der Kerntakte: avg, max, min, first (Kern 0).
+.TP
+.B gpu_temperature
+Standard: amdgpu:edge, nvml:temperature, xe:pkg.
+.TP
+.B gpu_usage
+Standard: drm:busy, nvml:usage.
+.TP
+.B gpu_power
+Standard: amdgpu:PPT, nvml:power, rapl:uncore.
+.TP
+.B gpu_clock
+Standard: amdgpu:sclk, nvml:clock, drm:freq.
+.TP
+.BR fan ", " pump
+Lüfter- und Pumpendrehzahl; kein Standard (der Mainboard-Header hängt vom System ab).
+.SH SENSOR-ANGABEN
+.TP
+.I chip:label
+hwmon-Sensor, z.\~B. k10temp:Tctl (stabil, bevorzugt).
+.TP
+.I hwmonN/name
+hwmon-Pfad, z.\~B. hwmon5/fan1 (die Nummer kann wechseln).
+.TP
+.I a+b
+Summe mehrerer Sensoren.
+.TP
+.BR rapl [ :\fIDomäne\fR ]
+RAPL-Leistung: package (Standard), core, uncore, dram, psys.
+.TP
+.BR nvml [ \fIN\fR ] :\fIWert\fR
+NVIDIA-GPU: temperature, power, clock, memclock, usage, fan.
+.TP
+.BR drm [ \fIN\fR ] :\fIWert\fR
+DRM-Karte: busy, freq.
+.PP
+.B seglcd sensors
+listet alle auf dem System verfügbaren Quellen mit ihren Angaben auf.
+.SH BEISPIEL
+.EX
+update_interval_ms = 250
+sample_interval_ms = 1000
+
+[sensors]
+cpu_temperature = "k10temp:Tctl"
+cpu_power = "rapl"
+fan = "it8686_31050607:fan1"
+pump = "it8686_31050607:fan5"
+.EE
+.SH SIEHE AUCH
+.BR seglcdd (1),
+.BR seglcd (1)

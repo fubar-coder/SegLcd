@@ -1,0 +1,763 @@
+# German translation of seglcd/seglcdd (Thermaltake segment LCD tools).
+msgid ""
+msgstr ""
+"Project-Id-Version: seglcd\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2026-11-20 12:00+0100\n"
+"Last-Translator: seglcd developers\n"
+"Language-Team: German\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/SegLcd.Tool/Commands.cs:654
+#, csharp-format
+msgid "(before {0})"
+msgstr "(vorher {0})"
+
+#: src/SegLcd.Tool/Commands.cs:65
+msgid "(empty)"
+msgstr "(leer)"
+
+#: src/SegLcd.Tool/Commands.cs:582
+msgid "(no NVIDIA GPU, or libnvidia-ml.so.1 not found)"
+msgstr "(keine NVIDIA-GPU bzw. libnvidia-ml.so.1 nicht gefunden)"
+
+#: src/SegLcd.Tool/Commands.cs:574
+msgid "(no RAPL domains)"
+msgstr "(keine RAPL-Domänen)"
+
+#: src/SegLcd.Tool/Commands.cs:590
+msgid "(no matching DRM values)"
+msgstr "(keine passenden DRM-Werte)"
+
+#. translators: shown instead of a value when the RAPL counter is not readable
+#: src/SegLcd.Tool/Commands.cs:572
+msgid "(permissions)"
+msgstr "(Rechte)"
+
+#: src/SegLcd.Tool/Commands.cs:36
+msgid "(unknown)"
+msgstr "(unbekannt)"
+
+#: src/SegLcd.Tool/CliTexts.cs:71
+msgid "Advance automatically every N seconds instead of waiting for Enter."
+msgstr "Automatisch alle N Sekunden weiterschalten statt auf Enter zu warten."
+
+#: src/SegLcd.Tool/Commands.cs:414
+#, csharp-format
+msgid "At most {0} bytes."
+msgstr "Höchstens {0} Bytes."
+
+#. translators: keys of the interactive probe; keep Enter, b, o and q as they are
+#: src/SegLcd.Tool/Commands.cs:293
+#, csharp-format
+msgid "Automatic run, {0} s per byte. Ctrl+C stops."
+msgstr "Automatischer Durchlauf, {0} s pro Byte. Strg+C beendet."
+
+#: src/SegLcd.Tool/Commands.cs:288
+msgid "Baseline: all values 0. Watch the display."
+msgstr "Basislinie: alle Werte 0. Das Display beobachten."
+
+#: src/SegLcd.Tool/CliTexts.cs:76
+msgid "Byte offset in the 64-byte packet (3–63)."
+msgstr "Byte-Offset im 64-Byte-Paket (3–63)."
+
+#: src/SegLcd.Tool/Commands.cs:594
+msgid "CPU clock MHz"
+msgstr "CPU-Takt MHz"
+
+#: src/SegLcd.Tool/FieldTexts.cs:23
+msgid "CPU clock MHz / 100"
+msgstr "CPU-Takt MHz / 100"
+
+#: src/SegLcd.Tool/FieldTexts.cs:24
+msgid "CPU clock MHz mod 100"
+msgstr "CPU-Takt MHz mod 100"
+
+#: src/SegLcd.Tool/CliTexts.cs:55
+msgid "CPU clock from all cores: Avg (average), Max, Min or First (core 0)."
+msgstr "CPU-Takt aus allen Kernen: Avg (Durchschnitt), Max, Min oder First (Kern 0)."
+
+#: src/SegLcd.Tool/CliTexts.cs:38
+msgid "CPU clock in MHz."
+msgstr "CPU-Takt in MHz."
+
+#: src/SegLcd.Tool/FieldTexts.cs:22
+msgid "CPU power (hundredths)"
+msgstr "CPU-Leistung (Hundertstel)"
+
+#: src/SegLcd.Tool/FieldTexts.cs:48
+msgid "CPU power W / 100"
+msgstr "CPU-Leistung W / 100"
+
+#: src/SegLcd.Tool/FieldTexts.cs:21
+msgid "CPU power W mod 100"
+msgstr "CPU-Leistung W mod 100"
+
+#: src/SegLcd.Tool/CliTexts.cs:37
+msgid "CPU power in W."
+msgstr "CPU-Leistung in W."
+
+#: src/SegLcd.Tool/CliTexts.cs:53
+msgid "CPU power sensor. Default: rapl, otherwise zenpower:SVI2_P_Core+zenpower:SVI2_P_SoC."
+msgstr "CPU-Leistungssensor. Standard: rapl, sonst zenpower:SVI2_P_Core+zenpower:SVI2_P_SoC."
+
+#: src/SegLcd.Tool/FieldTexts.cs:18
+msgid "CPU temperature (hundredths)"
+msgstr "CPU-Temperatur (Hundertstel)"
+
+#: src/SegLcd.Tool/FieldTexts.cs:17
+msgid "CPU temperature (integer part)"
+msgstr "CPU-Temperatur (ganzzahliger Teil)"
+
+#: src/SegLcd.Tool/CliTexts.cs:35
+msgid "CPU temperature in °C."
+msgstr "CPU-Temperatur in °C."
+
+#: src/SegLcd.Tool/CliTexts.cs:52
+msgid "CPU temperature sensor. Default: k10temp:Tctl, zenpower:Tdie, zenpower:Tctl, coretemp:Package id 0."
+msgstr "CPU-Temperatursensor. Standard: k10temp:Tctl, zenpower:Tdie, zenpower:Tctl, coretemp:Package id 0."
+
+#: src/SegLcd.Tool/CliTexts.cs:93
+msgid "CPU temperature to show."
+msgstr "Anzuzeigende CPU-Temperatur."
+
+#: src/SegLcd.Tool/FieldTexts.cs:19
+msgid "CPU temperature unit (0=°C, 1=°F)"
+msgstr "CPU-Temperatur-Einheit (0=°C, 1=°F)"
+
+#: src/SegLcd.Tool/FieldTexts.cs:20
+msgid "CPU usage % (integer part)"
+msgstr "CPU-Auslastung % (ganzzahliger Teil)"
+
+#: src/SegLcd.Tool/FieldTexts.cs:51
+msgid "CPU usage (hundredths)"
+msgstr "CPU-Auslastung (Hundertstel)"
+
+#: src/SegLcd.Tool/CliTexts.cs:36
+msgid "CPU usage in %."
+msgstr "CPU-Auslastung in %."
+
+#: src/SegLcd.Tool/FieldTexts.cs:26
+msgid "CPU voltage (hundredths)"
+msgstr "CPU-Spannung (Hundertstel)"
+
+#: src/SegLcd.Tool/FieldTexts.cs:25
+msgid "CPU voltage (integer part)"
+msgstr "CPU-Spannung (ganzzahliger Teil)"
+
+#: src/SegLcd.Tool/CliTexts.cs:39
+msgid "CPU voltage in V."
+msgstr "CPU-Spannung in V."
+
+#: src/SegLcd.Tool/CliTexts.cs:54
+msgid "CPU voltage sensor. Default: zenpower:SVI2_Core."
+msgstr "CPU-Spannungssensor. Standard: zenpower:SVI2_Core."
+
+#: src/SegLcd.Tool/Commands.cs:544
+msgid "Closing the device."
+msgstr "Gerät wird geschlossen."
+
+#. Log message SegLcd.Daemon.DisplayController.LogConfigLoaded (event 110). Keep the {Name} placeholders.
+msgid "Configuration loaded: {Path}"
+msgstr "Konfiguration geladen: {Path}"
+
+#. Log message SegLcd.Daemon.DisplayController.LogConfigSaved (event 111). Keep the {Name} placeholders.
+msgid "Configuration saved: {Path}"
+msgstr "Konfiguration gespeichert: {Path}"
+
+#: src/SegLcd.Tool/DeviceCommandBase.cs:88
+#, csharp-format
+msgid "Connected: {0}"
+msgstr "Verbunden: {0}"
+
+#: src/SegLcd.Tool/DeviceCommandBase.cs:35
+#, csharp-format
+msgid "Connected: {0} ({1})"
+msgstr "Verbunden: {0} ({1})"
+
+#: src/SegLcd.Tool/DeviceCommandBase.cs:36
+#, csharp-format
+msgid "Connected: {0} ({1}) – protocol unverified for this model"
+msgstr "Verbunden: {0} ({1}) – Protokoll für dieses Modell unverifiziert"
+
+#: src/SegLcd.Tool/DeviceCommandBase.cs:88
+msgid "Connection lost."
+msgstr "Verbindung verloren."
+
+#: src/SegLcd.Tool/CliTexts.cs:75
+msgid "Count the value of one byte up step by step (e.g. for bar graphs)."
+msgstr "Den Wert eines Bytes schrittweise hochzählen (z. B. für Balkenanzeigen)."
+
+#. Log message SegLcd.Daemon.DBus.DBusService.LogDBusFailed (event 203). Keep the {Name} placeholders.
+msgid "D-Bus error: {Reason}"
+msgstr "D-Bus-Fehler: {Reason}"
+
+#. Log message SegLcd.Daemon.DBus.DBusService.LogNameTaken (event 201). Keep the {Name} placeholders.
+msgid "D-Bus name {Name} is already taken – is seglcdd already running?"
+msgstr "D-Bus-Name {Name} ist bereits vergeben – läuft seglcdd schon?"
+
+#. Log message SegLcd.Daemon.DBus.DBusService.LogReady (event 202). Keep the {Name} placeholders.
+msgid "D-Bus ready: {Name} {Path}"
+msgstr "D-Bus bereit: {Name} {Path}"
+
+#: src/SegLcd.Tool/Commands.cs:585
+msgid "DRM (spec: drm[N]:busy|freq)"
+msgstr "DRM (Spec: drm[N]:busy|freq)"
+
+#: src/SegLcd.Tool/CliTexts.cs:98
+msgid "Decode captured packets (hex, one line per packet, e.g. tshark output)."
+msgstr "Mitgeschnittene Pakete dekodieren (Hex, eine Zeile pro Paket, z. B. tshark-Ausgabe)."
+
+#: src/SegLcd.Tool/DeviceCommandBase.cs:45
+#, csharp-format
+msgid "Device found ({0}), but it could not be opened – is the udev rule installed? See udev/70-seglcd.rules"
+msgstr "Gerät gefunden ({0}), aber Öffnen fehlgeschlagen – ist die udev-Regel installiert? Siehe udev/70-seglcd.rules"
+
+#: src/SegLcd.Tool/CliTexts.cs:22
+msgid "Device path (e.g. /dev/hidraw5). Default: first segment LCD found."
+msgstr "Gerätepfad (z. B. /dev/hidraw5). Standard: erstes gefundenes Segment-LCD."
+
+#. Log message SegLcd.Daemon.DisplayController.LogConnected (event 100). Keep the {Name} placeholders.
+msgid "Display connected: {Path} ({Model})"
+msgstr "Display verbunden: {Path} ({Model})"
+
+#. Log message SegLcd.Daemon.DisplayController.LogDisplayDisabled (event 103). Keep the {Name} placeholders.
+msgid "Display disabled, device released"
+msgstr "Display ausgeschaltet, Gerät freigegeben"
+
+#. Log message SegLcd.Daemon.DisplayController.LogDisconnected (event 101). Keep the {Name} placeholders.
+msgid "Display disconnected – waiting for the device"
+msgstr "Display getrennt – warte auf Gerät"
+
+#. Log message SegLcd.Daemon.DisplayController.LogDisplayEnabled (event 102). Keep the {Name} placeholders.
+msgid "Display enabled"
+msgstr "Display eingeschaltet"
+
+#: src/SegLcd.Tool/CliTexts.cs:78
+msgid "End value."
+msgstr "Endwert."
+
+#: src/SegLcd.Tool/Commands.cs:294
+msgid "Enter = next byte, b = back, <number> = change value, o<offset> = jump, q = quit"
+msgstr "Enter = nächstes Byte, b = zurück, <Zahl> = Wert ändern, o<Offset> = springen, q = Ende"
+
+#: src/SegLcd.Tool/CliTexts.cs:60
+msgid "Fan sensor (e.g. it8686_31050607:fan1). See 'seglcd sensors'."
+msgstr "Lüftersensor (z. B. it8686_31050607:fan1). Siehe 'seglcd sensors'."
+
+#: src/SegLcd.Tool/CliTexts.cs:44
+msgid "Fan speed in RPM."
+msgstr "Lüfterdrehzahl in RPM."
+
+#: src/SegLcd.Tool/CliTexts.cs:99
+msgid "File with hex lines; '-' or empty = stdin."
+msgstr "Datei mit Hex-Zeilen; '-' oder leer = stdin."
+
+#: src/SegLcd.Tool/CliTexts.cs:81
+msgid "Further fixed bytes as offset=value (e.g. 21=12,22=34)."
+msgstr "Weitere feste Bytes als offset=wert (z. B. 21=12,22=34)."
+
+#: src/SegLcd.Tool/FieldTexts.cs:33
+msgid "GPU clock MHz / 100"
+msgstr "GPU-Takt MHz / 100"
+
+#: src/SegLcd.Tool/FieldTexts.cs:34
+msgid "GPU clock MHz mod 100"
+msgstr "GPU-Takt MHz mod 100"
+
+#: src/SegLcd.Tool/CliTexts.cs:43
+msgid "GPU clock in MHz."
+msgstr "GPU-Takt in MHz."
+
+#: src/SegLcd.Tool/CliTexts.cs:59
+msgid "GPU clock sensor. Default: amdgpu:sclk, nvml:clock, drm:freq."
+msgstr "GPU-Taktsensor. Standard: amdgpu:sclk, nvml:clock, drm:freq."
+
+#: src/SegLcd.Tool/FieldTexts.cs:32
+msgid "GPU power (hundredths)"
+msgstr "GPU-Leistung (Hundertstel)"
+
+#: src/SegLcd.Tool/FieldTexts.cs:49
+msgid "GPU power W / 100"
+msgstr "GPU-Leistung W / 100"
+
+#: src/SegLcd.Tool/FieldTexts.cs:31
+msgid "GPU power W mod 100"
+msgstr "GPU-Leistung W mod 100"
+
+#: src/SegLcd.Tool/CliTexts.cs:42
+msgid "GPU power in W."
+msgstr "GPU-Leistung in W."
+
+#: src/SegLcd.Tool/CliTexts.cs:58
+msgid "GPU power sensor. Default: amdgpu:PPT, nvml:power, rapl:uncore."
+msgstr "GPU-Leistungssensor. Standard: amdgpu:PPT, nvml:power, rapl:uncore."
+
+#: src/SegLcd.Tool/FieldTexts.cs:28
+msgid "GPU temperature (hundredths)"
+msgstr "GPU-Temperatur (Hundertstel)"
+
+#: src/SegLcd.Tool/FieldTexts.cs:27
+msgid "GPU temperature (integer part)"
+msgstr "GPU-Temperatur (ganzzahliger Teil)"
+
+#: src/SegLcd.Tool/CliTexts.cs:40
+msgid "GPU temperature in °C."
+msgstr "GPU-Temperatur in °C."
+
+#: src/SegLcd.Tool/CliTexts.cs:56
+msgid "GPU temperature sensor. Default: amdgpu:edge, nvml:temperature, xe:pkg."
+msgstr "GPU-Temperatursensor. Standard: amdgpu:edge, nvml:temperature, xe:pkg."
+
+#: src/SegLcd.Tool/CliTexts.cs:94
+msgid "GPU temperature to show."
+msgstr "Anzuzeigende GPU-Temperatur."
+
+#: src/SegLcd.Tool/FieldTexts.cs:29
+msgid "GPU temperature unit (0=°C, 1=°F)"
+msgstr "GPU-Temperatur-Einheit (0=°C, 1=°F)"
+
+#: src/SegLcd.Tool/FieldTexts.cs:30
+msgid "GPU usage %"
+msgstr "GPU-Auslastung %"
+
+#: src/SegLcd.Tool/CliTexts.cs:41
+msgid "GPU usage in %."
+msgstr "GPU-Auslastung in %."
+
+#: src/SegLcd.Tool/CliTexts.cs:57
+msgid "GPU usage source. Default: drm:busy, nvml:usage."
+msgstr "Quelle der GPU-Auslastung. Standard: drm:busy, nvml:usage."
+
+#: src/SegLcd.Tool/CliTexts.cs:85
+msgid "Hex bytes, e.g. \"00 01 02 2a 32\". The rest is filled with 00."
+msgstr "Hex-Bytes, z. B. \"00 01 02 2a 32\". Der Rest wird mit 00 aufgefüllt."
+
+#. Log message SegLcd.Daemon.DisplayController.LogConfigError (event 112). Keep the {Name} placeholders.
+msgid "Invalid configuration, using defaults: {Reason}"
+msgstr "Konfiguration fehlerhaft, verwende Standardwerte: {Reason}"
+
+#: src/SegLcd.Tool/Commands.cs:537
+#, csharp-format
+msgid "Last packet sent – the device stays open for {0} s. When does the display go off?"
+msgstr "Letztes Paket gesendet – das Gerät bleibt {0} s geöffnet. Wann geht das Display aus?"
+
+#: src/SegLcd.Tool/CliTexts.cs:72
+msgid "Leave bytes 1/2 (command) free instead of setting them to 01 02."
+msgstr "Byte 1/2 (Kommando) frei lassen, statt sie auf 01 02 zu setzen."
+
+#: src/SegLcd.Tool/Commands.cs:637
+#, csharp-format
+msgid "Line {0}: not hex – skipped."
+msgstr "Zeile {0}: kein Hex – übersprungen."
+
+#: src/SegLcd.Tool/CliTexts.cs:97
+msgid "List all available sensor sources with current values (for 'live' and seglcdd)."
+msgstr "Alle verfügbaren Sensorquellen mit aktuellen Werten auflisten (für 'live' und seglcdd)."
+
+#: src/SegLcd.Tool/Commands.cs:41
+msgid "Manufacturer"
+msgstr "Hersteller"
+
+#: src/SegLcd.Tool/CliTexts.cs:80
+msgid "Milliseconds per step."
+msgstr "Millisekunden pro Schritt."
+
+#: src/SegLcd.Tool/Commands.cs:577
+msgid "NVIDIA NVML (spec: nvml[N]:temperature|power|clock|memclock|usage|fan)"
+msgstr "NVIDIA NVML (Spec: nvml[N]:temperature|power|clock|memclock|usage|fan)"
+
+#: src/SegLcd.Tool/Commands.cs:28
+msgid "No matching devices found."
+msgstr "Keine passenden Geräte gefunden."
+
+#: src/SegLcd.Tool/DeviceCommandBase.cs:44
+msgid "No segment LCD found (VID 0x5131, PID 0x200E/0x2007)."
+msgstr "Kein Segment-LCD gefunden (VID 0x5131, PID 0x200E/0x2007)."
+
+#. Log message SegLcd.Daemon.DBus.DBusService.LogNoSessionBus (event 200). Keep the {Name} placeholders.
+msgid "No session bus (DBUS_SESSION_BUS_ADDRESS not set) – D-Bus interface disabled"
+msgstr "Kein Session-Bus (DBUS_SESSION_BUS_ADDRESS fehlt) – D-Bus-Schnittstelle deaktiviert"
+
+#: src/SegLcd.Tool/Commands.cs:199
+msgid "Note: specify fan/pump with --fan-sensor/--pump-sensor (see 'seglcd sensors')."
+msgstr "Hinweis: Lüfter/Pumpe mit --fan-sensor/--pump-sensor angeben (siehe 'seglcd sensors')."
+
+#: src/SegLcd.Tool/Hex.cs:31
+msgid "Odd number of hex digits."
+msgstr "Ungerade Anzahl Hex-Ziffern."
+
+#: src/SegLcd.Tool/Commands.cs:669
+#, csharp-format
+msgid "Off ({0} bytes)"
+msgstr "Aus ({0} Bytes)"
+
+#: src/SegLcd.Tool/CliTexts.cs:100
+msgid "Only show bytes that changed compared to the previous packet."
+msgstr "Nur Bytes anzeigen, die sich gegenüber dem vorherigen Paket geändert haben."
+
+#: src/SegLcd.Tool/CliTexts.cs:70
+msgid "Only test these offsets (comma-separated, e.g. 3,13,21 or ranges 36-63). Default: 3–63."
+msgstr "Nur diese Offsets testen (kommagetrennt, z. B. 3,13,21 oder Bereiche 36-63). Standard: 3–63."
+
+#: src/SegLcd.Tool/Commands.cs:52
+msgid "Open"
+msgstr "Öffnen"
+
+#: src/SegLcd.Tool/CliTexts.cs:24
+msgid "Print every packet sent."
+msgstr "Jedes gesendete Paket ausgeben."
+
+#: src/SegLcd.Tool/CliTexts.cs:63
+msgid "Print the values read."
+msgstr "Gelesene Werte ausgeben."
+
+#: src/SegLcd.Tool/Commands.cs:42
+msgid "Product"
+msgstr "Produkt"
+
+#: src/SegLcd.Tool/CliTexts.cs:61
+msgid "Pump sensor (e.g. it8686_31050607:fan5)."
+msgstr "Pumpensensor (z. B. it8686_31050607:fan5)."
+
+#: src/SegLcd.Tool/CliTexts.cs:45
+msgid "Pump speed in RPM."
+msgstr "Pumpendrehzahl in RPM."
+
+#: src/SegLcd.Tool/Commands.cs:596
+msgid "RAM %"
+msgstr "RAM %"
+
+#: src/SegLcd.Tool/FieldTexts.cs:47
+msgid "RAM usage % (integer part)"
+msgstr "RAM-Auslastung % (ganzzahliger Teil)"
+
+#: src/SegLcd.Tool/FieldTexts.cs:52
+msgid "RAM usage (hundredths)"
+msgstr "RAM-Auslastung (Hundertstel)"
+
+#: src/SegLcd.Tool/CliTexts.cs:46
+msgid "RAM usage in %."
+msgstr "RAM-Auslastung in %."
+
+#: src/SegLcd.Tool/Commands.cs:565
+msgid "RAPL (spec: rapl, rapl:<domain>) – W, measured over 0.5 s"
+msgstr "RAPL (Spec: rapl, rapl:<domäne>) – W, gemessen über 0,5 s"
+
+#: src/SegLcd.Tool/CliTexts.cs:88
+msgid "Read the device's input reports (meaning unknown so far)."
+msgstr "Input-Reports des Geräts mitlesen (Bedeutung bisher unbekannt)."
+
+#: src/SegLcd.Tool/CliTexts.cs:62
+msgid "Read the sensors every N ms."
+msgstr "Sensoren alle N ms neu einlesen."
+
+#: src/SegLcd.Tool/CliTexts.cs:101
+msgid "Remove a leading report ID byte (0x00) from 65-byte lines."
+msgstr "Führendes Report-ID-Byte (0x00) bei 65-Byte-Zeilen entfernen."
+
+#: src/SegLcd.Tool/Commands.cs:54
+msgid "Report descr."
+msgstr "Report-Deskr."
+
+#: src/SegLcd.Daemon/DisplayController.cs:148
+#, csharp-format
+msgid "SampleIntervalMs must be between {0} and {1}."
+msgstr "SampleIntervalMs muss zwischen {0} und {1} liegen."
+
+#: src/SegLcd.Tool/CliTexts.cs:69
+msgid "Seconds per value of the --values sequence."
+msgstr "Sekunden pro Wert der --values-Folge."
+
+#: src/SegLcd.Tool/CliTexts.cs:84
+msgid "Send an arbitrary packet (hex, max. 64 bytes, without report ID) periodically."
+msgstr "Ein beliebiges Paket (Hex, max. 64 Bytes, ohne Report-ID) periodisch senden."
+
+#: src/SegLcd.Tool/CliTexts.cs:34
+msgid "Send fixed values to the display (keep-alive every 250 ms)."
+msgstr "Feste Werte an das Display senden (Keep-Alive alle 250 ms)."
+
+#: src/SegLcd.Tool/CliTexts.cs:26
+msgid "Send interval in ms."
+msgstr "Sendeintervall in ms."
+
+#: src/SegLcd.Tool/CliTexts.cs:51
+msgid "Send live sensor values to the display."
+msgstr "Aktuelle Sensorwerte an das Display senden."
+
+#: src/SegLcd.Tool/CliTexts.cs:23
+msgid "Send nothing, only print the (first) packet as hex."
+msgstr "Nichts senden, nur das (erste) Paket als Hex ausgeben."
+
+#: src/SegLcd.Tool/CliTexts.cs:86
+msgid "Send only once instead of periodically."
+msgstr "Nur einmal senden statt periodisch."
+
+#: src/SegLcd.Tool/CliTexts.cs:27
+msgid "Send temperatures in °F (not suitable for the LB360-S)."
+msgstr "Temperaturen in °F senden (nicht geeignet für die LB360-S)."
+
+#: src/SegLcd.Tool/CliTexts.cs:48
+msgid "Send the off packet (0x0F) when finished."
+msgstr "Beim Beenden das Aus-Paket (0x0F) senden."
+
+#: src/SegLcd.Tool/CliTexts.cs:91
+msgid "Send update packets for this long (seconds)."
+msgstr "So lange Update-Pakete senden (Sekunden)."
+
+#: src/SegLcd.Tool/CliTexts.cs:89
+msgid "Send update packets with zero values in parallel (in case the device only answers then)."
+msgstr "Parallel Update-Pakete mit Nullwerten senden (falls das Gerät nur dann antwortet)."
+
+#: src/SegLcd.Tool/Commands.cs:526
+#, csharp-format
+msgid "Sending every 250 ms for {0} s …"
+msgstr "Sende alle 250 ms für {0} s …"
+
+#: src/SegLcd.Tool/DeviceCommandBase.cs:95
+msgid "Sending … (Ctrl+C stops)"
+msgstr "Sende … (Strg+C beendet)"
+
+#: src/SegLcd.Linux/LinuxFrameSource.cs:147
+#, csharp-format
+msgid "Sensor '{0}' not found (see 'seglcd sensors')."
+msgstr "Sensor '{0}' nicht gefunden (siehe 'seglcd sensors')."
+
+#: src/SegLcd.Tool/CliTexts.cs:68
+msgid "Sequence of values per byte instead of --value, e.g. 0,1,50,99,128,255."
+msgstr "Wertefolge pro Byte statt --value, z. B. 0,1,50,99,128,255."
+
+#: src/SegLcd.Tool/Commands.cs:43
+msgid "Serial number"
+msgstr "Seriennummer"
+
+#: src/SegLcd.Tool/CliTexts.cs:66
+msgid "Set single bytes interactively to find out which field the display shows."
+msgstr "Interaktiv einzelne Bytes setzen, um herauszufinden, welches Feld das Display anzeigt."
+
+#: src/SegLcd.Tool/CliTexts.cs:31
+msgid "Show all HID devices, not only known segment LCDs."
+msgstr "Alle HID-Geräte anzeigen, nicht nur bekannte Segment-LCDs."
+
+#: src/SegLcd.Tool/LocalizedHelpBuilder.cs:45
+msgid "Show help and usage information"
+msgstr "Hilfe und Nutzungsinformationen anzeigen"
+
+#: src/SegLcd.Tool/CliTexts.cs:30
+msgid "Show segment LCDs found (or all HID devices with --all) with their descriptors."
+msgstr "Gefundene Segment-LCDs (oder mit --all alle HID-Geräte) mit Deskriptoren anzeigen."
+
+#. Log message SegLcd.Daemon.DisplayController.LogSource (event 113). Keep the {Name} placeholders.
+msgid "Source {Field}: {Source}"
+msgstr "Quelle {Field}: {Source}"
+
+#: src/SegLcd.Tool/CliTexts.cs:77
+msgid "Start value."
+msgstr "Startwert."
+
+#: src/SegLcd.Tool/CliTexts.cs:79
+msgid "Step size."
+msgstr "Schrittweite."
+
+#: src/SegLcd.Tool/CliTexts.cs:25
+msgid "Stop after N seconds."
+msgstr "Nach N Sekunden beenden."
+
+#: src/SegLcd.Tool/CliTexts.cs:87
+msgid "Switch the display off (packet 0x0F)."
+msgstr "Display ausschalten (Paket 0x0F)."
+
+#: src/SegLcd.Tool/CliTexts.cs:21
+msgid "Test and analysis tool for the Thermaltake segment LCD (e.g. LB360-S ARGB Sync)."
+msgstr "Test- und Analysewerkzeug für das Thermaltake Segment-LCD (z. B. LB360-S ARGB Sync)."
+
+#: src/SegLcd.Tool/CliTexts.cs:92
+msgid "Then keep the device open without sending for this long (seconds)."
+msgstr "Danach so lange ohne Senden geöffnet halten (Sekunden)."
+
+#: src/SegLcd.Tool/CliTexts.cs:47
+msgid "Time of day (ISO 8601), default: now."
+msgstr "Uhrzeit (ISO 8601), Standard: jetzt."
+
+#: src/SegLcd.Tool/CliTexts.cs:90
+msgid "Timeout test: send for N seconds, then stop but keep the device open for M more seconds."
+msgstr "Timeout-Test: N Sekunden senden, dann aufhören, aber das Gerät weitere M Sekunden geöffnet halten."
+
+#: src/SegLcd.Tool/Commands.cs:670
+#, csharp-format
+msgid "Unknown command {0} {1} ({2} bytes)"
+msgstr "Unbekanntes Kommando {0} {1} ({2} Bytes)"
+
+#: src/SegLcd.Linux/LinuxFrameSource.cs:118
+#: src/SegLcd.Linux/LinuxFrameSource.cs:136
+#, csharp-format
+msgid "Unknown field '{0}'. Allowed: {1}"
+msgstr "Unbekanntes Feld '{0}'. Erlaubt: {1}"
+
+#: src/SegLcd.Tool/Commands.cs:668
+#, csharp-format
+msgid "Update ({0} bytes)"
+msgstr "Update ({0} Bytes)"
+
+#: src/SegLcd.Daemon/DisplayController.cs:134
+#, csharp-format
+msgid "UpdateIntervalMs must be between {0} and {1}."
+msgstr "UpdateIntervalMs muss zwischen {0} und {1} liegen."
+
+#: src/SegLcd.Tool/Commands.cs:290
+#, csharp-format
+msgid "Value sequence per byte: {0} ({1} s each)."
+msgstr "Wertefolge pro Byte: {0} (je {1} s)."
+
+#: src/SegLcd.Tool/CliTexts.cs:67
+msgid "Value written into the byte under test."
+msgstr "Wert, der in das jeweils getestete Byte geschrieben wird."
+
+#: src/SegLcd.Tool/Commands.cs:482
+msgid "Waiting for input reports … (Ctrl+C stops)"
+msgstr "Warte auf Input-Reports … (Strg+C beendet)"
+
+#: src/SegLcd.Tool/DeviceCommandBase.cs:68
+#, csharp-format
+msgid "Warning: interval {0} ms > {1} ms – the display turns off after about 400–500 ms without a packet and will flicker."
+msgstr "Warnung: Intervall {0} ms > {1} ms – das Display schaltet nach ca. 400–500 ms ohne Paket ab und wird flackern."
+
+#: src/SegLcd.Tool/DeviceCommandBase.cs:38
+#, csharp-format
+msgid "Warning: {0} does not display °F (the symbol stays °C, values ≥ 100 appear with two digits, e.g. 122 → 22). Send without --fahrenheit."
+msgstr "Warnung: {0} stellt °F nicht dar (das Symbol bleibt °C, Werte ≥ 100 erscheinen zweistellig, z. B. 122 → 22). Ohne --fahrenheit senden."
+
+#. translators: placeholder for a sub-command in the usage line of the help
+#: src/SegLcd.Tool/LocalizedHelpBuilder.cs:59
+msgid "[command]"
+msgstr "[Befehl]"
+
+#. translators: placeholder for options in the usage line of the help
+#: src/SegLcd.Tool/LocalizedHelpBuilder.cs:61
+msgid "[options]"
+msgstr "[Optionen]"
+
+#: src/SegLcd.Tool/Commands.cs:37
+msgid "[protocol unverified]"
+msgstr "[Protokoll unverifiziert]"
+
+#. translators: marks a required argument in the help
+#: src/SegLcd.Tool/LocalizedHelpBuilder.cs:145
+msgid "[required]"
+msgstr "[erforderlich]"
+
+#: src/SegLcd.Tool/Commands.cs:593
+msgid "built in"
+msgstr "fest eingebaut"
+
+#: src/SegLcd.Tool/FieldTexts.cs:15
+msgid "command"
+msgstr "Kommando"
+
+#: src/SegLcd.Tool/FieldTexts.cs:42
+msgid "day"
+msgstr "Tag"
+
+#: src/SegLcd.Tool/FieldTexts.cs:46
+msgid "day of week (0=Sunday)"
+msgstr "Wochentag (0=Sonntag)"
+
+#. translators: label of a default value in the help, as in "[default: False]"
+#: src/SegLcd.Tool/LocalizedHelpBuilder.cs:147
+msgid "default"
+msgstr "Standard"
+
+#: src/SegLcd.Tool/Commands.cs:52
+msgid "failed (permissions? udev rule)"
+msgstr "fehlgeschlagen (Rechte? udev-Regel)"
+
+#: src/SegLcd.Tool/FieldTexts.cs:35
+msgid "fan RPM / 100"
+msgstr "Lüfter RPM / 100"
+
+#: src/SegLcd.Tool/FieldTexts.cs:36
+msgid "fan RPM mod 100"
+msgstr "Lüfter RPM mod 100"
+
+#: src/SegLcd.Tool/FieldTexts.cs:43
+msgid "hour"
+msgstr "Stunde"
+
+#: src/SegLcd.Tool/Commands.cs:560
+msgid "hwmon (spec: hwmonN/name or chip:label)"
+msgstr "hwmon (Spec: hwmonN/name oder chip:label)"
+
+#: src/SegLcd.Tool/FieldTexts.cs:44
+msgid "minute"
+msgstr "Minute"
+
+#: src/SegLcd.Tool/FieldTexts.cs:41
+msgid "month"
+msgstr "Monat"
+
+#: src/SegLcd.Tool/FieldTexts.cs:37
+msgid "pump RPM / 100"
+msgstr "Pumpe RPM / 100"
+
+#: src/SegLcd.Tool/FieldTexts.cs:38
+msgid "pump RPM mod 100"
+msgstr "Pumpe RPM mod 100"
+
+#: src/SegLcd.Tool/FieldTexts.cs:14
+msgid "reserved (always 00)"
+msgstr "reserviert (immer 00)"
+
+#: src/SegLcd.Daemon/DaemonConfig.cs:41
+#, csharp-format
+msgid "sample_interval_ms must be between {0} and {1} (is {2})."
+msgstr "sample_interval_ms muss zwischen {0} und {1} liegen (ist {2})."
+
+#: src/SegLcd.Tool/FieldTexts.cs:45
+msgid "second"
+msgstr "Sekunde"
+
+#: src/SegLcd.Daemon/DaemonConfig.cs:83
+#, csharp-format
+msgid "sensors.cpu_clock_mode '{0}' is invalid (avg, max, min, first)."
+msgstr "sensors.cpu_clock_mode '{0}' ist ungültig (avg, max, min, first)."
+
+#: src/SegLcd.Tool/FieldTexts.cs:16
+msgid "sub-command"
+msgstr "Sub-Kommando"
+
+#: src/SegLcd.Tool/FieldTexts.cs:50
+msgid "unknown (original LB360-S software: always 5)"
+msgstr "unbekannt (Original-Software LB360-S: immer 5)"
+
+#: src/SegLcd.Tool/FieldTexts.cs:53
+msgid "unused"
+msgstr "unbenutzt"
+
+#: src/SegLcd.Daemon/DaemonConfig.cs:39
+#, csharp-format
+msgid "update_interval_ms must be between {0} and {1} (is {2})."
+msgstr "update_interval_ms muss zwischen {0} und {1} liegen (ist {2})."
+
+#: src/SegLcd.Tool/FieldTexts.cs:39
+msgid "year / 100"
+msgstr "Jahr / 100"
+
+#: src/SegLcd.Tool/FieldTexts.cs:40
+msgid "year mod 100"
+msgstr "Jahr mod 100"
+
+#: src/SegLcd.Tool/Commands.cs:671
+#, csharp-format
+msgid "{0} bytes"
+msgstr "{0} Bytes"
+
+#: src/SegLcd.Tool/Commands.cs:504
+#, csharp-format
+msgid "{0} input report received."
+msgid_plural "{0} input reports received."
+msgstr[0] "{0} Input-Report empfangen."
+msgstr[1] "{0} Input-Reports empfangen."

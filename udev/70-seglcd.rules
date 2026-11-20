@@ -1,0 +1,22 @@
+# Thermaltake Segment-LCD (z. B. LB360-S ARGB Sync, CL-W499 / CL-W500)
+#
+# Gibt dem lokal angemeldeten Benutzer (systemd-logind "uaccess") Zugriff auf
+#   1. das hidraw-Device   (/dev/hidrawN)        -> Test-Programm / Library
+#   2. das rohe USB-Device (/dev/bus/usb/BBB/DDD) -> USB-Passthrough in eine
+#                                                    VM unter qemu:///session
+#
+# Der Dateiname muss < 73 sein, damit TAG+="uaccess" vor 73-seat-late.rules
+# ausgewertet wird.
+#
+# Installation:
+#   sudo install -m 644 70-seglcd.rules /etc/udev/rules.d/
+#   sudo udevadm control --reload
+#   sudo udevadm trigger --action=change --subsystem-match=hidraw --subsystem-match=usb
+
+# --- LB360-S ARGB Sync (5131:200e) -----------------------------------------
+SUBSYSTEM=="hidraw", ATTRS{idVendor}=="5131", ATTRS{idProduct}=="200e", MODE="0660", TAG+="uaccess"
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="5131", ATTR{idProduct}=="200e", MODE="0660", TAG+="uaccess"
+
+# --- LA-Serie (5131:2007), gleiches Protokoll laut ThermalTakeWaKue ---------
+SUBSYSTEM=="hidraw", ATTRS{idVendor}=="5131", ATTRS{idProduct}=="2007", MODE="0660", TAG+="uaccess"
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="5131", ATTR{idProduct}=="2007", MODE="0660", TAG+="uaccess"

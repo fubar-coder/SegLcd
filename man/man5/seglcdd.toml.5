@@ -1,0 +1,93 @@
+.\" -*- coding: UTF-8 -*-
+.TH SEGLCDD.TOML 5 "2026-11-20" "seglcd" "File Formats"
+.SH NAME
+seglcdd.toml \- configuration file of seglcdd
+.SH SYNOPSIS
+.I $XDG_CONFIG_HOME/seglcd/config.toml
+(usually
+.IR ~/.config/seglcd/config.toml )
+.SH DESCRIPTION
+The configuration of
+.BR seglcdd (1)
+in TOML 1.1 with snake_case keys. A missing file or a missing key means the default value.
+Invalid values are reported in the journal and the defaults are used.
+A fully commented file with all options and their defaults is installed from
+.IR packaging/config.example.toml .
+.SH TOP-LEVEL KEYS
+.TP
+.BR enabled " = " true
+Feed the display. false sends the off packet and releases the device.
+.TP
+.BR update_interval_ms " = " 250
+Packet interval in ms, 50\(en400. The display turns off after about 400\(en500 ms without a packet.
+.TP
+.BR sample_interval_ms " = " 1000
+Sensor interval in ms, 100\(en10000. In between, the last values are repeated.
+.TP
+.BR device " = " \(dq\(dq
+Device path such as /dev/hidraw5; empty means the first segment LCD found.
+.SH [sensors]
+Each key takes a sensor spec; an empty string selects the first available default.
+.TP
+.B cpu_temperature
+Default: k10temp:Tctl, zenpower:Tdie, zenpower:Tctl, coretemp:Package id 0.
+.TP
+.B cpu_power
+Default: rapl, zenpower:SVI2_P_Core+zenpower:SVI2_P_SoC.
+.TP
+.B cpu_voltage
+Default: zenpower:SVI2_Core.
+.TP
+.BR cpu_clock_mode " = " \(dqavg\(dq
+How the core clocks are combined: avg, max, min, first (core 0).
+.TP
+.B gpu_temperature
+Default: amdgpu:edge, nvml:temperature, xe:pkg.
+.TP
+.B gpu_usage
+Default: drm:busy, nvml:usage.
+.TP
+.B gpu_power
+Default: amdgpu:PPT, nvml:power, rapl:uncore.
+.TP
+.B gpu_clock
+Default: amdgpu:sclk, nvml:clock, drm:freq.
+.TP
+.BR fan ", " pump
+Fan and pump speed; no default (the mainboard header depends on the system).
+.SH SENSOR SPECS
+.TP
+.I chip:label
+hwmon sensor, e.g. k10temp:Tctl (stable, preferred).
+.TP
+.I hwmonN/name
+hwmon path, e.g. hwmon5/fan1 (the number may change).
+.TP
+.I a+b
+Sum of several sensors.
+.TP
+.BR rapl [ :\fIdomain\fR ]
+RAPL power: package (default), core, uncore, dram, psys.
+.TP
+.BR nvml [ \fIN\fR ] :\fImetric\fR
+NVIDIA GPU: temperature, power, clock, memclock, usage, fan.
+.TP
+.BR drm [ \fIN\fR ] :\fImetric\fR
+DRM card: busy, freq.
+.PP
+.B seglcd sensors
+lists all sources available on the system together with their specs.
+.SH EXAMPLE
+.EX
+update_interval_ms = 250
+sample_interval_ms = 1000
+
+[sensors]
+cpu_temperature = "k10temp:Tctl"
+cpu_power = "rapl"
+fan = "it8686_31050607:fan1"
+pump = "it8686_31050607:fan5"
+.EE
+.SH SEE ALSO
+.BR seglcdd (1),
+.BR seglcd (1)

@@ -1,0 +1,67 @@
+baseURL: "http://localhost:1313/"
+title: "SegLcd"
+locale: de-DE
+defaultContentLanguage: de
+theme: hextra
+
+enableRobotsTXT: false
+enableGitInfo: false
+enableEmoji: true
+
+# Dateien außerhalb von docs/ (z. B. packaging/config.example.toml) für Shortcodes verfügbar machen.
+# Hinweis: Ein eigener Mount ersetzt den Standard-Mount des Ziels, daher assets explizit mit aufführen.
+module:
+  mounts:
+    - source: assets
+      target: assets
+    - source: ../packaging
+      target: assets/packaging
+
+markup:
+  highlight:
+    noClasses: false
+  goldmark:
+    renderer:
+      unsafe: true
+    extensions:
+      passthrough:
+        enable: true
+        delimiters:
+          block: [['\[', '\]'], ['$$', '$$']]
+          inline: [['\(', '\)']]
+
+menu:
+  main:
+    - name: Dokumentation
+      pageRef: /docs
+      weight: 1
+    - name: Protokoll
+      pageRef: /docs/protokoll
+      weight: 2
+    - name: Suche
+      weight: 5
+      params:
+        type: search
+
+params:
+  description: "Reverse-Engineering-Dokumentation des USB-Protokolls des Segment-LCD der Thermaltake LB360-S ARGB Sync."
+  navbar:
+    displayTitle: true
+    displayLogo: false
+  footer:
+    displayCopyright: false
+    displayPoweredBy: true
+  page:
+    width: wide
+  theme:
+    default: system
+    displayToggle: true
+  search:
+    enable: true
+    type: flexsearch
+    flexsearch:
+      index: content
+  editURL:
+    enable: false
+  toc:
+    displayTags: false

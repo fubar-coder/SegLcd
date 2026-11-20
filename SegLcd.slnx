@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/SegLcd.Core/SegLcd.Core.csproj" />
+    <Project Path="src/SegLcd.Linux/SegLcd.Linux.csproj" />
+    <Project Path="src/SegLcd.Localization/SegLcd.Localization.csproj" />
+    <Project Path="src/SegLcd.Tool/SegLcd.Tool.csproj" />
+    <Project Path="src/SegLcd.Daemon/SegLcd.Daemon.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/SegLcd.Tests/SegLcd.Tests.csproj" />
+  </Folder>
+</Solution>

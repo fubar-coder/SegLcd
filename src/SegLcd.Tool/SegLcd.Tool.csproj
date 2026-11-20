@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net11.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>seglcd</AssemblyName>
+    <!-- NuGet treats ids case-insensitively: "seglcd" would collide with the SegLcd library -->
+    <PackageId>SegLcd.Tool</PackageId>
+    <IsPackable>false</IsPackable>
+    <RootNamespace>SegLcd.Tool</RootNamespace>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <!-- Localization: keep System.CommandLine's German satellites (DotMake's props default this to "en") and allow
+         creating the "de" culture under InvariantGlobalization (UI culture only, formatting stays invariant). -->
+    <SatelliteResourceLanguages>en;de</SatelliteResourceLanguages>
+    <PredefinedCulturesOnly>false</PredefinedCulturesOnly>
+    <PublishAot>true</PublishAot>
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SegLcd.Core\SegLcd.Core.csproj" />
+    <ProjectReference Include="..\SegLcd.Linux\SegLcd.Linux.csproj" />
+    <ProjectReference Include="..\SegLcd.Localization\SegLcd.Localization.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DotMake.CommandLine" Version="3.7.0" />
+  </ItemGroup>
+
+</Project>

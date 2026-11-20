@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net11.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>seglcdd</AssemblyName>
+    <PackageId>SegLcd.Daemon</PackageId>
+    <IsPackable>false</IsPackable>
+    <RootNamespace>SegLcd.Daemon</RootNamespace>
+    <PublishAot>true</PublishAot>
+    <IsAotCompatible>true</IsAotCompatible>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <PredefinedCulturesOnly>false</PredefinedCulturesOnly>
+    <!-- Tomlyn: reflection-based POCO mapping off, only the source-generated context is used -->
+    <TomlynIsReflectionEnabledByDefault>false</TomlynIsReflectionEnabledByDefault>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="11.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="11.0.0" />
+    <PackageReference Include="Tmds.DBus.Generator" Version="0.95.2" PrivateAssets="all" />
+    <PackageReference Include="Tmds.DBus.Protocol" Version="0.95.2" />
+    <PackageReference Include="Tomlyn" Version="2.11.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SegLcd.Linux\SegLcd.Linux.csproj" />
+    <ProjectReference Include="..\SegLcd.Localization\SegLcd.Localization.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- D-Bus interface definition; Tmds.DBus.Generator creates the server-side handler from it -->
+    <AdditionalFiles Include="DBus/io.github.fubar_coder.SegLcd1.xml"
+                     DBusGeneratorMode="Handler"
+                     Namespace="SegLcd.Daemon.DBus" />
+  </ItemGroup>
+
+</Project>

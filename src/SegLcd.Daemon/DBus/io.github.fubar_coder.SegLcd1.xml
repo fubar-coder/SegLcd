@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  D-Bus API of seglcdd (Thermaltake segment LCD daemon).
+  Session bus name: io.github.fubar_coder.SegLcd1
+  Object path:      /io/github/fubar_coder/SegLcd1
+-->
+<node>
+  <interface name="io.github.fubar_coder.SegLcd1">
+
+    <!-- Re-reads the configuration file and applies it. -->
+    <method name="ReloadConfig"/>
+
+    <!-- Writes the current runtime settings to the configuration file. -->
+    <method name="SaveConfig"/>
+
+    <!--
+      Sets the sensor for a field (cpu_temperature, cpu_power, cpu_voltage, gpu_temperature,
+      gpu_power, gpu_clock, fan, pump). spec: hwmonN/name, chip:label, a+b, rapl; empty = automatic.
+      Returns the resolved source. Not persisted until SaveConfig.
+    -->
+    <method name="SetSensor">
+      <arg name="field" type="s" direction="in"/>
+      <arg name="spec" type="s" direction="in"/>
+      <arg name="source" type="s" direction="out"/>
+    </method>
+
+    <!-- true: the display is fed; false: off packet sent, device released (e.g. for seglcd). -->
+    <property name="Enabled" type="b" access="readwrite"/>
+
+    <!-- Packet interval in milliseconds (50 – 400). -->
+    <property name="UpdateIntervalMs" type="u" access="readwrite"/>
+
+    <!-- Sensor sampling interval in milliseconds (100 – 10000). -->
+    <property name="SampleIntervalMs" type="u" access="readwrite"/>
+
+    <property name="Connected" type="b" access="read"/>
+    <property name="DevicePath" type="s" access="read"/>
+    <property name="Model" type="s" access="read"/>
+    <property name="ConfigPath" type="s" access="read"/>
+
+    <!-- field -> resolved sensor description ("–" if none) -->
+    <property name="Sources" type="a{ss}" access="read"/>
+
+    <!-- Values last sent (field -> value, only available values). No change signal. -->
+    <property name="CurrentValues" type="a{sd}" access="read">
+      <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="false"/>
+    </property>
+
+    <!-- Last packet sent (64 bytes). No change signal. -->
+    <property name="LastPacket" type="ay" access="read">
+      <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="false"/>
+    </property>
+  </interface>
+</node>

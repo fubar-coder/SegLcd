@@ -1,0 +1,14 @@
+<Project>
+
+  <PropertyGroup>
+    <!-- Alle Build-Ausgaben unter ./artifacts/{bin,obj,publish,package}/<Projekt>/<pivot> -->
+    <UseArtifactsOutput>true</UseArtifactsOutput>
+    <ArtifactsPath>$(MSBuildThisFileDirectory)artifacts</ArtifactsPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- License of all projects (full text: LICENSE) -->
+    <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
+  </PropertyGroup>
+
+</Project>

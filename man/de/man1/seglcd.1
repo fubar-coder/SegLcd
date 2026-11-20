@@ -1,0 +1,190 @@
+.\" -*- coding: UTF-8 -*-
+.TH SEGLCD 1 "2026-11-20" "seglcd" "Benutzerbefehle"
+.SH BEZEICHNUNG
+seglcd \- Test- und Analysewerkzeug für das Thermaltake Segment-LCD (LB360-S ARGB Sync)
+.SH ÜBERSICHT
+.B seglcd
+.I Befehl
+.RI [ Optionen ]
+.br
+.B seglcd
+.RB [ \-\-help | \-\-version ]
+.SH BESCHREIBUNG
+.B seglcd
+spricht das Segment-LCD auf dem Pumpenblock der Thermaltake LB360-S ARGB Sync
+(USB 5131:200e) und der LA-Serie (5131:2007) über HID (hidraw/hidapi) an.
+Das Display zeigt nur Werte, solange es mindestens alle 400\(en500 ms ein Update-Paket
+erhält. Alle sendenden Befehle wiederholen ihr Paket daher periodisch (Keep-Alive),
+bis
+.B \-\-duration
+abgelaufen ist oder Strg+C gedrückt wird.
+.PP
+Für den Dauerbetrieb gibt es den Dienst
+.BR seglcdd (1).
+Vor sendenden Befehlen diesen pausieren (D-Bus-Property
+.BR Enabled ),
+sonst senden beide Programme abwechselnd.
+.SH BEFEHLE
+.TP
+.B list \fR[\fB\-\-all\fR]
+Gefundene Segment-LCDs (oder alle HID-Geräte) mit Pfad, IDs, Usage-Page, Strings,
+Öffnen-Test und Report-Deskriptor anzeigen.
+.TP
+.B send \fR[\fIWerte\fR]
+Feste Werte senden:
+.BR \-\-cpu\-temp ", " \-\-cpu\-usage ", " \-\-cpu\-power ", " \-\-cpu\-clock ", " \-\-cpu\-voltage ,
+.BR \-\-gpu\-temp ", " \-\-gpu\-usage ", " \-\-gpu\-power ", " \-\-gpu\-clock ,
+.BR \-\-fan ", " \-\-pump ", " \-\-ram ", " \-\-time
+.RI ( ISO\~8601 ),
+.BR \-\-fahrenheit ", " \-\-off\-at\-end .
+Fehlende Werte werden als 0 gesendet.
+.TP
+.B live
+Aktuelle Sensorwerte senden. Quellen:
+.BR \-\-cpu\-temp\-sensor ", " \-\-cpu\-power\-sensor ", " \-\-cpu\-voltage\-sensor ,
+.BR \-\-gpu\-temp\-sensor ", " \-\-gpu\-usage\-sensor ", " \-\-gpu\-power\-sensor ", " \-\-gpu\-clock\-sensor ,
+.BR \-\-fan\-sensor ", " \-\-pump\-sensor
+(siehe
+.B SENSOR-ANGABEN
+unten),
+.B \-\-cpu\-clock\-mode
+.RB ( Avg | Max | Min | First ),
+.B \-\-sample\-interval
+.I ms
+(Standard 1000),
+.B \-\-show
+(Werte ausgeben),
+.BR \-\-fahrenheit .
+Sendet beim Beenden das Aus-Paket und verbindet sich nach dem Trennen des Geräts neu.
+.TP
+.B probe
+Jeweils ein Byte auf
+.B \-\-value
+(Standard 88) setzen, alle anderen bleiben 0 \(en um herauszufinden, welches Feld das Display anzeigt.
+.B \-\-values
+.I Liste
+(z.\~B. 0,1,50,99,128,255) durchläuft stattdessen eine Wertefolge pro Byte, jeden Wert für
+.B \-\-value\-seconds
+(1); mit
+.B \-\-auto
+einmal pro Byte, sonst bis Enter gedrückt wird.
+.B \-\-offsets
+.I Liste
+(z.\~B. 3,13,36\-63; Standard 3\(en63),
+.B \-\-auto
+.I Sekunden
+(automatisch weiterschalten),
+.B \-\-no\-header
+(Byte 1/2 frei lassen). Tasten: Enter weiter, b zurück, eine Zahl ändert den Wert,
+.BI o Offset
+springt, q beendet.
+.TP
+.B sweep \fIOffset\fR
+Ein Byte von
+.B \-\-from
+bis
+.B \-\-to
+(100) in Schritten von
+.B \-\-step
+(1) alle
+.B \-\-step\-ms
+(500) hochzählen;
+.B \-\-set
+.I offset=wert,...
+setzt weitere feste Bytes.
+.TP
+.B raw \fIHex\fR...
+Bis zu 64 Bytes (ohne Report-ID, Rest mit 00 aufgefüllt) periodisch senden, mit
+.B \-\-once
+einmal.
+.TP
+.B off
+Das Aus-Paket (00\~0F\~00\~...) senden.
+.TP
+.B hold
+.B \-\-send
+Sekunden (5) lang mit
+.BR \-\-cpu\-temp / \-\-gpu\-temp
+(42/57) senden, dann aufhören, das Gerät aber noch
+.B \-\-hold
+Sekunden (10) geöffnet halten. Dient zum Messen des Display-Timeouts.
+.TP
+.B listen
+Input-Reports ausgeben;
+.B \-\-keep\-alive
+sendet parallel Nullpakete.
+.TP
+.B sensors
+Alle Sensorquellen (hwmon, RAPL, NVIDIA NVML, DRM, cpufreq, meminfo) mit zu verwendender Angabe und aktuellem Wert auflisten.
+.TP
+.B decode \fR[\fIDatei\fR|\fB\-\fR]
+Hex-Pakete dekodieren, eins pro Zeile, optional mit vorangestellter Zeit und Tabulator
+(Ausgabe von tools/extract\-packets.sh).
+.B \-\-diff
+zeigt nur geänderte Bytes,
+.B \-\-strip\-report\-id
+entfernt ein führendes 00 bei 65-Byte-Zeilen.
+.SH GEMEINSAME OPTIONEN
+.TP
+.BI \-\-device " Pfad"
+Dieses Gerät verwenden, z.\~B. /dev/hidraw5 (Standard: erstes bekanntes Segment-LCD).
+.TP
+.B \-\-dry\-run
+Nichts senden, das (erste) Paket als Hex ausgeben.
+.TP
+.B \-\-verbose
+Jedes gesendete Paket mit Zeitstempel ausgeben.
+.TP
+.BI \-\-duration " Sekunden"
+Nach dieser Zeit beenden (Standard: bis Strg+C).
+.TP
+.BI \-\-interval " ms"
+Sendeintervall (Standard 250). Werte über 400 erzeugen eine Warnung: Das Display schaltet nach ca. 400\(en500 ms ohne Paket ab.
+.SH SENSOR-ANGABEN
+.TP
+.I chip:label
+hwmon-Sensor, z.\~B. k10temp:Tctl, it8686_31050607:fan5 (stabil, bevorzugt).
+.TP
+.I hwmonN/name
+hwmon-Pfad, z.\~B. hwmon5/fan1 (die Nummer kann sich beim Neustart ändern).
+.TP
+.I a+b
+Summe, z.\~B. zenpower:SVI2_P_Core+zenpower:SVI2_P_SoC.
+.TP
+.BR rapl [ :\fIDomäne\fR ]
+Leistung aus einem RAPL-Zähler: package (Standard), core, uncore, dram, psys. Nur für root lesbar, sofern
+udev/72\-rapl\-energy\-read.rules nicht installiert ist.
+.TP
+.BR nvml [ \fIN\fR ] :\fIWert\fR
+NVIDIA-GPU N: temperature, power, clock, memclock, usage, fan (%).
+.TP
+.BR drm [ \fIN\fR ] :\fIWert\fR
+DRM-Karte N: busy (%), freq (MHz, Intel).
+.SH HINWEISE
+Die LB360-S zeigt nur CPU- und GPU-Temperatur an, ganzzahlig in \(deC, begrenzt auf 99.
+.B \-\-fahrenheit
+nicht verwenden: Das Symbol bleibt \(deC, und Werte ab 100 erscheinen zweistellig (122 \(-> 22).
+.SH UMGEBUNG
+.TP
+.BR LC_MESSAGES ", " LANG
+Anzeigesprache (z.\~B. de_DE.UTF-8). LC_ALL und LANGUAGE werden ignoriert.
+.SH RÜCKGABEWERT
+0 Erfolg, 1 nichts gefunden oder ungültige Eingabe, 2 Gerät nicht gefunden oder nicht zugreifbar.
+.SH DATEIEN
+.TP
+.I /etc/udev/rules.d/70\-thermaltake\-segment\-lcd.rules
+Gibt dem angemeldeten Benutzer Zugriff auf das Gerät.
+.SH BEISPIELE
+.EX
+seglcd list
+seglcd send \-\-cpu\-temp 42 \-\-gpu\-temp 57 \-\-duration 20
+seglcd live \-\-show \-\-fan\-sensor it8686_31050607:fan1 \-\-pump\-sensor it8686_31050607:fan5
+seglcd probe \-\-offsets 36\-63 \-\-auto 3
+tools/extract\-packets.sh mitschnitt.pcapng 3 | seglcd decode \-\-diff
+.EE
+.SH MARKEN
+SegLcd ist ein unabhängiges Projekt und nicht mit Thermaltake verbunden. "Thermaltake" ist eine Marke der Thermaltake Technology Co., Ltd.; der Name wird nur verwendet, um die unterstützte Hardware zu bezeichnen.
+.SH SIEHE AUCH
+.BR seglcdd (1),
+.BR seglcdd.toml (5),
+.BR udev (7)

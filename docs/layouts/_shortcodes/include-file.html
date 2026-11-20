@@ -1,0 +1,15 @@
+{{- /*
+  Bindet eine Datei aus den Assets (z. B. gemountetes ../packaging) als Codeblock ein.
+  Aufruf: {{< include-file path="packaging/config.example.toml" lang="toml" >}}
+*/ -}}
+{{- $path := .Get "path" -}}
+{{- $lang := .Get "lang" | default "text" -}}
+{{- with resources.Get $path -}}
+{{- $opts := dict "lineNos" false -}}
+<div class="hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code">
+  <div class="filename">{{ $path }}</div>
+  {{- transform.Highlight .Content $lang "" -}}
+</div>
+{{- else -}}
+{{- errorf "include-file: %q nicht gefunden (%s)" $path $.Position -}}
+{{- end -}}

@@ -1,0 +1,15 @@
+# OPTIONAL: RAPL-Energiezähler (CPU-Paketleistung) für die Gruppe "rapl" lesbar machen.
+#
+# Seit Linux 5.10 ist energy_uj nur für root lesbar (PLATYPUS, CVE-2020-8694/8695:
+# aus feinen Energiewerten lassen sich Rückschlüsse auf laufende Berechnungen ziehen).
+# Diese Regel öffnet den Zähler NUR für Mitglieder der Gruppe "rapl" – deutlich enger als
+# z. B. btop, das dafür cap_dac_read_search (Lesezugriff auf ALLE Dateien) bekommt.
+#
+# Installation:
+#   sudo install -m 644 udev/rapl.sysusers.conf /etc/sysusers.d/rapl.conf
+#   sudo systemd-sysusers
+#   sudo usermod -aG rapl "$USER"            # danach neu anmelden
+#   sudo install -m 644 udev/72-rapl-energy-read.rules /etc/udev/rules.d/
+#   sudo udevadm control --reload
+#   sudo udevadm trigger --action=add --subsystem-match=powercap
+SUBSYSTEM=="powercap", KERNEL=="intel-rapl:*", ACTION=="add|change", RUN+="/usr/bin/chgrp rapl /sys%p/energy_uj", RUN+="/usr/bin/chmod 0440 /sys%p/energy_uj"

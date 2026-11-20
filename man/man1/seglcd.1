@@ -1,0 +1,191 @@
+.\" -*- coding: UTF-8 -*-
+.TH SEGLCD 1 "2026-11-20" "seglcd" "User Commands"
+.SH NAME
+seglcd \- test and analysis tool for the Thermaltake segment LCD (LB360-S ARGB Sync)
+.SH SYNOPSIS
+.B seglcd
+.I command
+.RI [ options ]
+.br
+.B seglcd
+.RB [ \-\-help | \-\-version ]
+.SH DESCRIPTION
+.B seglcd
+talks to the segment LCD on the pump block of the Thermaltake LB360-S ARGB Sync
+(USB 5131:200e) and the LA series (5131:2007) via HID (hidraw/hidapi).
+The display only shows values while it receives an update packet at least every
+400\(en500 ms, so all sending commands repeat their packet periodically (keep-alive)
+until
+.B \-\-duration
+elapses or Ctrl+C is pressed.
+.PP
+For permanent operation use the service
+.BR seglcdd (1);
+pause it (D-Bus property
+.BR Enabled )
+before running sending commands, otherwise both programs send alternately.
+.SH COMMANDS
+.TP
+.B list \fR[\fB\-\-all\fR]
+Show the segment LCDs found (or all HID devices) with path, IDs, usage page,
+strings, whether the device can be opened, and the report descriptor.
+.TP
+.B send \fR[\fIvalues\fR]
+Send fixed values:
+.BR \-\-cpu\-temp ", " \-\-cpu\-usage ", " \-\-cpu\-power ", " \-\-cpu\-clock ", " \-\-cpu\-voltage ,
+.BR \-\-gpu\-temp ", " \-\-gpu\-usage ", " \-\-gpu\-power ", " \-\-gpu\-clock ,
+.BR \-\-fan ", " \-\-pump ", " \-\-ram ", " \-\-time
+.RI ( ISO\~8601 ),
+.BR \-\-fahrenheit ", " \-\-off\-at\-end .
+Missing values are sent as 0.
+.TP
+.B live
+Send live sensor values. Sources:
+.BR \-\-cpu\-temp\-sensor ", " \-\-cpu\-power\-sensor ", " \-\-cpu\-voltage\-sensor ,
+.BR \-\-gpu\-temp\-sensor ", " \-\-gpu\-usage\-sensor ", " \-\-gpu\-power\-sensor ", " \-\-gpu\-clock\-sensor ,
+.BR \-\-fan\-sensor ", " \-\-pump\-sensor
+(see
+.B SENSOR SPECS
+below),
+.B \-\-cpu\-clock\-mode
+.RB ( Avg | Max | Min | First ),
+.B \-\-sample\-interval
+.I ms
+(default 1000),
+.B \-\-show
+(print the values),
+.BR \-\-fahrenheit .
+Sends the off packet when finished and reconnects after the device was unplugged.
+.TP
+.B probe
+Set one byte at a time to
+.B \-\-value
+(default 88) while all others stay 0, to find out which field the display shows.
+.B \-\-values
+.I list
+(e.g. 0,1,50,99,128,255) cycles through a value sequence per byte instead, each value for
+.B \-\-value\-seconds
+(1); with
+.B \-\-auto
+once per byte, otherwise until Enter is pressed.
+.B \-\-offsets
+.I list
+(e.g. 3,13,36\-63; default 3\(en63),
+.B \-\-auto
+.I seconds
+(advance automatically),
+.B \-\-no\-header
+(leave bytes 1/2 free). Interactive keys: Enter next, b back, a number changes the value,
+.BI o offset
+jumps, q quits.
+.TP
+.B sweep \fIoffset\fR
+Count one byte from
+.B \-\-from
+to
+.B \-\-to
+(100) in steps of
+.B \-\-step
+(1) every
+.B \-\-step\-ms
+(500);
+.B \-\-set
+.I offset=value,...
+sets further fixed bytes.
+.TP
+.B raw \fIhex\fR...
+Send up to 64 bytes (without report ID, rest filled with 00) periodically, or once with
+.BR \-\-once .
+.TP
+.B off
+Send the off packet (00\~0F\~00\~...).
+.TP
+.B hold
+Send for
+.B \-\-send
+seconds (5) with
+.BR \-\-cpu\-temp / \-\-gpu\-temp
+(42/57), then stop but keep the device open for
+.B \-\-hold
+seconds (10). Used to measure the display timeout.
+.TP
+.B listen
+Print input reports;
+.B \-\-keep\-alive
+sends zero packets in parallel.
+.TP
+.B sensors
+List all sensor sources (hwmon, RAPL, NVIDIA NVML, DRM, cpufreq, meminfo) with the spec to use and the current value.
+.TP
+.B decode \fR[\fIfile\fR|\fB\-\fR]
+Decode hex packets, one per line, optionally preceded by a time and a tab
+(output of tools/extract\-packets.sh).
+.B \-\-diff
+shows only changed bytes,
+.B \-\-strip\-report\-id
+removes a leading 00 from 65-byte lines.
+.SH COMMON OPTIONS
+.TP
+.BI \-\-device " path"
+Use this device, e.g. /dev/hidraw5 (default: first known segment LCD).
+.TP
+.B \-\-dry\-run
+Send nothing, print the (first) packet as hex.
+.TP
+.B \-\-verbose
+Print every packet sent with a time stamp.
+.TP
+.BI \-\-duration " seconds"
+Stop after this time (default: until Ctrl+C).
+.TP
+.BI \-\-interval " ms"
+Send interval (default 250). Values above 400 cause a warning: the display turns off after about 400\(en500 ms without a packet.
+.SH SENSOR SPECS
+.TP
+.I chip:label
+hwmon sensor, e.g. k10temp:Tctl, it8686_31050607:fan5 (stable, preferred).
+.TP
+.I hwmonN/name
+hwmon path, e.g. hwmon5/fan1 (the number may change on reboot).
+.TP
+.I a+b
+Sum, e.g. zenpower:SVI2_P_Core+zenpower:SVI2_P_SoC.
+.TP
+.BR rapl [ :\fIdomain\fR ]
+Power from a RAPL counter: package (default), core, uncore, dram, psys. Root only unless
+udev/72\-rapl\-energy\-read.rules is installed.
+.TP
+.BR nvml [ \fIN\fR ] :\fImetric\fR
+NVIDIA GPU N: temperature, power, clock, memclock, usage, fan (%).
+.TP
+.BR drm [ \fIN\fR ] :\fImetric\fR
+DRM card N: busy (%), freq (MHz, Intel).
+.SH NOTES
+The LB360-S shows only the CPU and GPU temperature, as integers in \(deC, capped at 99.
+Do not use
+.B \-\-fahrenheit
+with it: the symbol stays \(deC and values of 100 and more are shown with two digits (122 \(-> 22).
+.SH ENVIRONMENT
+.TP
+.BR LC_MESSAGES ", " LANG
+Display language (e.g. de_DE.UTF-8). LC_ALL and LANGUAGE are ignored.
+.SH EXIT STATUS
+0 success, 1 nothing found or invalid input, 2 device not found or not accessible.
+.SH FILES
+.TP
+.I /etc/udev/rules.d/70\-thermaltake\-segment\-lcd.rules
+Gives the logged-in user access to the device.
+.SH EXAMPLES
+.EX
+seglcd list
+seglcd send \-\-cpu\-temp 42 \-\-gpu\-temp 57 \-\-duration 20
+seglcd live \-\-show \-\-fan\-sensor it8686_31050607:fan1 \-\-pump\-sensor it8686_31050607:fan5
+seglcd probe \-\-offsets 36\-63 \-\-auto 3
+tools/extract\-packets.sh capture.pcapng 3 | seglcd decode \-\-diff
+.EE
+.SH TRADEMARKS
+SegLcd is an independent project and not affiliated with Thermaltake. Thermaltake is a trademark of Thermaltake Technology Co., Ltd.; the name is used only to identify the supported hardware.
+.SH SEE ALSO
+.BR seglcdd (1),
+.BR seglcdd.toml (5),
+.BR udev (7)

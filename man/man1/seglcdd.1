@@ -1,0 +1,111 @@
+.\" -*- coding: UTF-8 -*-
+.TH SEGLCDD 1 "2026-11-20" "seglcd" "User Commands"
+.SH NAME
+seglcdd \- service feeding sensor values to the Thermaltake segment LCD, with D-Bus interface
+.SH SYNOPSIS
+.B seglcdd
+.RB [ \-\-config
+.IR path ]
+.br
+.B systemctl \-\-user
+.RB { start | stop | reload | status }
+.B seglcdd
+.SH DESCRIPTION
+.B seglcdd
+reads CPU and GPU sensors (hwmon, RAPL, NVIDIA NVML, DRM, procfs) every
+.I sample_interval_ms
+and sends them to the segment LCD of the Thermaltake LB360-S ARGB Sync every
+.I update_interval_ms
+(the display turns off after about 400\(en500 ms without a packet).
+It reconnects automatically when the device appears again and sends the off packet when stopped.
+.PP
+It runs as a systemd user service
+.RI ( Type=notify ),
+needs no root privileges (the udev rule grants access with
+.IR uaccess )
+and offers a D-Bus interface on the session bus.
+.SH OPTIONS
+.TP
+.BI \-\-config " path"
+Configuration file (default:
+.IR $XDG_CONFIG_HOME/seglcd/config.toml ).
+A missing file means default settings. See
+.BR seglcdd.toml (5).
+.SH D-BUS INTERFACE
+Bus: session; name and interface
+.BR io.github.fubar_coder.SegLcd1 ;
+object
+.BR /io/github/fubar_coder/SegLcd1 .
+.SS Properties
+.TP
+.BR Enabled " (b, read/write)"
+Feed the display; false sends the off packet and releases the device (e.g. for
+.BR seglcd (1)).
+.TP
+.BR UpdateIntervalMs " (u, read/write)"
+Packet interval, 50\(en400 ms.
+.TP
+.BR SampleIntervalMs " (u, read/write)"
+Sensor interval, 100\(en10000 ms.
+.TP
+.BR Connected " (b), " DevicePath " (s), " Model " (s), " ConfigPath " (s)"
+Connection state and paths.
+.TP
+.BR Sources " (a{ss})"
+Field \(-> resolved sensor source (empty = none).
+.TP
+.BR CurrentValues " (a{sd}), " LastPacket " (ay)"
+Last values and last packet; no change signal.
+.PP
+.B PropertiesChanged
+is emitted for Enabled, the intervals, the connection properties and Sources.
+Invalid values are rejected with org.freedesktop.DBus.Error.InvalidArgs.
+.SS Methods
+.TP
+.BI SetSensor( field ", " spec ") \(-> " source
+Set the source of a field (cpu_temperature, cpu_power, cpu_voltage, gpu_temperature, gpu_usage,
+gpu_power, gpu_clock, fan, pump); empty spec = automatic. Not saved until SaveConfig.
+.TP
+.B ReloadConfig()
+Re-read the configuration file; on error the old settings stay active.
+.TP
+.B SaveConfig()
+Write the current settings to the configuration file.
+.SH LOGGING
+Messages go to the journal in English
+.RB ( "journalctl \-\-user \-u seglcdd" ).
+When started in a terminal, the console output is shown in the display language.
+.SH ENVIRONMENT
+.TP
+.BR LC_MESSAGES ", " LANG
+Language of D-Bus error messages and terminal output.
+.TP
+.B DBUS_SESSION_BUS_ADDRESS
+Session bus; without it the D-Bus interface is disabled, the display keeps running.
+.SH FILES
+.TP
+.I ~/.config/seglcd/config.toml
+Configuration, see
+.BR seglcdd.toml (5).
+.TP
+.I ~/.config/systemd/user/seglcdd.service
+systemd unit.
+.TP
+.I ~/.local/share/dbus\-1/services/io.github.fubar_coder.SegLcd1.service
+D-Bus activation (starts the service on access).
+.SH EXAMPLES
+.EX
+systemctl \-\-user enable \-\-now seglcdd
+busctl \-\-user get\-property io.github.fubar_coder.SegLcd1 \e
+  /io/github/fubar_coder/SegLcd1 io.github.fubar_coder.SegLcd1 CurrentValues
+busctl \-\-user call io.github.fubar_coder.SegLcd1 \e
+  /io/github/fubar_coder/SegLcd1 io.github.fubar_coder.SegLcd1 \e
+  SetSensor ss pump it8686_31050607:fan5
+.EE
+.SH TRADEMARKS
+SegLcd is an independent project and not affiliated with Thermaltake. Thermaltake is a trademark of Thermaltake Technology Co., Ltd.; the name is used only to identify the supported hardware.
+.SH SEE ALSO
+.BR seglcd (1),
+.BR seglcdd.toml (5),
+.BR systemd.service (5),
+.BR busctl (1)

@@ -1,0 +1,20 @@
+# Benutzerdienst für das Thermaltake Segment-LCD (LB360-S).
+# Installation: packaging/install-user.sh   (oder manuell, siehe Doku "Dienst seglcdd")
+[Unit]
+Description=Thermaltake Segment-LCD (LB360-S) – Sensorwerte aufs Pumpen-Display
+Documentation=file://%h/.local/share/doc/seglcd/README.md
+
+[Service]
+Type=notify
+ExecStart=%h/.local/bin/seglcdd
+ExecReload=/usr/bin/busctl --user call io.github.fubar_coder.SegLcd1 /io/github/fubar_coder/SegLcd1 io.github.fubar_coder.SegLcd1 ReloadConfig
+Restart=on-failure
+RestartSec=3
+# Härtung (Benutzerdienst: nur was ohne Rechte geht)
+NoNewPrivileges=yes
+PrivateTmp=yes
+LockPersonality=yes
+RestrictRealtime=yes
+
+[Install]
+WantedBy=default.target
