@@ -2,8 +2,15 @@
 
 > SegLcd ist ein unabhängiges Projekt und nicht mit Thermaltake verbunden. „Thermaltake“ ist eine Marke der Thermaltake Technology Co., Ltd.; der Name wird nur verwendet, um die unterstützte Hardware zu bezeichnen.
 
-Protokoll-Dokumentation, udev-Regel, Test-Werkzeug und .NET-Library für das Pumpen-Display
-der Thermaltake LB360-S ARGB Sync (USB `5131:200e`).
+Protokoll-Dokumentation, Library und Werkzeuge, um das Segment-LCD auf dem Pumpenblock der
+**Thermaltake LB360-S ARGB Sync** (USB `5131:200e`) unter Linux anzusteuern – vom Reverse Engineering des
+USB-HID-Protokolls bis zum systemd-Dienst, der CPU- und GPU-Temperatur live aufs Display bringt.
+
+📖 **Dokumentation:** https://fubar-coder.github.io/SegLcd/
+
+- `seglcd` – CLI zum Testen, Senden und Analysieren (`list`, `send`, `live`, `probe`, `decode`, …)
+- `seglcdd` – systemd-Benutzerdienst mit D-Bus-Schnittstelle und TOML-Konfiguration
+- Sensoren für AMD, Intel und NVIDIA (hwmon, RAPL, NVML, DRM), Native AOT, Deutsch/Englisch
 
 | Pfad | Inhalt |
 |---|---|

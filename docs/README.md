@@ -1,5 +1,8 @@
 # Dokumentation (Hugo + Hextra)
 
+Veröffentlicht unter https://fubar-coder.github.io/SegLcd/ – automatisch per GitHub Action
+(`.github/workflows/docs.yml`) bei jedem Push auf `main`, der `docs/` betrifft.
+
 Voraussetzung: Hugo **extended** ≥ 0.146 (`sudo pacman -S hugo`).
 
 ```bash

@@ -1,4 +1,4 @@
-baseURL: "http://localhost:1313/"
+baseURL: "https://fubar-coder.github.io/SegLcd/"  # hugo server uses localhost automatically
 title: "SegLcd"
 locale: de-DE
 defaultContentLanguage: de
