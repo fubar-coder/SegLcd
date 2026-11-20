@@ -1,0 +1,84 @@
+# Maintainer: Mark Junker <fubar-coder at live dot de>
+pkgname=seglcd-git
+_pkgname=seglcd
+pkgver=0.1.0.r0.g0000000
+pkgrel=1
+pkgdesc="Library, CLI and D-Bus service for the segment LCD of the Thermaltake LB360-S ARGB Sync AIO cooler (development version)"
+arch=('x86_64' 'aarch64')
+url="https://github.com/fubar-coder/SegLcd"
+license=('GPL-3.0-or-later')
+# hidapi is loaded at run time (dlopen of libhidapi-hidraw.so.0), so namcap cannot see the link.
+depends=('glibc' 'hidapi')
+# .NET 11 SDK: the official repositories only ship .NET 10 so far; dotnet-sdk-bin (AUR) provides dotnet-sdk=11.
+makedepends=('git' 'dotnet-sdk>=11' 'clang' 'zlib')
+optdepends=('nvidia-utils: NVIDIA GPU sensors via NVML')
+provides=("$_pkgname")
+conflicts=("$_pkgname")
+backup=('etc/seglcd/config.toml')
+options=('!debug')
+# No .install script: pacman hooks create the system user (sysusers.d), reload udev rules and systemd units.
+# After installing: sudo systemctl enable --now seglcdd   (control via D-Bus: sudo usermod -aG seglcd <user>)
+source=("$_pkgname::git+$url.git")
+sha256sums=('SKIP')
+_srcname="$_pkgname"
+_version="${pkgver%%.r*}"
+
+pkgver() {
+    cd "$_pkgname"
+    local base
+    base=$(sed -n 's:.*<Version>\(.*\)</Version>.*:\1:p' Directory.Build.props)
+    printf '%s.r%s.g%s' "$base" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+}
+
+# .NET runtime identifier for $CARCH (namcap's "reference to x86_64" note refers to this mapping).
+_rid() {
+    case "$CARCH" in
+        x86_64) echo linux-x64 ;;
+        aarch64) echo linux-arm64 ;;
+    esac
+}
+
+build() {
+    cd "$_srcname"
+    export DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_NOLOGO=1 DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
+    export NUGET_PACKAGES="$srcdir/nuget"
+    local project
+    for project in SegLcd.Tool SegLcd.Daemon; do
+        dotnet publish "src/$project" -c Release -r "$(_rid)" \
+            -p:Version="$_version" -p:ContinuousIntegrationBuild=true
+    done
+}
+
+check() {
+    cd "$_srcname"
+    export DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_NOLOGO=1 NUGET_PACKAGES="$srcdir/nuget"
+    dotnet test SegLcd.slnx
+}
+
+package() {
+    cd "$_srcname"
+    local out="artifacts/publish" rid
+    rid="$(_rid)"
+
+    install -Dm755 "$out/SegLcd.Tool/release_$rid/seglcd" "$pkgdir/usr/bin/seglcd"
+    install -Dm755 "$out/SegLcd.Daemon/release_$rid/seglcdd" "$pkgdir/usr/bin/seglcdd"
+
+    install -Dm644 packaging/systemd/system/seglcdd.service "$pkgdir/usr/lib/systemd/system/seglcdd.service"
+    install -Dm644 packaging/sysusers/seglcd.conf "$pkgdir/usr/lib/sysusers.d/seglcd.conf"
+    install -Dm644 packaging/udev/70-seglcd.rules "$pkgdir/usr/lib/udev/rules.d/70-seglcd.rules"
+    install -Dm644 packaging/dbus/system/io.github.fubar_coder.SegLcd1.conf \
+        "$pkgdir/usr/share/dbus-1/system.d/io.github.fubar_coder.SegLcd1.conf"
+    install -Dm644 packaging/dbus/system/io.github.fubar_coder.SegLcd1.service \
+        "$pkgdir/usr/share/dbus-1/system-services/io.github.fubar_coder.SegLcd1.service"
+    install -Dm644 packaging/config.example.toml "$pkgdir/etc/seglcd/config.toml"
+
+    local page
+    for page in man/man1/seglcd.1 man/man1/seglcdd.1 man/man5/seglcdd.toml.5 \
+                man/de/man1/seglcd.1 man/de/man1/seglcdd.1 man/de/man5/seglcdd.toml.5; do
+        install -Dm644 "$page" "$pkgdir/usr/share/$page"
+    done
+
+    install -Dm644 README.md README.de.md packaging/config.example.toml -t "$pkgdir/usr/share/doc/$_pkgname"
+    install -Dm644 udev/72-rapl-energy-read.rules udev/rapl.sysusers.conf -t "$pkgdir/usr/share/doc/$_pkgname/examples"
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

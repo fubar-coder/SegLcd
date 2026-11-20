@@ -206,7 +206,7 @@ msgid "D-Bus name {Name} is already taken – is seglcdd already running?"
 msgstr ""
 
 #. Log message SegLcd.Daemon.DBus.DBusService.LogReady (event 202). Keep the {Name} placeholders.
-msgid "D-Bus ready: {Name} {Path}"
+msgid "D-Bus ready: {Name} {Path} ({Bus} bus)"
 msgstr ""
 
 #: src/SegLcd.Tool/Commands.cs:585
@@ -376,16 +376,20 @@ msgstr ""
 msgid "NVIDIA NVML (spec: nvml[N]:temperature|power|clock|memclock|usage|fan)"
 msgstr ""
 
+#. Log message SegLcd.Daemon.DBus.DBusService.LogNoBus (event 200). Keep the {Name} placeholders.
+msgid "No D-Bus {Bus} bus available – D-Bus interface disabled"
+msgstr ""
+
+#. Log message SegLcd.Daemon.DisplayController.LogConfigMissing (event 114). Keep the {Name} placeholders.
+msgid "No configuration file at {Path}, using defaults"
+msgstr ""
+
 #: src/SegLcd.Tool/Commands.cs:28
 msgid "No matching devices found."
 msgstr ""
 
 #: src/SegLcd.Tool/DeviceCommandBase.cs:44
 msgid "No segment LCD found (VID 0x5131, PID 0x200E/0x2007)."
-msgstr ""
-
-#. Log message SegLcd.Daemon.DBus.DBusService.LogNoSessionBus (event 200). Keep the {Name} placeholders.
-msgid "No session bus (DBUS_SESSION_BUS_ADDRESS not set) – D-Bus interface disabled"
 msgstr ""
 
 #: src/SegLcd.Tool/Commands.cs:199

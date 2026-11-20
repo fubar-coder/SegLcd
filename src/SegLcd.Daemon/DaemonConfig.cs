@@ -104,6 +104,16 @@ public sealed class SensorSection
 [TomlSerializable(typeof(DaemonConfig))]
 internal sealed partial class ConfigTomlContext : TomlSerializerContext;
 
+/// <summary>How seglcdd runs: as systemd user service (session bus) or system service (system bus).</summary>
+public enum DaemonMode
+{
+    User,
+    System,
+}
+
+/// <summary>Run-time mode, registered in DI.</summary>
+public sealed record DaemonOptions(DaemonMode Mode);
+
 /// <summary>Loads and saves <see cref="DaemonConfig"/> as TOML.</summary>
 public sealed class ConfigStore(string path)
 {
@@ -119,6 +129,12 @@ public sealed class ConfigStore(string path)
             return System.IO.Path.Combine(root, "seglcd", "config.toml");
         }
     }
+
+    /// <summary>Path of the system-wide configuration used with <c>--system</c>.</summary>
+    public const string SystemPath = "/etc/seglcd/config.toml";
+
+    /// <summary>Default configuration path for <paramref name="mode"/>.</summary>
+    public static string DefaultPathFor(DaemonMode mode) => mode == DaemonMode.System ? SystemPath : DefaultPath;
 
     public string Path { get; } = path;
 

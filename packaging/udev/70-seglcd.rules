@@ -1,0 +1,16 @@
+# Segment LCD of Thermaltake AIO coolers (e.g. LB360-S ARGB Sync) – package variant.
+#
+# Access to the hidraw device for
+#   - the system service seglcdd (user/group "seglcd", from sysusers.d/seglcd.conf),
+#   - members of the group "seglcd",
+#   - the locally logged-in user (uaccess), e.g. for seglcd experiments.
+# The raw USB device additionally gets uaccess for USB passthrough into a VM under qemu:///session.
+# The file name must sort before 73 for uaccess to work.
+
+# LB360-S ARGB Sync (5131:200e)
+SUBSYSTEM=="hidraw", ATTRS{idVendor}=="5131", ATTRS{idProduct}=="200e", GROUP="seglcd", MODE="0660", TAG+="uaccess"
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="5131", ATTR{idProduct}=="200e", MODE="0660", TAG+="uaccess"
+
+# LA series (5131:2007)
+SUBSYSTEM=="hidraw", ATTRS{idVendor}=="5131", ATTRS{idProduct}=="2007", GROUP="seglcd", MODE="0660", TAG+="uaccess"
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="5131", ATTR{idProduct}=="2007", MODE="0660", TAG+="uaccess"

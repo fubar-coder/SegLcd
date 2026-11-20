@@ -201,8 +201,8 @@ msgid "D-Bus name {Name} is already taken – is seglcdd already running?"
 msgstr "D-Bus-Name {Name} ist bereits vergeben – läuft seglcdd schon?"
 
 #. Log message SegLcd.Daemon.DBus.DBusService.LogReady (event 202). Keep the {Name} placeholders.
-msgid "D-Bus ready: {Name} {Path}"
-msgstr "D-Bus bereit: {Name} {Path}"
+msgid "D-Bus ready: {Name} {Path} ({Bus} bus)"
+msgstr "D-Bus bereit: {Name} {Path} ({Bus}-Bus)"
 
 #: src/SegLcd.Tool/Commands.cs:585
 msgid "DRM (spec: drm[N]:busy|freq)"
@@ -371,6 +371,14 @@ msgstr "Millisekunden pro Schritt."
 msgid "NVIDIA NVML (spec: nvml[N]:temperature|power|clock|memclock|usage|fan)"
 msgstr "NVIDIA NVML (Spec: nvml[N]:temperature|power|clock|memclock|usage|fan)"
 
+#. Log message SegLcd.Daemon.DBus.DBusService.LogNoBus (event 200). Keep the {Name} placeholders.
+msgid "No D-Bus {Bus} bus available – D-Bus interface disabled"
+msgstr "Kein D-Bus-{Bus}-Bus verfügbar – D-Bus-Schnittstelle deaktiviert"
+
+#. Log message SegLcd.Daemon.DisplayController.LogConfigMissing (event 114). Keep the {Name} placeholders.
+msgid "No configuration file at {Path}, using defaults"
+msgstr "Keine Konfigurationsdatei unter {Path}, verwende Standardwerte"
+
 #: src/SegLcd.Tool/Commands.cs:28
 msgid "No matching devices found."
 msgstr "Keine passenden Geräte gefunden."
@@ -378,10 +386,6 @@ msgstr "Keine passenden Geräte gefunden."
 #: src/SegLcd.Tool/DeviceCommandBase.cs:44
 msgid "No segment LCD found (VID 0x5131, PID 0x200E/0x2007)."
 msgstr "Kein Segment-LCD gefunden (VID 0x5131, PID 0x200E/0x2007)."
-
-#. Log message SegLcd.Daemon.DBus.DBusService.LogNoSessionBus (event 200). Keep the {Name} placeholders.
-msgid "No session bus (DBUS_SESSION_BUS_ADDRESS not set) – D-Bus interface disabled"
-msgstr "Kein Session-Bus (DBUS_SESSION_BUS_ADDRESS fehlt) – D-Bus-Schnittstelle deaktiviert"
 
 #: src/SegLcd.Tool/Commands.cs:199
 msgid "Note: specify fan/pump with --fan-sensor/--pump-sensor (see 'seglcd sensors')."

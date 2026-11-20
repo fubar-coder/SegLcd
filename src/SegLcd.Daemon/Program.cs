@@ -9,7 +9,11 @@ using SegLcd.Daemon;
 using SegLcd.Daemon.DBus;
 using SegLcd.Localization;
 
-// seglcdd [--config <path>]   (default: $XDG_CONFIG_HOME/seglcd/config.toml)
+// seglcdd [--system] [--config <path>]
+//   default (user service): session bus, $XDG_CONFIG_HOME/seglcd/config.toml
+//   --system (system service): system bus, /etc/seglcd/config.toml
+var mode = args.Contains("--system") ? DaemonMode.System : DaemonMode.User;
+args = [.. args.Where(a => a != "--system")];
 
 // Display language from LC_MESSAGES / LANG: used for D-Bus error messages and the console log in a terminal.
 var language = DisplayLanguage.Resolve(Environment.GetEnvironmentVariable);
@@ -34,7 +38,8 @@ if (Environment.GetEnvironmentVariable("JOURNAL_STREAM") is null)
     builder.Logging.Services.Configure<ConsoleLoggerOptions>(o => o.FormatterName = LocalizingConsoleFormatter.FormatterName);
 }
 
-builder.Services.AddSingleton(new ConfigStore(builder.Configuration["config"] ?? ConfigStore.DefaultPath));
+builder.Services.AddSingleton(new DaemonOptions(mode));
+builder.Services.AddSingleton(new ConfigStore(builder.Configuration["config"] ?? ConfigStore.DefaultPathFor(mode)));
 builder.Services.AddSingleton<DisplayController>();
 builder.Services.AddHostedService(sp => sp.GetRequiredService<DisplayController>());
 builder.Services.AddHostedService<DBusService>();

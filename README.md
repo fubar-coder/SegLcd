@@ -27,7 +27,7 @@ to a systemd service that shows the CPU and GPU temperature live on the display.
 | `src/SegLcd.Tool` | CLI `seglcd` (DotMake.CommandLine, Native AOT) |
 | `src/SegLcd.Daemon` | service `seglcdd` (systemd --user, D-Bus, TOML configuration) |
 | `man/` | man pages `seglcd(1)`, `seglcdd(1)`, `seglcdd.toml(5)` – English and German (`man/de/`) |
-| `packaging/` | systemd unit, D-Bus activation, example configuration, `install-user.sh` |
+| `packaging/` | packages (AUR, RPM, DEB), system/user units, D-Bus policy, example configuration, `install-user.sh` / `uninstall-user.sh` |
 | `tests/SegLcd.Tests` | TUnit tests, including the test vectors from the documentation |
 
 ```bash
@@ -44,11 +44,16 @@ artifacts/publish/SegLcd.Tool/release_linux-x64/seglcd list
 artifacts/publish/SegLcd.Tool/release_linux-x64/seglcd send --cpu-temp 42 --gpu-temp 57 --duration 20
 ```
 
-Install the service (systemd user service with D-Bus):
+Install the service:
+
+- **system-wide as package** (system service from boot, user `seglcd`, system bus): Arch (AUR), Fedora/openSUSE
+  (RPM), Debian/Ubuntu (DEB) – see [packaging/README.md](packaging/README.md), then `sudo systemctl enable --now seglcdd`;
+- **per user without root** (systemd user service, session bus):
 
 ```bash
-packaging/install-user.sh
+packaging/install-user.sh          # --help, --reset-config, --no-start
 journalctl --user -u seglcdd -f
+packaging/uninstall-user.sh        # --purge also removes ~/.config/seglcd
 ```
 
 ## License

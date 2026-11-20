@@ -9,6 +9,8 @@
   <PropertyGroup>
     <!-- License of all projects (full text: LICENSE) -->
     <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
+    <!-- Single source of the release version (packaging recipes must match, see PackagingTests) -->
+    <Version>0.1.0</Version>
   </PropertyGroup>
 
 </Project>

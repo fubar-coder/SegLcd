@@ -51,8 +51,8 @@ man="${XDG_DATA_HOME:-$HOME/.local/share}/man"
 
 install -Dm755 artifacts/publish/SegLcd.Daemon/release_linux-x64/seglcdd "$bin/seglcdd"
 install -Dm755 artifacts/publish/SegLcd.Tool/release_linux-x64/seglcd "$bin/seglcd"
-install -Dm644 packaging/systemd/seglcdd.service "$units/seglcdd.service"
-install -Dm644 packaging/dbus/io.github.fubar_coder.SegLcd1.service "$dbus/io.github.fubar_coder.SegLcd1.service"
+install -Dm644 packaging/systemd/user/seglcdd.service "$units/seglcdd.service"
+install -Dm644 packaging/dbus/session/io.github.fubar_coder.SegLcd1.service "$dbus/io.github.fubar_coder.SegLcd1.service"
 install -Dm644 README.md "$doc/README.md"
 for page in man/man1/*.1 man/man5/*.5 man/de/man1/*.1 man/de/man5/*.5; do
     install -Dm644 "$page" "$man/${page#man/}"

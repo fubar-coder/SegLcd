@@ -1,0 +1,42 @@
+# System service for the segment LCD of the Thermaltake LB360-S ARGB Sync (installed by the RPM/DEB/AUR packages).
+# Runs as the dedicated user "seglcd" (sysusers.d/seglcd.conf), access to the display via the udev rule (GROUP="seglcd").
+[Unit]
+Description=SegLcd – sensor values on the Thermaltake LB360-S pump display
+Documentation=man:seglcdd(1) man:seglcdd.toml(5) https://fubar-coder.github.io/SegLcd/
+
+[Service]
+Type=notify
+User=seglcd
+Group=seglcd
+ExecStart=/usr/bin/seglcdd --system
+ExecReload=/usr/bin/busctl --system call io.github.fubar_coder.SegLcd1 /io/github/fubar_coder/SegLcd1 io.github.fubar_coder.SegLcd1 ReloadConfig
+Restart=on-failure
+RestartSec=3
+# /etc/seglcd is owned by the service user, so SaveConfig (D-Bus) can write /etc/seglcd/config.toml.
+ConfigurationDirectory=seglcd
+ConfigurationDirectoryMode=0755
+
+# Hardening. Not used on purpose: PrivateDevices (would hide /dev/hidraw* and /dev/nvidia*).
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+RestrictNamespaces=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+RestrictAddressFamilies=AF_UNIX AF_NETLINK
+SystemCallArchitectures=native
+CapabilityBoundingSet=
+# Optional: CPU package power via RAPL – install udev/72-rapl-energy-read.rules (group "rapl") and add
+# "SupplementaryGroups=rapl" with: systemctl edit seglcdd.service
+
+[Install]
+WantedBy=multi-user.target

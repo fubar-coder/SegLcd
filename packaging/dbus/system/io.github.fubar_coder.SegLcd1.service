@@ -1,0 +1,6 @@
+# D-Bus system activation: accessing the name starts seglcdd.service (system) if it is not running.
+[D-BUS Service]
+Name=io.github.fubar_coder.SegLcd1
+Exec=/bin/false
+User=seglcd
+SystemdService=seglcdd.service

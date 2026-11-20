@@ -4,6 +4,7 @@
 seglcdd \- Dienst, der das Thermaltake Segment-LCD mit Sensorwerten versorgt, mit D-Bus-Schnittstelle
 .SH ÜBERSICHT
 .B seglcdd
+.RB [ \-\-system ]
 .RB [ \-\-config
 .IR Pfad ]
 .br
@@ -25,6 +26,15 @@ braucht keine Root-Rechte (die udev-Regel vergibt den Zugriff per
 .IR uaccess )
 und bietet eine D-Bus-Schnittstelle auf dem Session-Bus.
 .SH OPTIONEN
+.TP
+.B \-\-system
+Als Systemdienst laufen (so nutzen es die RPM-/DEB-/AUR-Pakete): System-Bus statt Session-Bus und
+.I /etc/seglcd/config.toml
+als Standardkonfiguration. Die Unit aus den Paketen startet ihn als Benutzer
+.BR seglcd ;
+Mitglieder der Gruppe
+.B seglcd
+dürfen ihn per D-Bus steuern, lesen dürfen alle.
 .TP
 .BI \-\-config " Pfad"
 Konfigurationsdatei (Standard:
@@ -83,6 +93,16 @@ Sprache der D-Bus-Fehlermeldungen und der Terminalausgabe.
 .B DBUS_SESSION_BUS_ADDRESS
 Session-Bus; ohne ihn ist die D-Bus-Schnittstelle deaktiviert, das Display läuft weiter.
 .SH DATEIEN
+.TP
+.I /etc/seglcd/config.toml
+Konfiguration des Systemdienstes
+.RB ( \-\-system ).
+.TP
+.I /usr/lib/systemd/system/seglcdd.service
+System-Unit (Pakete).
+.TP
+.I /usr/share/dbus\-1/system.d/io.github.fubar_coder.SegLcd1.conf
+Policy für den System-Bus (Pakete).
 .TP
 .I ~/.config/seglcd/config.toml
 Konfiguration, siehe

@@ -1,0 +1,18 @@
+#!/bin/sh
+set -e
+
+if [ "$1" = "configure" ]; then
+    # System user/group "seglcd" (must exist before the service is started by the debhelper snippet below).
+    if command -v systemd-sysusers >/dev/null 2>&1; then
+        systemd-sysusers seglcd.conf
+    fi
+    # Apply the udev rule (group "seglcd") to an already connected display.
+    if command -v udevadm >/dev/null 2>&1; then
+        udevadm control --reload-rules || true
+        udevadm trigger --action=change --subsystem-match=hidraw || true
+    fi
+fi
+
+#DEBHELPER#
+
+exit 0

@@ -1,0 +1,50 @@
+#!/usr/bin/make -f
+# Debian packaging of SegLcd. Copy packaging/debian to ./debian before building, see packaging/README.md.
+
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
+export DOTNET_NOLOGO=1
+export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
+# NuGet packages: bundled in vendor/nuget (packaging/make-tarball.sh --vendor) for offline builds, else downloaded.
+export NUGET_PACKAGES := $(if $(wildcard vendor/nuget),$(CURDIR)/vendor/nuget,$(CURDIR)/debian/.nuget)
+
+include /usr/share/dpkg/pkg-info.mk
+include /usr/share/dpkg/architecture.mk
+DOTNET_RID := $(if $(filter arm64,$(DEB_HOST_ARCH)),linux-arm64,linux-x64)
+PKG := $(CURDIR)/debian/seglcd
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	for project in SegLcd.Tool SegLcd.Daemon; do \
+	    dotnet publish src/$$project -c Release -r $(DOTNET_RID) \
+	        -p:Version=$(DEB_VERSION_UPSTREAM) -p:ContinuousIntegrationBuild=true -o debian/build/$$project || exit 1; \
+	done
+
+override_dh_auto_install:
+	install -Dm755 debian/build/SegLcd.Tool/seglcd    $(PKG)/usr/bin/seglcd
+	install -Dm755 debian/build/SegLcd.Daemon/seglcdd $(PKG)/usr/bin/seglcdd
+	install -Dm644 packaging/systemd/system/seglcdd.service $(PKG)/usr/lib/systemd/system/seglcdd.service
+	install -Dm644 packaging/sysusers/seglcd.conf $(PKG)/usr/lib/sysusers.d/seglcd.conf
+	install -Dm644 packaging/udev/70-seglcd.rules $(PKG)/usr/lib/udev/rules.d/70-seglcd.rules
+	install -Dm644 packaging/dbus/system/io.github.fubar_coder.SegLcd1.conf \
+	    $(PKG)/usr/share/dbus-1/system.d/io.github.fubar_coder.SegLcd1.conf
+	install -Dm644 packaging/dbus/system/io.github.fubar_coder.SegLcd1.service \
+	    $(PKG)/usr/share/dbus-1/system-services/io.github.fubar_coder.SegLcd1.service
+	install -Dm644 packaging/config.example.toml $(PKG)/etc/seglcd/config.toml
+	for page in man/man1/seglcd.1 man/man1/seglcdd.1 man/man5/seglcdd.toml.5 \
+	            man/de/man1/seglcd.1 man/de/man1/seglcdd.1 man/de/man5/seglcdd.toml.5; do \
+	    install -Dm644 $$page $(PKG)/usr/share/$$page || exit 1; \
+	done
+
+override_dh_auto_test:
+	# The unit tests need the .NET test host and network access for NuGet; run them in CI instead.
+
+override_dh_auto_clean:
+	rm -rf debian/build debian/.nuget artifacts
+
+# Native AOT binaries: no DWARF compression.
+override_dh_dwz:
+
+override_dh_installsystemd:
+	dh_installsystemd --name=seglcdd

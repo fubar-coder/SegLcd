@@ -1,0 +1,28 @@
+Source: seglcd
+Section: utils
+Priority: optional
+Maintainer: Mark Junker <fubar-coder@live.de>
+Build-Depends: debhelper-compat (= 13),
+               dotnet-sdk-11.0,
+               clang,
+               zlib1g-dev
+Standards-Version: 4.7.0
+Homepage: https://github.com/fubar-coder/SegLcd
+Vcs-Browser: https://github.com/fubar-coder/SegLcd
+Vcs-Git: https://github.com/fubar-coder/SegLcd.git
+Rules-Requires-Root: no
+
+Package: seglcd
+Architecture: amd64 arm64
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+         libhidapi-hidraw0
+Description: tools and service for the Thermaltake LB360-S segment LCD
+ SegLcd drives the segment LCD on the pump block of the Thermaltake
+ LB360-S ARGB Sync AIO cooler (USB 5131:200e) on Linux.
+ .
+  * seglcd: CLI for testing, sending and analysing packets
+  * seglcdd: system service showing the CPU and GPU temperature live on the
+    display, with a D-Bus interface (io.github.fubar_coder.SegLcd1)
+ .
+ SegLcd is not affiliated with Thermaltake.

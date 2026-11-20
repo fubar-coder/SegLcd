@@ -190,7 +190,10 @@ public sealed partial class DisplayController(ConfigStore store, ILogger<Display
             await StopSessionAsync();
         await ApplySessionAsync();
         WakeSampler();
-        LogConfigLoaded(store.Path);
+        if (File.Exists(store.Path))
+            LogConfigLoaded(store.Path);
+        else
+            LogConfigMissing(store.Path);
         Changed?.Invoke(ControllerChange.Enabled | ControllerChange.UpdateInterval | ControllerChange.SampleInterval
                         | ControllerChange.Sources | ControllerChange.Connection);
     }
@@ -349,6 +352,9 @@ public sealed partial class DisplayController(ConfigStore store, ILogger<Display
 
     [LoggerMessage(EventId = 110, Level = LogLevel.Information, Message = "Configuration loaded: {Path}")]
     private partial void LogConfigLoaded(string path);
+
+    [LoggerMessage(EventId = 114, Level = LogLevel.Information, Message = "No configuration file at {Path}, using defaults")]
+    private partial void LogConfigMissing(string path);
 
     [LoggerMessage(EventId = 111, Level = LogLevel.Information, Message = "Configuration saved: {Path}")]
     private partial void LogConfigSaved(string path);

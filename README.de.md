@@ -29,7 +29,7 @@ USB-HID-Protokolls bis zum systemd-Dienst, der CPU- und GPU-Temperatur live aufs
 | `src/SegLcd.Tool` | CLI `seglcd` (DotMake.CommandLine, Native AOT) |
 | `src/SegLcd.Daemon` | Dienst `seglcdd` (systemd --user, D-Bus, TOML-Konfiguration) |
 | `man/` | Man-Pages `seglcd(1)`, `seglcdd(1)`, `seglcdd.toml(5)` – Englisch und Deutsch (`man/de/`) |
-| `packaging/` | systemd-Unit, D-Bus-Activation, Beispielkonfiguration, `install-user.sh` |
+| `packaging/` | Pakete (AUR, RPM, DEB), System-/Benutzer-Units, D-Bus-Policy, Beispielkonfiguration, `install-user.sh` / `uninstall-user.sh` |
 | `tests/SegLcd.Tests` | TUnit-Tests mit den Testvektoren der Doku |
 
 ```bash
@@ -46,11 +46,16 @@ artifacts/publish/SegLcd.Tool/release_linux-x64/seglcd list
 artifacts/publish/SegLcd.Tool/release_linux-x64/seglcd send --cpu-temp 42 --gpu-temp 57 --duration 20
 ```
 
-Dienst installieren (systemd-Benutzerdienst mit D-Bus):
+Dienst installieren:
+
+- **systemweit als Paket** (Systemdienst ab dem Booten, Benutzer `seglcd`, System-Bus): Arch (AUR), Fedora/openSUSE
+  (RPM), Debian/Ubuntu (DEB) – siehe [packaging/README.md](packaging/README.md), danach `sudo systemctl enable --now seglcdd`;
+- **pro Benutzer ohne root** (systemd-Benutzerdienst, Session-Bus):
 
 ```bash
-packaging/install-user.sh
+packaging/install-user.sh          # --help, --reset-config, --no-start
 journalctl --user -u seglcdd -f
+packaging/uninstall-user.sh        # --purge entfernt auch ~/.config/seglcd
 ```
 
 ## Lizenz
