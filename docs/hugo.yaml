@@ -1,15 +1,76 @@
 baseURL: "https://fubar-coder.github.io/SegLcd/"  # hugo server uses localhost automatically
 title: "SegLcd"
-locale: de-DE
-defaultContentLanguage: de
 theme: hextra
+
+# English is the primary language (/), German a translation (/de/): page.md = English, page.de.md = German.
+defaultContentLanguage: en
+languages:
+  en:
+    label: English
+    locale: en-US
+    weight: 1
+    title: SegLcd
+    params:
+      description: "Reverse-engineered USB protocol, library and Linux tools for the segment LCD of the Thermaltake LB360-S ARGB Sync."
+    menus:
+      main:
+        - name: Documentation
+          pageRef: /docs
+          weight: 1
+        - name: Protocol
+          pageRef: /docs/protocol
+          weight: 2
+        - name: GitHub
+          url: https://github.com/fubar-coder/SegLcd
+          weight: 4
+          params:
+            icon: github
+        - name: Search
+          weight: 5
+          params:
+            type: search
+        - name: Language
+          weight: 6
+          params:
+            type: language-switch
+  de:
+    label: Deutsch
+    locale: de-DE
+    weight: 2
+    title: SegLcd
+    params:
+      description: "Reverse-Engineering-Dokumentation des USB-Protokolls, Library und Linux-Werkzeuge für das Segment-LCD der Thermaltake LB360-S ARGB Sync."
+      banner:
+        message: "Diese Übersetzung kann hinter der [englischen Fassung](https://fubar-coder.github.io/SegLcd/) zurückliegen."
+    menus:
+      main:
+        - name: Dokumentation
+          pageRef: /docs
+          weight: 1
+        - name: Protokoll
+          pageRef: /docs/protocol
+          weight: 2
+        - name: GitHub
+          url: https://github.com/fubar-coder/SegLcd
+          weight: 4
+          params:
+            icon: github
+        - name: Suche
+          weight: 5
+          params:
+            type: search
+        - name: Sprache
+          weight: 6
+          params:
+            type: language-switch
+
 
 enableRobotsTXT: false
 enableGitInfo: false
 enableEmoji: true
 
-# Dateien außerhalb von docs/ (z. B. packaging/config.example.toml) für Shortcodes verfügbar machen.
-# Hinweis: Ein eigener Mount ersetzt den Standard-Mount des Ziels, daher assets explizit mit aufführen.
+# Make files outside docs/ (e.g. packaging/config.example.toml) available to shortcodes.
+# Note: a custom mount replaces the default mount of its target, so assets must be listed explicitly.
 module:
   mounts:
     - source: assets
@@ -30,21 +91,7 @@ markup:
           block: [['\[', '\]'], ['$$', '$$']]
           inline: [['\(', '\)']]
 
-menu:
-  main:
-    - name: Dokumentation
-      pageRef: /docs
-      weight: 1
-    - name: Protokoll
-      pageRef: /docs/protokoll
-      weight: 2
-    - name: Suche
-      weight: 5
-      params:
-        type: search
-
 params:
-  description: "Reverse-Engineering-Dokumentation des USB-Protokolls des Segment-LCD der Thermaltake LB360-S ARGB Sync."
   navbar:
     displayTitle: true
     displayLogo: false

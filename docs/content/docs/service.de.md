@@ -11,7 +11,7 @@ und bietet auf dem **Session-Bus** eine D-Bus-Schnittstelle zum Abfragen und Ste
 |---|---|
 | Binary | `~/.local/bin/seglcdd` (Native AOT, ~6 MB, braucht zur Laufzeit `libhidapi-hidraw.so.0`) |
 | Unit | `~/.config/systemd/user/seglcdd.service` (`Type=notify`) |
-| Konfiguration | `~/.config/seglcd/config.toml` – siehe [Sensoren & Konfiguration](../sensoren/#configtoml) |
+| Konfiguration | `~/.config/seglcd/config.toml` – siehe [Sensoren & Konfiguration](../sensors/#configtoml) |
 | D-Bus | Session-Bus, Name `io.github.fubar_coder.SegLcd1`, Objekt `/io/github/fubar_coder/SegLcd1` |
 | Log | journald: `journalctl --user -u seglcdd` |
 | Man-Pages | `seglcdd(1)`, `seglcdd.toml(5)` (Englisch und Deutsch, Quelle `man/`) |
@@ -50,7 +50,7 @@ systemctl --user enable --now seglcdd
   {{< /tab >}}
 {{< /tabs >}}
 
-Danach die Konfiguration anpassen (mindestens `fan`/`pump`, siehe [Sensoren](../sensoren/#lüfter-und-pumpe-zuordnen))
+Danach die Konfiguration anpassen (mindestens `fan`/`pump`, siehe [Sensoren](../sensors/#lüfter-und-pumpe-zuordnen))
 und `systemctl --user reload seglcdd` ausführen.
 
 ### Unit-Datei
@@ -160,7 +160,7 @@ Bedarf abfragen). Ungültige Werte beim Schreiben werden mit `org.freedesktop.DB
 
 | Methode | Signatur | Bedeutung |
 |---|---|---|
-| `SetSensor(field, spec) → source` | `ss` → `s` | Quelle eines Feldes setzen ([Spec-Syntax](../sensoren/#sensor-angaben-spec-syntax), leer = automatisch); liefert die aufgelöste Quelle. Unbekanntes Feld oder nicht gefundener Sensor → `InvalidArgs`. **Nicht persistent** bis `SaveConfig`. |
+| `SetSensor(field, spec) → source` | `ss` → `s` | Quelle eines Feldes setzen ([Spec-Syntax](../sensors/#sensor-angaben-spec-syntax), leer = automatisch); liefert die aufgelöste Quelle. Unbekanntes Feld oder nicht gefundener Sensor → `InvalidArgs`. **Nicht persistent** bis `SaveConfig`. |
 | `ReloadConfig()` | – | `config.toml` neu lesen und anwenden; bei Fehler bleibt die alte Konfiguration aktiv |
 | `SaveConfig()` | – | aktuelle Laufzeit-Einstellungen nach `config.toml` schreiben (Kommentare der Datei gehen dabei verloren) |
 

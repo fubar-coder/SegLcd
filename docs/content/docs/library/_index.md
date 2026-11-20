@@ -1,64 +1,64 @@
 ---
-title: Library-Leitfaden
+title: Library guide
 weight: 6
 ---
 
-Diese Seite fasst zusammen, was eine Library zur Ansteuerung des Displays leisten muss – unabhängig von
-der Programmiersprache. Die [.NET-Referenz-Implementierung](referenz-dotnet/) setzt das um.
+This page summarizes what a library for driving the display must provide – independent of
+the programming language. The [.NET reference implementation](dotnet-reference/) implements it.
 
-## Schichten
+## Layers
 
 ```mermaid
 flowchart TB
-    App["Anwendung / Dienst<br/>(Sensoren lesen)"] --> Session
-    Session["Session / Keep-Alive<br/>Timer 250 ms, Reconnect, Aus beim Beenden"] --> Device
-    Device["Gerät<br/>Finden, Öffnen, 65-Byte-Write, Fehler → Disconnect"] --> HID["HID-Backend<br/>hidraw · hidapi · Windows HID"]
-    Session --> Codec["Codec (rein, ohne I/O)<br/>Frame → 64-Byte-Paket"]
+    App["Application / service<br/>(read sensors)"] --> Session
+    Session["Session / keep-alive<br/>Timer 250 ms, reconnect, off on exit"] --> Device
+    Device["Device<br/>Find, open, 65-byte write, error → disconnect"] --> HID["HID backend<br/>hidraw · hidapi · Windows HID"]
+    Session --> Codec["Codec (pure, no I/O)<br/>Frame → 64-byte packet"]
 ```
 
-| Schicht | Aufgabe | Testbarkeit |
+| Layer | Responsibility | Testability |
 |---|---|---|
-| **Codec** | Werte → 64 Byte nach [Update-Paket](../protokoll/update-paket/), Aus-Paket | vollständig per Unit-Test mit den Testvektoren |
-| **Gerät** | VID/PID-Suche, Öffnen, Report-ID voranstellen, Write mit Timeout | gegen echtes Gerät / Mock |
-| **Session** | periodisch senden, aktuellen Frame atomar austauschen, Hotplug | mit Fake-Gerät |
+| **Codec** | values → 64 bytes per [update packet](../protocol/update-packet/), off packet | fully unit-testable with the test vectors |
+| **Device** | VID/PID search, opening, prepending the report ID, write with timeout | against real device / mock |
+| **Session** | periodic sending, atomic swap of the current frame, hotplug | with fake device |
 
-## Anforderungen
+## Requirements
 
-### Erkennung
+### Detection
 
-- Nur **bekannte VID/PID-Paare** ansprechen (`5131:200e`, `5131:2007`). Vendor `0x5131` wird auch für
-  fremde Geräte verwendet – niemals „alle Geräte von 0x5131“ beschreiben.
-- Zusätzlich prüfen: HID-Interface mit Output-Report-Länge 64 (bzw. 65 inkl. Report-ID).
-- Keine Seriennummer vorhanden → Mehrfachgeräte über den physischen Pfad unterscheiden.
-- Fehlende Produkt-/Herstellerstrings sind **kein Fehler**.
+- Only address **known VID/PID pairs** (`5131:200e`, `5131:2007`). Vendor `0x5131` is also used for
+  unrelated devices – never write to "all devices of 0x5131".
+- Additionally check: HID interface with output report length 64 (or 65 including report ID).
+- No serial number available → distinguish multiple devices by their physical path.
+- Missing product/manufacturer strings are **not an error**.
 
-### Senden
+### Sending
 
-- Jedes Paket **vollständig** (64 Byte) senden; über hidraw/hidapi/Windows mit Report-ID `0x00` davor (65 Byte).
-- Intervall standardmäßig **250 ms**, konfigurierbar, aber **höchstens 400 ms** – das Display schaltet nach ca. 400–500 ms ohne Paket ab.
-- Der Sende-Thread darf durch langsame Sensoren nicht blockiert werden: Sensoren in eigenem Takt lesen
-  und den zuletzt gültigen Frame **atomar** in die Session legen.
-- Pro Gerät **ein** Schreiber (Mutex o. ä.). Zwei Prozesse auf demselben Gerät führen zu Flackern.
-- Uhrzeit-Felder bei jedem Paket mit der aktuellen Lokalzeit füllen.
+- Send every packet **completely** (64 bytes); via hidraw/hidapi/Windows with report ID `0x00` prepended (65 bytes).
+- Interval **250 ms** by default, configurable, but **at most 400 ms** – the display turns off after approx. 400–500 ms without a packet.
+- The sending thread must not be blocked by slow sensors: read sensors at their own pace
+  and place the last valid frame into the session **atomically**.
+- **One** writer per device (mutex or similar). Two processes on the same device cause flickering.
+- Fill the time fields with the current local time in every packet.
 
-### Fehler & Hotplug
+### Errors & hotplug
 
-| Situation | Verhalten |
+| Situation | Behavior |
 |---|---|
-| Gerät beim Start nicht vorhanden | periodisch (z. B. jede Sekunde) neu suchen oder udev-Monitor nutzen |
-| Öffnen scheitert mit „Zugriff verweigert“ | klare Meldung mit Hinweis auf udev-Regel; nicht in Endlosschleife loggen |
-| Write scheitert (`ENODEV`, `EPIPE`, I/O-Fehler) | Handle schließen, Zustand „getrennt“, Reconnect |
-| Write-Timeout | einmal wiederholen, danach wie Fehler behandeln |
-| Beenden (Dispose, `SIGTERM`, Dienst-Stopp) | Timer stoppen, **Aus-Paket** senden, Handle schließen |
-| Systemsuspend | nach dem Aufwachen reconnecten (Gerät wird oft neu enumeriert) |
+| Device not present at startup | rescan periodically (e.g. every second) or use a udev monitor |
+| Opening fails with "access denied" | clear message pointing to the udev rule; do not log in an endless loop |
+| Write fails (`ENODEV`, `EPIPE`, I/O error) | close handle, state "disconnected", reconnect |
+| Write timeout | retry once, then treat as an error |
+| Exit (Dispose, `SIGTERM`, service stop) | stop timer, send **off packet**, close handle |
+| System suspend | reconnect after resume (device is often re-enumerated) |
 
-### API-Empfehlung
+### Recommended API
 
 ```text
-Frame            – unveränderlicher Wertesatz (nullable Felder, Temperaturen immer in °C, Einheit separat)
+Frame            – immutable set of values (nullable fields, temperatures always in °C, unit separate)
 encode_update(frame, now) -> bytes[64]
 encode_off()              -> bytes[64]
-enumerate()               -> [DeviceInfo]        # ohne zu öffnen (funktioniert ohne Rechte)
+enumerate()               -> [DeviceInfo]        # without opening (works without permissions)
 open(info)                -> Device
 Device.send_packet(bytes[64])
 Session(connect_fn, interval)
@@ -67,19 +67,19 @@ Session.start() / Session.close(send_off = true)
 events: connected(path), disconnected, packet_sent(bytes)
 ```
 
-### Nicht-Ziele
+### Non-goals
 
-- Lüfter/Pumpe **regeln** (läuft über die Mainboard-Header).
-- ARGB-Beleuchtung (läuft über den 5-V-ARGB-Header).
-- Sensoren in der Library selbst – besser als Plug-in/Callback, damit die Library plattformneutral bleibt.
+- **Controlling** fan/pump (handled via the motherboard headers).
+- ARGB lighting (handled via the 5 V ARGB header).
+- Sensors in the library itself – better as a plug-in/callback so that the library stays platform-neutral.
 
-## Plattform-Backends
+## Platform backends
 
-| Plattform | Backend | Hinweise |
+| Platform | Backend | Notes |
 |---|---|---|
-| Linux | hidraw direkt (`open`/`write`/`poll`) | keine Abhängigkeiten, [Details](../linux/hidraw/) |
-| Linux / Windows / macOS | hidapi (`libhidapi-hidraw`, `hidapi.dll`) | native Bibliothek nötig |
-| .NET | **HidApi.Net** (AOT-fähiges Binding für hidapi) | in der Referenz verwendet, braucht native hidapi |
-| .NET | HidSharp (rein managed, Linux über hidraw + libudev) | keine nativen Abhängigkeiten, aber Trim-Warnung unter AOT |
-| Windows nativ | `CreateFile` auf Interface-Pfad, `WriteFile` mit 65 Byte | Pfad über SetupAPI/`HidD_GetHidGuid` |
-| Beliebig | libusb (Interrupt-OUT auf EP `0x01`, **64** Byte ohne Report-ID) | Kernel-Treiber muss gelöst werden – nicht empfohlen |
+| Linux | hidraw directly (`open`/`write`/`poll`) | no dependencies, [details](../linux/hidraw/) |
+| Linux / Windows / macOS | hidapi (`libhidapi-hidraw`, `hidapi.dll`) | native library required |
+| .NET | **HidApi.Net** (AOT-capable binding for hidapi) | used in the reference, requires native hidapi |
+| .NET | HidSharp (fully managed, Linux via hidraw + libudev) | no native dependencies, but trim warning under AOT |
+| Windows native | `CreateFile` on interface path, `WriteFile` with 65 bytes | path via SetupAPI/`HidD_GetHidGuid` |
+| Any | libusb (interrupt OUT on EP `0x01`, **64** bytes without report ID) | kernel driver must be detached – not recommended |

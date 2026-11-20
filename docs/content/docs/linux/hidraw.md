@@ -1,14 +1,14 @@
 ---
-title: hidraw im Detail
+title: hidraw in detail
 weight: 2
 ---
 
-Diese Seite beschreibt, wie man das Display **ohne HID-Library** direkt über die Linux-hidraw-Schnittstelle
-anspricht – relevant für Implementierungen in C, Rust, Go, Python usw.
+This page describes how to access the display **without a HID library** directly via the Linux hidraw interface
+– relevant for implementations in C, Rust, Go, Python, etc.
 
-## Gerät finden
+## Finding the device
 
-Die Nummer `N` in `/dev/hidrawN` ist nicht stabil. Gefunden wird das Gerät über sysfs (ohne Root lesbar):
+The number `N` in `/dev/hidrawN` is not stable. The device is found via sysfs (readable without root):
 
 ```bash
 for d in /sys/class/hidraw/hidraw*; do
@@ -16,83 +16,83 @@ for d in /sys/class/hidraw/hidraw*; do
 done
 ```
 
-| Datei | Inhalt (Beispiel) |
+| File | Content (example) |
 |---|---|
-| `/sys/class/hidraw/hidraw5/device/uevent` | `HID_ID=0003:00005131:0000200E` (Bus 3 = USB, VID, PID – Hex, großgeschrieben), `HID_NAME=HID 5131:200e`, `HID_PHYS=usb-0000:02:00.0-10/input0` |
-| `/sys/class/hidraw/hidraw5/device/report_descriptor` | 34 Byte Report-Deskriptor (binär) |
-| `/dev/input/by-id/usb-5131_200e-hidraw` | stabiler Symlink (von systemd-udev angelegt) |
+| `/sys/class/hidraw/hidraw5/device/uevent` | `HID_ID=0003:00005131:0000200E` (bus 3 = USB, VID, PID – hex, uppercase), `HID_NAME=HID 5131:200e`, `HID_PHYS=usb-0000:02:00.0-10/input0` |
+| `/sys/class/hidraw/hidraw5/device/report_descriptor` | 34-byte report descriptor (binary) |
+| `/dev/input/by-id/usb-5131_200e-hidraw` | stable symlink (created by systemd-udev) |
 
-Alternativ mit libudev: `subsystem = "hidraw"`, Eltern-Gerät `usb`/`usb_device` mit
-`idVendor == "5131"` und `idProduct == "200e"`. Für **Hotplug** einen udev-Monitor auf `hidraw` abonnieren.
+Alternatively with libudev: `subsystem = "hidraw"`, parent device `usb`/`usb_device` with
+`idVendor == "5131"` and `idProduct == "200e"`. For **hotplug**, subscribe a udev monitor to `hidraw`.
 
-## Öffnen
+## Opening
 
 ```c
 int fd = open("/dev/hidraw5", O_RDWR | O_NONBLOCK | O_CLOEXEC);
 ```
 
-Mehrere Prozesse können den Knoten gleichzeitig öffnen – der Kernel serialisiert die Writes, aber die
-Pakete beider Prozesse landen abwechselnd auf dem Display. Eine Library sollte das Gerät daher
-**exklusiv** benutzen (z. B. über eine Lock-Datei oder einen einzigen Dienst).
+Multiple processes can open the node at the same time – the kernel serializes the writes, but the
+packets of both processes reach the display interleaved. A library should therefore use the device
+**exclusively** (e.g. via a lock file or a single service).
 
-## Schreiben
+## Writing
 
 ```c
-uint8_t buf[65] = {0};   // buf[0] = Report-ID 0 (Gerät hat keine Report-IDs)
-buf[1 + 1] = 0x01;       // Paket-Offset 1: Kommando
-buf[1 + 2] = 0x02;       // Paket-Offset 2: Sub-Kommando
-buf[1 + 3] = 42;         // CPU-Temperatur
-ssize_t n = write(fd, buf, sizeof buf);   // n == 65 bei Erfolg
+uint8_t buf[65] = {0};   // buf[0] = report ID 0 (device has no report IDs)
+buf[1 + 1] = 0x01;       // packet offset 1: command
+buf[1 + 2] = 0x02;       // packet offset 2: subcommand
+buf[1 + 3] = 42;         // CPU temperature
+ssize_t n = write(fd, buf, sizeof buf);   // n == 65 on success
 ```
 
-Was im Kernel passiert (`drivers/hid/hidraw.c` → `usbhid_output_report`):
+What happens in the kernel (`drivers/hid/hidraw.c` → `usbhid_output_report`):
 
-1. hidraw übergibt den Puffer als **Output-Report** an `hid_hw_output_report()`.
-2. `usbhid` erkennt `buf[0] == 0` und **entfernt das Report-ID-Byte**.
-3. Die verbleibenden 64 Byte gehen per Interrupt-Transfer an Endpoint `0x01`.
-4. `write()` blockiert, bis der Transfer abgeschlossen ist (Timeout im Kernel), und liefert 65 zurück.
+1. hidraw passes the buffer as an **output report** to `hid_hw_output_report()`.
+2. `usbhid` detects `buf[0] == 0` and **strips the report ID byte**.
+3. The remaining 64 bytes go to endpoint `0x01` via interrupt transfer.
+4. `write()` blocks until the transfer completes (timeout in the kernel) and returns 65.
 
-| Fehler (`errno`) | Bedeutung | Reaktion |
+| Error (`errno`) | Meaning | Reaction |
 |---|---|---|
-| `ENODEV` | Gerät abgezogen | schließen, auf Hotplug warten |
-| `EPIPE` | Endpoint-Stall | schließen, neu öffnen |
-| `ETIMEDOUT` | Gerät nimmt nichts an | erneut versuchen, ggf. neu öffnen |
-| `EACCES` (bei `open`) | keine Rechte | [udev-Regel](../udev/) |
-| `EINTR` | Signal | wiederholen |
+| `ENODEV` | device unplugged | close, wait for hotplug |
+| `EPIPE` | endpoint stall | close, reopen |
+| `ETIMEDOUT` | device accepts nothing | retry, reopen if needed |
+| `EACCES` (on `open`) | no permissions | [udev rule](../udev/) |
+| `EINTR` | signal | retry |
 
 {{< callout type="warning" >}}
-Immer **genau 65 Byte** schreiben. Kürzere Writes erzeugen kurze USB-Pakete, deren Behandlung durch die
-Firmware undefiniert ist.
+Always write **exactly 65 bytes**. Shorter writes produce short USB packets whose handling by the
+firmware is undefined.
 {{< /callout >}}
 
-## Lesen (Input-Reports)
+## Reading (input reports)
 
 ```c
 uint8_t in[64];
-ssize_t n = read(fd, in, sizeof in);   // 64 Byte, OHNE Report-ID-Byte; EAGAIN wenn nichts da
+ssize_t n = read(fd, in, sizeof in);   // 64 bytes, WITHOUT report ID byte; EAGAIN if nothing available
 ```
 
-Mit `poll()` auf `POLLIN` warten. Der Kernel puffert pro Dateideskriptor bis zu 64 Reports.
+Wait with `poll()` on `POLLIN`. The kernel buffers up to 64 reports per file descriptor.
 
-## Nützliche ioctls (`<linux/hidraw.h>`)
+## Useful ioctls (`<linux/hidraw.h>`)
 
-| ioctl | Nummer (x86-64) | Zweck |
+| ioctl | Number (x86-64) | Purpose |
 |---|---|---|
-| `HIDIOCGRDESCSIZE` | `0x80044801` | Länge des Report-Deskriptors (34) |
-| `HIDIOCGRDESC` | `0x90044802` | Report-Deskriptor lesen (`struct hidraw_report_descriptor`) |
+| `HIDIOCGRDESCSIZE` | `0x80044801` | Length of the report descriptor (34) |
+| `HIDIOCGRDESC` | `0x90044802` | Read the report descriptor (`struct hidraw_report_descriptor`) |
 | `HIDIOCGRAWINFO` | `0x80084803` | `bustype` (3), `vendor` (0x5131), `product` (0x200e) |
 | `HIDIOCGRAWNAME(len)` | `0x80004804 \| len<<16` | Name: `HID 5131:200e` |
-| `HIDIOCGRAWPHYS(len)` | `0x80004805 \| len<<16` | Physischer Pfad: `usb-0000:02:00.0-10/input0` |
+| `HIDIOCGRAWPHYS(len)` | `0x80004805 \| len<<16` | Physical path: `usb-0000:02:00.0-10/input0` |
 
-`HIDIOCSFEATURE`/`HIDIOCGFEATURE` sind sinnlos – das Gerät hat keine Feature-Reports.
+`HIDIOCSFEATURE`/`HIDIOCGFEATURE` are pointless – the device has no feature reports.
 
-## Minimalbeispiel in der Shell
+## Minimal example in the shell
 
-Zum schnellen Test ohne jede Software (Root oder udev-Regel nötig). Sendet 20 s lang „42 °C“:
+For a quick test without any software (root or udev rule required). Sends "42 °C" for 20 s:
 
 ```bash
 f=$(mktemp)
-{ printf '\x00\x00\x01\x02\x2a'; head -c 60 /dev/zero; } > "$f"   # 65 Byte
+{ printf '\x00\x00\x01\x02\x2a'; head -c 60 /dev/zero; } > "$f"   # 65 bytes
 for i in $(seq 80); do
   dd if="$f" of=/dev/hidraw5 bs=65 count=1 status=none
   sleep 0.25
@@ -100,6 +100,6 @@ done
 rm "$f"
 ```
 
-`dd bs=65` stellt sicher, dass die 65 Byte (`00` Report-ID + `00 01 02 2a` + 60 × `00`) in **einem**
-`write()` beim Kernel ankommen. Mehrere `printf`/`head` direkt auf das Gerät umzuleiten, würde
-dagegen *mehrere* kurze Reports erzeugen.
+`dd bs=65` ensures that the 65 bytes (`00` report ID + `00 01 02 2a` + 60 × `00`) reach the kernel in **a single**
+`write()`. Redirecting several `printf`/`head` calls directly to the device would
+instead produce *multiple* short reports.

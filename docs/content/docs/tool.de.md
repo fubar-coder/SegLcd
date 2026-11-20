@@ -5,7 +5,7 @@ weight: 6
 
 `seglcd` (Projekt `src/SegLcd.Tool`, .NET 11, DotMake.CommandLine, Native AOT) ist das Werkzeug
 zum Ausprobieren, Verifizieren und Analysieren des Protokolls. Für den Dauerbetrieb gibt es den Dienst
-[`seglcdd`](../dienst/); beide nutzen dieselbe Sensor-Library ([Sensoren & Konfiguration](../sensoren/)).
+[`seglcdd`](../service/); beide nutzen dieselbe Sensor-Library ([Sensoren & Konfiguration](../sensors/)).
 
 ## Installation
 
@@ -26,7 +26,7 @@ Ohne Installation: `dotnet run --project src/SegLcd.Tool -- <befehl> …` oder d
 {{< callout type="warning" >}}
 Läuft der Dienst `seglcdd`, vor sendenden Befehlen (`send`, `live`, `probe`, `sweep`, `raw`, `off`, `hold`) dessen
 `Enabled`-Property auf `false` setzen oder ihn stoppen – sonst senden beide abwechselnd
-([Details](../dienst/#zusammenspiel-mit-seglcd)).
+([Details](../service/#zusammenspiel-mit-seglcd)).
 {{< /callout >}}
 
 ## Übersicht
@@ -92,7 +92,7 @@ seglcd send --cpu-temp 42.5 --fan 1234 --dry-run | seglcd decode
 
 ### live
 
-Echte Sensorwerte. Quellen, Standardwerte und Spec-Syntax: [Sensoren & Konfiguration](../sensoren/).
+Echte Sensorwerte. Quellen, Standardwerte und Spec-Syntax: [Sensoren & Konfiguration](../sensors/).
 
 | Option | Standard |
 |---|---|
@@ -176,7 +176,7 @@ Liest Input-Reports (64 Byte) und gibt sie mit Zeitstempel aus; `--keep-alive` s
 
 Listet alle verfügbaren Quellen gruppiert nach Art – hwmon, RAPL-Domänen, NVIDIA (NVML), DRM sowie CPU-Takt und
 RAM – jeweils mit der Spec-Angabe, die man direkt in Optionen oder `config.toml` verwenden kann, und dem aktuellen
-Wert. Grundlage für die Konfiguration ([Beispielausgabe](../sensoren/#verfügbare-sensoren-finden)).
+Wert. Grundlage für die Konfiguration ([Beispielausgabe](../sensors/#verfügbare-sensoren-finden)).
 
 ### decode
 

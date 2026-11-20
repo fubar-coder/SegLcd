@@ -1,36 +1,38 @@
-# SegLcd – Segment-LCD der Thermaltake LB360-S ARGB Sync unter Linux
+# SegLcd – Thermaltake LB360-S ARGB Sync segment LCD on Linux
 
-> SegLcd ist ein unabhängiges Projekt und nicht mit Thermaltake verbunden. „Thermaltake“ ist eine Marke der Thermaltake Technology Co., Ltd.; der Name wird nur verwendet, um die unterstützte Hardware zu bezeichnen.
+**English** · [Deutsch](README.de.md)
 
-Protokoll-Dokumentation, Library und Werkzeuge, um das Segment-LCD auf dem Pumpenblock der
-**Thermaltake LB360-S ARGB Sync** (USB `5131:200e`) unter Linux anzusteuern – vom Reverse Engineering des
-USB-HID-Protokolls bis zum systemd-Dienst, der CPU- und GPU-Temperatur live aufs Display bringt.
+> SegLcd is an independent project and not affiliated with Thermaltake. "Thermaltake" is a trademark of Thermaltake Technology Co., Ltd.; the name is used only to identify the supported hardware.
 
-📖 **Dokumentation:** https://fubar-coder.github.io/SegLcd/
+Protocol documentation, library and tools to drive the segment LCD on the pump block of the
+**Thermaltake LB360-S ARGB Sync** (USB `5131:200e`) on Linux – from reverse engineering the USB HID protocol
+to a systemd service that shows the CPU and GPU temperature live on the display.
 
-- `seglcd` – CLI zum Testen, Senden und Analysieren (`list`, `send`, `live`, `probe`, `decode`, …)
-- `seglcdd` – systemd-Benutzerdienst mit D-Bus-Schnittstelle und TOML-Konfiguration
-- Sensoren für AMD, Intel und NVIDIA (hwmon, RAPL, NVML, DRM), Native AOT, Deutsch/Englisch
+📖 **Documentation:** https://fubar-coder.github.io/SegLcd/ ([Deutsch](https://fubar-coder.github.io/SegLcd/de/))
 
-| Pfad | Inhalt |
+- `seglcd` – CLI for testing, sending and analysing (`list`, `send`, `live`, `probe`, `decode`, …)
+- `seglcdd` – systemd user service with D-Bus interface and TOML configuration
+- Sensors for AMD, Intel and NVIDIA (hwmon, RAPL, NVML, DRM), Native AOT, English/German
+
+| Path | Contents |
 |---|---|
-| `docs/` | Hugo/Hextra-Dokumentation (`cd docs && hugo server`) |
-| `udev/70-seglcd.rules` | Zugriff ohne Root + USB-Passthrough unter `qemu:///session` |
-| `udev/72-rapl-energy-read.rules` | optional: CPU-Paketleistung (RAPL) für Gruppe `rapl` |
-| `vm/lb360s-usb-hostdev.xml` | libvirt-Hostdev für die Windows-VM |
-| `tools/` | usbmon-Mitschnitt und Paket-Extraktion |
-| `src/SegLcd.Core` | Library (.NET 11, AOT, HidApi.Net → native hidapi) |
-| `src/SegLcd.Linux` | Linux-Sensoren (hwmon, procfs, cpufreq, RAPL) |
-| `src/SegLcd.Localization` | gettext-Lokalisierung (`po/`: Englisch → Deutsch) |
+| `docs/` | Hugo/Hextra documentation (`cd docs && hugo server`) |
+| `udev/70-seglcd.rules` | access without root + USB passthrough under `qemu:///session` |
+| `udev/72-rapl-energy-read.rules` | optional: CPU package power (RAPL) for group `rapl` |
+| `vm/lb360s-usb-hostdev.xml` | libvirt hostdev for a Windows VM |
+| `tools/` | usbmon capture and packet extraction |
+| `src/SegLcd.Core` | library (.NET 11, AOT, HidApi.Net → native hidapi) |
+| `src/SegLcd.Linux` | Linux sensors (hwmon, procfs, cpufreq, RAPL, NVML, DRM) |
+| `src/SegLcd.Localization` | gettext localization (`po/`: English → German) |
 | `src/SegLcd.Tool` | CLI `seglcd` (DotMake.CommandLine, Native AOT) |
-| `src/SegLcd.Daemon` | Dienst `seglcdd` (systemd --user, D-Bus, TOML-Konfiguration) |
-| `man/` | Man-Pages `seglcd(1)`, `seglcdd(1)`, `seglcdd.toml(5)` – Englisch und Deutsch (`man/de/`) |
-| `packaging/` | systemd-Unit, D-Bus-Activation, Beispielkonfiguration, `install-user.sh` |
-| `tests/SegLcd.Tests` | TUnit-Tests mit den Testvektoren der Doku |
+| `src/SegLcd.Daemon` | service `seglcdd` (systemd --user, D-Bus, TOML configuration) |
+| `man/` | man pages `seglcd(1)`, `seglcdd(1)`, `seglcdd.toml(5)` – English and German (`man/de/`) |
+| `packaging/` | systemd unit, D-Bus activation, example configuration, `install-user.sh` |
+| `tests/SegLcd.Tests` | TUnit tests, including the test vectors from the documentation |
 
 ```bash
 git submodule update --init
-sudo pacman -S hidapi                # native Abhängigkeit (libhidapi-hidraw.so.0)
+sudo pacman -S hidapi                # native dependency (libhidapi-hidraw.so.0)
 sudo install -m 644 udev/70-seglcd.rules /etc/udev/rules.d/
 sudo udevadm control --reload
 sudo udevadm trigger --action=change --subsystem-match=hidraw --subsystem-match=usb
@@ -42,13 +44,13 @@ artifacts/publish/SegLcd.Tool/release_linux-x64/seglcd list
 artifacts/publish/SegLcd.Tool/release_linux-x64/seglcd send --cpu-temp 42 --gpu-temp 57 --duration 20
 ```
 
-Dienst installieren (systemd-Benutzerdienst mit D-Bus):
+Install the service (systemd user service with D-Bus):
 
 ```bash
 packaging/install-user.sh
 journalctl --user -u seglcdd -f
 ```
 
-## Lizenz
+## License
 
-GPL-3.0-or-later – siehe [LICENSE](LICENSE).
+GPL-3.0-or-later – see [LICENSE](LICENSE).

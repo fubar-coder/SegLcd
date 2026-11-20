@@ -11,7 +11,7 @@ schickt. Der Host muss die Werte **periodisch** senden, sonst schaltet sich das 
 {{< callout type="info" >}}
 Die Paketstruktur stammt aus der Analyse der LA-Serie (`5131:2007`) durch ThermalTakeWaKue. Für die
 LB360-S (`5131:200e`) ist das Update-Paket auf Hardware bestätigt; welche Felder sie anzeigt, steht unter
-[Verifikation](verifikation/).
+[Verifikation](verification/).
 {{< /callout >}}
 
 ## Transport
@@ -69,8 +69,8 @@ Aussetzer durch blockierende Sensor-Reads oder lange GC-Pausen führen sonst zu 
 
 | Byte 1 | Byte 2 | Name | Beschreibung |
 |---|---|---|---|
-| `0x01` | `0x02` | [Update](update-paket/) | Alle Messwerte und Uhrzeit; wird periodisch gesendet |
-| `0x0F` | `0x00` | [Aus](aus-paket/) | Display dunkel schalten (Original-Software beim Beenden) |
+| `0x01` | `0x02` | [Update](update-packet/) | Alle Messwerte und Uhrzeit; wird periodisch gesendet |
+| `0x0F` | `0x00` | [Aus](off-packet/) | Display dunkel schalten (Original-Software beim Beenden) |
 
 Byte 0 ist in allen bekannten Paketen `0x00`. Andere Kommandowerte sind nicht bekannt; eine Library
 sollte keine anderen senden. Mit `seglcd raw` lassen sich unbekannte Kommandos gezielt ausprobieren.

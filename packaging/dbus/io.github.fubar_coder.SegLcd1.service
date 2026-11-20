@@ -1,4 +1,4 @@
-# D-Bus-Activation: Ein Zugriff auf den Namen startet seglcdd.service, falls er nicht läuft.
+# D-Bus activation: accessing the name starts seglcdd.service if it is not running.
 [D-BUS Service]
 Name=io.github.fubar_coder.SegLcd1
 Exec=/bin/false

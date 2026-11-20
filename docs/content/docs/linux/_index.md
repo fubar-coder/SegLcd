@@ -3,11 +3,11 @@ title: Linux
 weight: 4
 ---
 
-Unter Linux bindet der Kernel-Treiber `usbhid`/`hid-generic` das Display automatisch und stellt es
-als `/dev/hidrawN` bereit. Es wird **kein eigener Kernel-Treiber** benötigt; der Zugriff erfolgt
-komplett im Userspace.
+On Linux, the kernel driver `usbhid`/`hid-generic` binds the display automatically and exposes it
+as `/dev/hidrawN`. **No custom kernel driver** is required; access happens
+entirely in userspace.
 
 {{< cards >}}
-  {{< card link="udev" title="udev-Regel & Berechtigungen" icon="lock-open" >}}
-  {{< card link="hidraw" title="hidraw-Schnittstelle im Detail" icon="terminal" >}}
+  {{< card link="udev" title="udev rule & permissions" icon="lock-open" >}}
+  {{< card link="hidraw" title="hidraw interface in detail" icon="terminal" >}}
 {{< /cards >}}

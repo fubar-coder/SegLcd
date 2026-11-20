@@ -1,56 +1,56 @@
 ---
-title: USB-Passthrough (qemu:///session)
+title: USB passthrough (qemu:///session)
 weight: 1
 ---
 
-Bei `qemu:///session` läuft QEMU **als normaler Benutzer**. Damit QEMU (bzw. der SPICE-Client) das
-USB-Gerät öffnen darf, braucht der Benutzer Schreibrechte auf `/dev/bus/usb/BBB/DDD` – genau dafür
-enthält die [udev-Regel](../../linux/udev/) die zweite Zeile (`SUBSYSTEM=="usb"`, `uaccess`).
+With `qemu:///session`, QEMU runs **as a regular user**. For QEMU (or the SPICE client) to be allowed to open the
+USB device, the user needs write permission on `/dev/bus/usb/BBB/DDD` – this is exactly why the
+[udev rule](../../linux/udev/) contains the second line (`SUBSYSTEM=="usb"`, `uaccess`).
 
 {{< callout type="info" >}}
-Während das Gerät an die VM durchgereicht ist, löst der Host `usbhid` vom Gerät; `/dev/hidrawN`
-verschwindet. `seglcd` auf dem Host funktioniert in dieser Zeit nicht. Nach dem Trennen bindet der Kernel
-das Gerät wieder (ggf. mit neuer hidraw-Nummer).
+While the device is passed through to the VM, the host detaches `usbhid` from the device; `/dev/hidrawN`
+disappears. `seglcd` on the host does not work during this time. After disconnecting, the kernel binds
+the device again (possibly with a new hidraw number).
 {{< /callout >}}
 
-## Voraussetzungen
+## Prerequisites
 
-- udev-Regel installiert (`getfacl /dev/bus/usb/001/003` zeigt den eigenen Benutzer mit `rw`).
-  Bus/Adresse liefert `lsusb -d 5131:200e`.
-- Die VM (hier `Win11Pro`) hat einen USB-Controller (`qemu-xhci` ist vorhanden) und – für Variante A –
-  SPICE-Grafik mit `redirdev`-Kanälen (ebenfalls vorhanden: zwei `spicevmc`-Kanäle).
+- udev rule installed (`getfacl /dev/bus/usb/001/003` shows your own user with `rw`).
+  Bus/address are reported by `lsusb -d 5131:200e`.
+- The VM (here `Win11Pro`) has a USB controller (`qemu-xhci` is present) and – for variant A –
+  SPICE graphics with `redirdev` channels (also present: two `spicevmc` channels).
 
-## Variante A: SPICE-USB-Umleitung (empfohlen)
+## Variant A: SPICE USB redirection (recommended)
 
-Am einfachsten und jederzeit umkehrbar – keine Änderung an der VM-Konfiguration nötig.
+Simplest and reversible at any time – no change to the VM configuration required.
 
 {{% steps %}}
 
-### VM starten und Konsole öffnen
+### Start the VM and open the console
 
 ```bash
 virt-manager --connect qemu:///session --show-domain-console Win11Pro
 ```
 
-### Gerät umleiten
+### Redirect the device
 
-Im Konsolenfenster: **Virtuelle Maschine → USB-Gerät umleiten** (bzw. *Redirect USB device*) und
-`5131:200e` auswählen. Der Eintrag heißt mangels Produktstring nur nach der ID.
+In the console window: **Virtual Machine → Redirect USB device** and
+select `5131:200e`. Lacking a product string, the entry is named only after the ID.
 
-### Zurückgeben
+### Release
 
-Im selben Dialog den Haken entfernen oder das Konsolenfenster schließen.
+Uncheck the device in the same dialog or close the console window.
 
 {{% /steps %}}
 
-Falls die Umleitung mit „Permission denied“ scheitert, ist die udev-Regel nicht aktiv (oder das Gerät seit der
-Installation nicht neu getriggert). spice-gtk kann ersatzweise über `spice-client-glib-usb-acl-helper` (polkit)
-Rechte anfordern; das fragt dann nach dem Passwort.
+If the redirection fails with "Permission denied", the udev rule is not active (or the device has not been re-triggered
+since installation). As a fallback, spice-gtk can request permissions via `spice-client-glib-usb-acl-helper` (polkit);
+it then asks for the password.
 
-## Variante B: libvirt-Hostdev
+## Variant B: libvirt hostdev
 
-Dauerhafter, unabhängig vom offenen Konsolenfenster. Die Datei `vm/lb360s-usb-hostdev.xml`
-wählt das Gerät über VID/PID aus (unabhängig von Bus/Adresse):
+More permanent, independent of an open console window. The file `vm/lb360s-usb-hostdev.xml`
+selects the device by VID/PID (independent of bus/address):
 
 ```xml {filename="vm/lb360s-usb-hostdev.xml"}
 <hostdev mode='subsystem' type='usb'>
@@ -62,44 +62,44 @@ wählt das Gerät über VID/PID aus (unabhängig von Bus/Adresse):
 ```
 
 ```bash
-# an laufende VM anhängen / wieder abhängen
+# attach to / detach from a running VM
 virsh -c qemu:///session attach-device Win11Pro vm/lb360s-usb-hostdev.xml --live
 virsh -c qemu:///session detach-device Win11Pro vm/lb360s-usb-hostdev.xml --live
 
-# dauerhaft in die Konfiguration (VM startet dank startupPolicy='optional' auch ohne Gerät)
+# permanently add to the configuration (thanks to startupPolicy='optional', the VM also starts without the device)
 virsh -c qemu:///session attach-device Win11Pro vm/lb360s-usb-hostdev.xml --config
 ```
 
-Typische Fehler:
+Typical errors:
 
-| Meldung | Ursache |
+| Message | Cause |
 |---|---|
-| `cannot open /dev/bus/usb/001/003: Permission denied` | udev-Regel fehlt / nicht getriggert |
-| `Did not find USB device 5131:200e` | Gerät nicht angesteckt oder gerade an anderen Client umgeleitet |
-| `device is in use by …` | gleichzeitig per SPICE umgeleitet – nur eine Variante verwenden |
+| `cannot open /dev/bus/usb/001/003: Permission denied` | udev rule missing / not triggered |
+| `Did not find USB device 5131:200e` | device not plugged in or currently redirected to another client |
+| `device is in use by …` | simultaneously redirected via SPICE – use only one variant |
 
 ## In Windows
 
-1. Die **TT SEGMENT LCD Software** von der
-   [Thermaltake-Download-Seite](https://thermaltake.com/pages/downloads) installieren
-   (aktuelle Liste: unterstützt CL-W499/CL-W500 = LB360-S).
+1. Install the **TT SEGMENT LCD Software** from the
+   [Thermaltake download page](https://thermaltake.com/pages/downloads)
+   (current list: supports CL-W499/CL-W500 = LB360-S).
 
    {{< callout type="warning" >}}
-   **Nicht TT RGB Plus!** TT RGB Plus ist auf der Download-Seite prominenter, findet das Display aber nicht.
-   Die TT SEGMENT LCD Software ist etwas versteckt – nach „SEGMENT LCD“ suchen.
+   **Not TT RGB Plus!** TT RGB Plus is more prominent on the download page but does not find the display.
+   The TT SEGMENT LCD Software is somewhat hidden – search for "SEGMENT LCD".
    {{< /callout >}}
-2. Im Geräte-Manager erscheint unter *Eingabegeräte (HID)* ein „HID-konformes, vom Hersteller definiertes Gerät“
-   mit `VID_5131&PID_200E`.
-3. Software starten – das Gerät erscheint dort als **„LB-S ARGB AIO“**.
-4. In der VM sind praktisch alle Messwerte **0** (virtuelle CPU ohne Sensoren, keine echte GPU, keine Lüfter).
-   Für die Protokollanalyse ist das kaum ein Nachteil: Die Feldzuordnung ist bereits mit `seglcd probe` bekannt.
-   Interessant am Mitschnitt sind Start-/Ende-Sequenz, Intervall und vor allem **Einstellungen** der Software
-   (Helligkeit, Anzeigemodus, Einheit, Display an/aus), die neue Kommandos erzeugen könnten.
+2. In Device Manager, a "HID-compliant vendor-defined device" with `VID_5131&PID_200E`
+   appears under *Human Interface Devices*.
+3. Start the software – the device appears there as **"LB-S ARGB AIO"**.
+4. In the VM, practically all readings are **0** (virtual CPU without sensors, no real GPU, no fans).
+   For protocol analysis this is hardly a drawback: the field mapping is already known from `seglcd probe`.
+   What is interesting in the capture are the start/end sequence, the interval, and above all the software's **settings**
+   (brightness, display mode, unit, display on/off), which could produce new commands.
 
 {{< callout type="warning" >}}
-Falls die Software ein **Firmware-Update** anbietet: vorerst ablehnen. Ein Update über USB-Passthrough
-kann abbrechen (Re-Enumeration, geänderte Adresse) und das Gerät unbrauchbar machen. Außerdem würde es
-die Vergleichbarkeit mit der hier dokumentierten Firmware zerstören.
+If the software offers a **firmware update**: decline for now. An update via USB passthrough
+can abort (re-enumeration, changed address) and brick the device. It would also
+destroy comparability with the firmware documented here.
 {{< /callout >}}
 
-Weiter mit dem [USB-Mitschnitt](../usb-mitschnitt/).
+Continue with the [USB capture](../usb-capture/).

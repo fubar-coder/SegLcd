@@ -106,7 +106,7 @@ Jedes Szenario als eigene Datei aufzeichnen, damit sich Änderungen eindeutig zu
 | 6 | Gerät während laufender Software ab-/anstecken | Verhalten beim Reconnect |
 | 7 | Windows-Herunterfahren mit laufender Software | Wird `0F` gesendet? |
 
-Ergebnisse in [Verifikation](../../protokoll/verifikation/) eintragen; neue Kommandos als eigene Seite
+Ergebnisse in [Verifikation](../../protocol/verification/) eintragen; neue Kommandos als eigene Seite
 unter *Protokoll* dokumentieren.
 
 ## Kontrolle ohne Windows

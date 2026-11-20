@@ -3,18 +3,18 @@ title: Reverse Engineering
 weight: 5
 ---
 
-Um die restlichen offenen Fragen zur LB360-S zu klären (Timeout, Aus-Paket, mögliche weitere Kommandos), wird der USB-Verkehr der **originalen Windows-Software**
-mitgeschnitten. Dafür muss kein Windows auf echter Hardware laufen: das Display wird per USB-Passthrough an
-eine Windows-VM durchgereicht und der Verkehr **auf dem Linux-Host** mit `usbmon` aufgezeichnet.
+To resolve the remaining open questions about the LB360-S (timeout, off packet, possible further commands), the USB traffic of the **original Windows software**
+is captured. This does not require Windows on real hardware: the display is passed through to
+a Windows VM via USB passthrough, and the traffic is recorded **on the Linux host** with `usbmon`.
 
 ```mermaid
 flowchart LR
-    LCD["LB360-S Display<br/>5131:200e"] -- USB --> Host["Linux-Host<br/>(usbmon schneidet mit)"]
+    LCD["LB360-S Display<br/>5131:200e"] -- USB --> Host["Linux host<br/>(usbmon captures)"]
     Host -- "libusb / SPICE-usbredir" --> QEMU["QEMU (qemu:///session)"]
-    QEMU --> Win["Windows-VM<br/>TT SEGMENT LCD Software"]
+    QEMU --> Win["Windows VM<br/>TT SEGMENT LCD Software"]
 ```
 
 {{< cards >}}
-  {{< card link="vm-passthrough" title="USB-Passthrough in die VM" icon="desktop-computer" >}}
-  {{< card link="usb-mitschnitt" title="USB-Mitschnitt & Auswertung" icon="search" >}}
+  {{< card link="vm-passthrough" title="USB passthrough into the VM" icon="desktop-computer" >}}
+  {{< card link="usb-capture" title="USB capture & analysis" icon="search" >}}
 {{< /cards >}}

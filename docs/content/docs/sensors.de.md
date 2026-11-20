@@ -3,7 +3,7 @@ title: Sensoren & Konfiguration
 weight: 8
 ---
 
-Diese Seite beschreibt, **woher** `seglcd live` und der Dienst [`seglcdd`](../dienst/) ihre Messwerte holen,
+Diese Seite beschreibt, **woher** `seglcd live` und der Dienst [`seglcdd`](../service/) ihre Messwerte holen,
 **wie** sie umgerechnet werden und **wie** man die Quellen konfiguriert. Der Code dazu liegt in der Library
 `src/SegLcd.Linux` (`LinuxSensors`, `LinuxFrameSource`) und wird von CLI und Dienst gemeinsam
 genutzt – beide verhalten sich daher identisch.
@@ -36,7 +36,7 @@ Es gibt **zwei unabhängige Takte**:
 | Takt | Standard | Zweck |
 |---|---|---|
 | `sample_interval_ms` (CLI: `--sample-interval`) | 1000 ms | Sensoren neu einlesen. Langsame Sensoren bremsen so nie das Senden. |
-| `update_interval_ms` (CLI: `--interval`) | 250 ms | Pakete senden; der letzte Frame wird wiederholt. **Max. 400 ms**, sonst schaltet das Display ab ([Timeout](../protokoll/verifikation/)). |
+| `update_interval_ms` (CLI: `--interval`) | 250 ms | Pakete senden; der letzte Frame wird wiederholt. **Max. 400 ms**, sonst schaltet das Display ab ([Timeout](../protocol/verification/)). |
 
 ## Woher die Werte kommen
 

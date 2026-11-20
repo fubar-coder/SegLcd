@@ -1,12 +1,12 @@
 <!--
-  USB-Passthrough des Thermaltake Segment-LCD (5131:200e) in eine libvirt-VM.
-  Funktioniert auch unter qemu:///session, wenn der Benutzer Schreibrechte auf
-  /dev/bus/usb/BBB/DDD hat (udev-Regel udev/70-seglcd.rules).
+  USB passthrough of the Thermaltake LB360-S segment LCD (5131:200e) into a libvirt VM.
+  Also works under qemu:///session if the user has write access to
+  /dev/bus/usb/BBB/DDD (udev rule udev/70-seglcd.rules).
 
-  Live anhängen / abhängen:
+  Attach / detach live:
     virsh -c qemu:///session attach-device Win11Pro vm/lb360s-usb-hostdev.xml --live
     virsh -c qemu:///session detach-device Win11Pro vm/lb360s-usb-hostdev.xml --live
-  Dauerhaft (bei jedem VM-Start; startupPolicy=optional -> VM startet auch ohne Gerät):
+  Permanently (on every VM start; startupPolicy=optional -> the VM also starts without the device):
     virsh -c qemu:///session attach-device Win11Pro vm/lb360s-usb-hostdev.xml --config
 -->
 <hostdev mode='subsystem' type='usb'>

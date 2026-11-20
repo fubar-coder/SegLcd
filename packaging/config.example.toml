@@ -1,56 +1,56 @@
-# seglcdd – Konfiguration
-# Ort: $XDG_CONFIG_HOME/seglcd/config.toml (meist ~/.config/seglcd/config.toml), alternativ: seglcdd --config <pfad>
-# Format: TOML 1.1. Diese Datei enthält ALLE Optionen mit ihren Standardwerten – eine fehlende Datei oder
-# fehlende Schlüssel verhalten sich genauso.
+# seglcdd – configuration
+# Location: $XDG_CONFIG_HOME/seglcd/config.toml (usually ~/.config/seglcd/config.toml), or: seglcdd --config <path>
+# Format: TOML 1.1. This file contains ALL options with their default values – a missing file or
+# missing keys behave the same.
 #
-# Sensor-Angaben (Abschnitt [sensors]):
-#   ""                  automatische Auswahl (Standard-Reihenfolge im Kommentar)
-#   "chip:label"        hwmon-Sensor, z. B. "k10temp:Tctl", "it8686_31050607:fan5"   (stabil, bevorzugen)
-#   "hwmonN/name"       hwmon-Pfad, z. B. "hwmon5/fan1"                             (Nummer kann wechseln)
-#   "a+b"               Summe, z. B. "zenpower:SVI2_P_Core+zenpower:SVI2_P_SoC"
-#   "rapl[:domäne]"     RAPL-Leistung: package (Standard), core, uncore, dram, psys  (Rechte: udev/72-rapl-energy-read.rules)
-#   "nvml[N]:wert"      NVIDIA-GPU N: temperature, power, clock, memclock, usage, fan (%)
-#   "drm[N]:wert"       DRM-Karte N: busy (%), freq (MHz, Intel)
-# Verfügbare Quellen auflisten: seglcd sensors
+# Sensor specs (section [sensors]):
+#   ""                  automatic selection (default order in the comment)
+#   "chip:label"        hwmon sensor, e.g. "k10temp:Tctl", "it8686_31050607:fan5"   (stable, preferred)
+#   "hwmonN/name"       hwmon path, e.g. "hwmon5/fan1"                             (the number may change)
+#   "a+b"               sum, e.g. "zenpower:SVI2_P_Core+zenpower:SVI2_P_SoC"
+#   "rapl[:domain]"     RAPL power: package (default), core, uncore, dram, psys   (permissions: udev/72-rapl-energy-read.rules)
+#   "nvml[N]:metric"    NVIDIA GPU N: temperature, power, clock, memclock, usage, fan (%)
+#   "drm[N]:metric"     DRM card N: busy (%), freq (MHz, Intel)
+# List the available sources: seglcd sensors
 
-# Display versorgen. false = Aus-Paket senden und Gerät freigeben (z. B. für Experimente mit seglcd).
+# Feed the display. false = send the off packet and release the device (e.g. for experiments with seglcd).
 enabled = true
 
-# Abstand zwischen zwei Paketen in ms (50–400). Das Display schaltet nach ca. 400–500 ms ohne Paket ab.
+# Time between two packets in ms (50–400). The display turns off after about 400–500 ms without a packet.
 update_interval_ms = 250
 
-# Abstand zwischen zwei Sensor-Abfragen in ms (100–10000). Dazwischen wird der letzte Wert wiederholt.
+# Time between two sensor reads in ms (100–10000). In between, the last values are repeated.
 sample_interval_ms = 1000
 
-# Gerätepfad, nur bei mehreren Displays nötig, z. B. "/dev/hidraw5". Leer = erstes gefundenes Segment-LCD.
+# Device path, only needed with several displays, e.g. "/dev/hidraw5". Empty = first segment LCD found.
 device = ""
 
 [sensors]
-# CPU-Temperatur.            Automatisch: k10temp:Tctl, zenpower:Tdie, zenpower:Tctl, coretemp:Package id 0
+# CPU temperature.           Automatic: k10temp:Tctl, zenpower:Tdie, zenpower:Tctl, coretemp:Package id 0
 cpu_temperature = ""
 
-# CPU-Leistung (W).          Automatisch: rapl, zenpower:SVI2_P_Core+zenpower:SVI2_P_SoC
+# CPU power (W).             Automatic: rapl, zenpower:SVI2_P_Core+zenpower:SVI2_P_SoC
 cpu_power = ""
 
-# CPU-Kernspannung (V).      Automatisch: zenpower:SVI2_Core
+# CPU core voltage (V).      Automatic: zenpower:SVI2_Core
 cpu_voltage = ""
 
-# CPU-Takt aus den Werten aller Kerne: "avg" (Durchschnitt), "max", "min", "first" (Kern 0).
+# CPU clock from the values of all cores: "avg" (average), "max", "min", "first" (core 0).
 cpu_clock_mode = "avg"
 
-# GPU-Temperatur.            Automatisch: amdgpu:edge, nvml:temperature, xe:pkg
+# GPU temperature.           Automatic: amdgpu:edge, nvml:temperature, xe:pkg
 gpu_temperature = ""
 
-# GPU-Auslastung (%).        Automatisch: drm:busy, nvml:usage
+# GPU usage (%).             Automatic: drm:busy, nvml:usage
 gpu_usage = ""
 
-# GPU-Leistung (W).          Automatisch: amdgpu:PPT, nvml:power, rapl:uncore
+# GPU power (W).             Automatic: amdgpu:PPT, nvml:power, rapl:uncore
 gpu_power = ""
 
-# GPU-Takt (MHz).            Automatisch: amdgpu:sclk, nvml:clock, drm:freq
+# GPU clock (MHz).           Automatic: amdgpu:sclk, nvml:clock, drm:freq
 gpu_clock = ""
 
-# Lüfter- und Pumpendrehzahl (RPM). Keine Automatik – der Mainboard-Header ist systemabhängig, z. B.:
+# Fan and pump speed (RPM). No automatic selection – the mainboard header depends on the system, e.g.:
 #   fan = "it8686_31050607:fan1"
 #   pump = "it8686_31050607:fan5"
 fan = ""

@@ -1,60 +1,60 @@
 ---
-title: Überblick
+title: Overview
 weight: 1
 ---
 
-Diese Dokumentation sammelt alles, was über das **Segment-LCD auf dem Pumpenblock der
-Thermaltake LB360-S ARGB Sync** (Modellnummern CL-W499-PL12SW-A, Snow Edition CL-W500-PL12SW-A)
-und seine USB-Ansteuerung bekannt ist. Ziel ist eine Beschreibung, die genau genug ist,
-um ohne weitere Recherche eine Library zur Ansteuerung des Displays zu entwickeln.
+This documentation collects everything known about the **segment LCD on the pump block of the
+Thermaltake LB360-S ARGB Sync** (model numbers CL-W499-PL12SW-A, Snow Edition CL-W500-PL12SW-A)
+and how it is driven over USB. The goal is a description precise enough
+to develop a library for driving the display without further research.
 
 {{< callout type="info" >}}
-SegLcd ist ein unabhängiges Projekt und nicht mit Thermaltake verbunden. „Thermaltake“ ist eine Marke der Thermaltake Technology Co., Ltd.; der Name wird nur verwendet, um die unterstützte Hardware zu bezeichnen.
+SegLcd is an independent project and not affiliated with Thermaltake. "Thermaltake" is a trademark of Thermaltake Technology Co., Ltd.; the name is used only to identify the supported hardware.
 {{< /callout >}}
 
-## Kurzfassung
+## Summary
 
-| Eigenschaft | Wert |
+| Property | Value |
 |---|---|
-| USB-ID | `5131:200e` (Vendor-ID 0x5131 ist bei usb.ids als „MSR“ registriert, **nicht** Thermaltakes `264a`) |
-| Geräteklasse | HID, Vendor-Usage-Page `0xFF00`, 64-Byte-Input- und -Output-Reports, **keine Report-IDs** |
-| Linux-Treiber | `usbhid` / `hid-generic`, Zugriff über `/dev/hidrawN` |
-| Ansteuerung | Host sendet alle **250 ms** ein 64-Byte-Update-Paket (`00 01 02 …`) mit Messwerten |
-| Ausschalten | Paket `00 0F 00 …` – oder einfach nicht mehr senden (Display geht nach Timeout aus) |
-| ARGB-Beleuchtung | **nicht** über USB, sondern über den 5-V-ARGB-Header des Mainboards |
-| Offizielle Software | „TT SEGMENT LCD Software“ (nur Windows, unterstützt laut Thermaltake CL-W499/CL-W500) |
+| USB ID | `5131:200e` (vendor ID 0x5131 is registered in usb.ids as "MSR", **not** Thermaltake's `264a`) |
+| Device class | HID, vendor usage page `0xFF00`, 64-byte input and output reports, **no report IDs** |
+| Linux driver | `usbhid` / `hid-generic`, access via `/dev/hidrawN` |
+| Control | Host sends a 64-byte update packet (`00 01 02 …`) with readings every **250 ms** |
+| Turning off | Packet `00 0F 00 …` – or simply stop sending (the display turns off after a timeout) |
+| ARGB lighting | **not** via USB, but via the motherboard's 5 V ARGB header |
+| Official software | "TT SEGMENT LCD Software" (Windows only; according to Thermaltake supports CL-W499/CL-W500) |
 
 {{< callout type="info" >}}
-**Verifikationsstand (2026-11-20):** Das Protokoll stammt vom Projekt
-[ThermalTakeWaKue](https://github.com/AL-193/ThermalTakeWaKue) für die **LA-Serie** (`5131:2007`).
-Auf der **LB360-S** (`5131:200e`) ist das Update-Paket jetzt **auf echter Hardware bestätigt**: Das Display zeigt
-die **CPU- und die GPU-Temperatur als ganze Zahl in °C**. Nachkommastellen, das °F-Flag und die CPU-Auslastung
-haben keinen sichtbaren Effekt. Details: [Verifikation & offene Fragen](protokoll/verifikation/).
+**Verification status (2026-11-20):** The protocol comes from the project
+[ThermalTakeWaKue](https://github.com/AL-193/ThermalTakeWaKue) for the **LA series** (`5131:2007`).
+On the **LB360-S** (`5131:200e`) the update packet is now **confirmed on real hardware**: the display shows
+the **CPU and GPU temperature as an integer in °C**. Decimals, the °F flag and CPU usage
+have no visible effect. Details: [Verification & open questions](protocol/verification/).
 {{< /callout >}}
 
-## Inhalt
+## Contents
 
 {{< cards >}}
-  {{< card link="hardware" title="Hardware & USB-Deskriptoren" icon="chip" >}}
-  {{< card link="protokoll" title="Protokoll" icon="document-text" >}}
+  {{< card link="hardware" title="Hardware & USB descriptors" icon="chip" >}}
+  {{< card link="protocol" title="Protocol" icon="document-text" >}}
   {{< card link="linux" title="Linux: udev & hidraw" icon="terminal" >}}
-  {{< card link="reverse-engineering" title="Reverse Engineering" icon="beaker" >}}
-  {{< card link="library" title="Library-Leitfaden" icon="code" >}}
-  {{< card link="werkzeug" title="Test-Werkzeug seglcd" icon="adjustments" >}}
-  {{< card link="dienst" title="Dienst seglcdd (systemd, D-Bus)" icon="server" >}}
-  {{< card link="sensoren" title="Sensoren & Konfiguration" icon="chart-bar" >}}
-  {{< card link="lokalisierung" title="Lokalisierung" icon="translate" >}}
-  {{< card link="quellen" title="Quellen" icon="link" >}}
+  {{< card link="reverse-engineering" title="Reverse engineering" icon="beaker" >}}
+  {{< card link="library" title="Library guide" icon="code" >}}
+  {{< card link="tool" title="Test tool seglcd" icon="adjustments" >}}
+  {{< card link="service" title="Service seglcdd (systemd, D-Bus)" icon="server" >}}
+  {{< card link="sensors" title="Sensors & configuration" icon="chart-bar" >}}
+  {{< card link="localization" title="Localization" icon="translate" >}}
+  {{< card link="sources" title="Sources" icon="link" >}}
 {{< /cards >}}
 
-## Repository-Aufbau
+## Repository layout
 
 {{< filetree/container >}}
   {{< filetree/folder name="SegLcd" >}}
     {{< filetree/folder name="docs" state="closed" >}}
       {{< filetree/file name="hugo.yaml" >}}
       {{< filetree/folder name="content" state="closed" >}}{{< /filetree/folder >}}
-      {{< filetree/folder name="themes/hextra (Submodule)" state="closed" >}}{{< /filetree/folder >}}
+      {{< filetree/folder name="themes/hextra (submodule)" state="closed" >}}{{< /filetree/folder >}}
     {{< /filetree/folder >}}
     {{< filetree/folder name="src" >}}
       {{< filetree/folder name="SegLcd.Core" state="closed" >}}{{< /filetree/folder >}}

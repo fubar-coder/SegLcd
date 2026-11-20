@@ -60,14 +60,14 @@ Offsets beziehen sich auf das 64-Byte-Paket **ohne** Report-ID (siehe [Transport
 für jede 1,x-V-Kernspannung den Wert `100` (`0x64`) – vermutlich ein Bug. Da kein bekanntes Display
 die Spannung anzeigt, ist das folgenlos. Die Referenz-Implementierung sendet die echten zwei Nachkommastellen.
 
-² Diese Bytes kennt die LA-Analyse nicht; sie stammen aus den [Mitschnitten der TT SEGMENT LCD Software](../verifikation/#mitschnitt-der-original-software-vm)
+² Diese Bytes kennt die LA-Analyse nicht; sie stammen aus den [Mitschnitten der TT SEGMENT LCD Software](../verification/#mitschnitt-der-original-software-vm)
 für die LB360-S. 48 und 50 sind eindeutig zugeordnet: Bei 100 % CPU-Auslastung ist Byte 48 in allen Paketen `0`,
 und Byte 33 + Byte 50/100 ergibt einen lückenlosen RAM-Verlauf (z. B. 27,98 → 28,03). Byte 37 ist immer `5`,
 Bedeutung unbekannt; die Referenz-Implementierung sendet dort `0` – das Display funktioniert damit.
 
 ³ Die LB360-S rechnet nicht um und zeigt immer das °C-Symbol; mit `1` werden Werte ≥ 100 nur zweistellig
 (mod 100) dargestellt statt auf 99 begrenzt. Für dieses Modell **immer `0`** senden – Details in der
-[Verifikation](../verifikation/#lb360-s-einheiten-flag).
+[Verifikation](../verification/#lb360-s-einheiten-flag).
 
 ### Kodierungsregeln
 

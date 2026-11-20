@@ -178,7 +178,7 @@ Voraussetzung: [udev-Regel](../../linux/udev/) installiert, `seglcd list` zeigt 
    for i in 300 400 500 750 1000; do echo "Intervall $i ms"; seglcd send --cpu-temp 42 --gpu-temp 57 --interval $i --duration 6; done
    ```
 
-6. **Abgleich mit dem Original** – USB-Mitschnitt der Windows-Software ([Anleitung](../../reverse-engineering/usb-mitschnitt/)),
+6. **Abgleich mit dem Original** – USB-Mitschnitt der Windows-Software ([Anleitung](../../reverse-engineering/usb-capture/)),
    mit `seglcd decode --diff` auswerten und mit diesem Dokument vergleichen.
 
 Ergebnisse bitte in dieser Tabelle nachtragen. Mitschnitte gehören in den lokalen Ordner `captures/`; er ist per `.gitignore` ausgeschlossen, weil usbmon den ganzen Bus aufzeichnet (auch andere Geräte).

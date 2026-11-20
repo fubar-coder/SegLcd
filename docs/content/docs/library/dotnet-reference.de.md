@@ -20,7 +20,7 @@ Windows: `hidapi.dll` aus dem [hidapi-Release](https://github.com/libusb/hidapi/
 |---|---|---|
 | `SegLcd.Core` (Namespace `SegLcd`) | Protokoll, Gerät, Session (plattformneutral) | HidApi.Net |
 | `SegLcd.Linux` | Linux-Sensoren (`LinuxSensors`, `LinuxFrameSource`, `SensorSettings`, NVML, DRM, RAPL) | – |
-| `SegLcd.Localization` | gettext-Lokalisierung ([Details](../../lokalisierung/)) | Karambolo.PO.Compact, M.E.Localization.Abstractions, M.E.Logging.Console |
+| `SegLcd.Localization` | gettext-Lokalisierung ([Details](../../localization/)) | Karambolo.PO.Compact, M.E.Localization.Abstractions, M.E.Logging.Console |
 | `SegLcd.Tool` | CLI `seglcd` | DotMake.CommandLine |
 | `SegLcd.Daemon` | Dienst `seglcdd` mit D-Bus | Microsoft.Extensions.Hosting(.Systemd), Tmds.DBus.Protocol/Generator, Tomlyn |
 
