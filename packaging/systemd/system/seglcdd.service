@@ -1,5 +1,6 @@
 # System service for the segment LCD of the Thermaltake LB360-S ARGB Sync (installed by the RPM/DEB/AUR packages).
 # Runs as the dedicated user "seglcd" (sysusers.d/seglcd.conf), access to the display via the udev rule (GROUP="seglcd").
+# No [Install] section: the udev rule starts it (SYSTEMD_WANTS) whenever the display is present ("static" unit).
 [Unit]
 Description=SegLcd – sensor values on the Thermaltake LB360-S pump display
 Documentation=man:seglcdd(1) man:seglcdd.toml(5) https://fubar-coder.github.io/SegLcd/
@@ -37,6 +38,3 @@ SystemCallArchitectures=native
 CapabilityBoundingSet=
 # Optional: CPU package power via RAPL – install udev/72-rapl-energy-read.rules (group "rapl") and add
 # "SupplementaryGroups=rapl" with: systemctl edit seglcdd.service
-
-[Install]
-WantedBy=multi-user.target

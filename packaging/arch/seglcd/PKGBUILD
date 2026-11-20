@@ -15,7 +15,8 @@ optdepends=('nvidia-utils: NVIDIA GPU sensors via NVML')
 backup=('etc/seglcd/config.toml')
 options=('!debug')
 # No .install script: pacman hooks create the system user (sysusers.d), reload udev rules and systemd units.
-# After installing: sudo systemctl enable --now seglcdd   (control via D-Bus: sudo usermod -aG seglcd <user>)
+# The service starts automatically when the display is present (udev SYSTEMD_WANTS; opt out: systemctl mask seglcdd).
+# Control via D-Bus: sudo usermod -aG seglcd <user>
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
 sha256sums=('SKIP') # replace with the real checksum once the v$pkgver tag exists (updpkgsums)
 _srcname="SegLcd-$pkgver"

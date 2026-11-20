@@ -1,7 +1,7 @@
 # Maintainer: Mark Junker <fubar-coder at live dot de>
 pkgname=seglcd-git
 _pkgname=seglcd
-pkgver=0.1.0.r5.g62acae6
+pkgver=0.1.0.r7.g5f62fcc
 pkgrel=1
 pkgdesc="Library, CLI and D-Bus service for the segment LCD of the Thermaltake LB360-S ARGB Sync AIO cooler (development version)"
 arch=('x86_64' 'aarch64')
@@ -17,7 +17,8 @@ conflicts=("$_pkgname")
 backup=('etc/seglcd/config.toml')
 options=('!debug')
 # No .install script: pacman hooks create the system user (sysusers.d), reload udev rules and systemd units.
-# After installing: sudo systemctl enable --now seglcdd   (control via D-Bus: sudo usermod -aG seglcd <user>)
+# The service starts automatically when the display is present (udev SYSTEMD_WANTS; opt out: systemctl mask seglcdd).
+# Control via D-Bus: sudo usermod -aG seglcd <user>
 source=("$_pkgname::git+$url.git")
 sha256sums=('SKIP')
 _srcname="$_pkgname"

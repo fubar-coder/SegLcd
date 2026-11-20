@@ -49,7 +49,7 @@ artifacts/publish/SegLcd.Tool/release_linux-x64/seglcd send --cpu-temp 42 --gpu-
 Dienst installieren:
 
 - **systemweit als Paket** (Systemdienst ab dem Booten, Benutzer `seglcd`, System-Bus): Arch (AUR), Fedora/openSUSE
-  (RPM), Debian/Ubuntu (DEB) – siehe [packaging/README.md](packaging/README.md), danach `sudo systemctl enable --now seglcdd`;
+  (RPM), Debian/Ubuntu (DEB) – siehe [packaging/README.md](packaging/README.md); der Dienst startet automatisch, sobald das Display vorhanden ist;
 - **pro Benutzer ohne root** (systemd-Benutzerdienst, Session-Bus):
 
 ```bash
