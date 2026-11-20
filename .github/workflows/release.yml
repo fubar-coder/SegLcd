@@ -41,7 +41,9 @@ jobs:
           dotnet-version: "11.0.x"
 
       - name: Test
-        run: dotnet test SegLcd.slnx
+        run: |
+          sudo apt-get -qq update && sudo apt-get -qq install -y gettext  # msgfmt/xgettext for the catalog tests
+          dotnet test SegLcd.slnx
 
       # Release notes: the message of an annotated tag, otherwise the commits since the previous tag.
       - name: Changelog

@@ -4,7 +4,7 @@ set -euo pipefail
 tarball=$(realpath "$1"); out=$(realpath -m "$2"); mkdir -p "$out"
 version=$(basename "$tarball" .tar.gz); version=${version#SegLcd-}
 
-dnf -y -q install rpm-build rpmlint systemd-rpm-macros clang zlib-devel tar gzip dotnet-sdk-11.0
+dnf -y -q install rpm-build rpmlint systemd-rpm-macros clang zlib-devel tar gzip gettext dotnet-sdk-11.0
 mkdir -p ~/rpmbuild/SOURCES
 cp "$tarball" ~/rpmbuild/SOURCES/
 tar -xOf "$tarball" "SegLcd-$version/packaging/rpm/seglcd.spec" > ~/seglcd.spec

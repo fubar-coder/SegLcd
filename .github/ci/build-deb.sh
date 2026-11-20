@@ -8,7 +8,7 @@ here=$(dirname "$(realpath "$0")")
 export DEBIAN_FRONTEND=noninteractive
 apt-get -qq update
 apt-get -qq install -y --no-install-recommends build-essential debhelper devscripts lintian clang zlib1g-dev \
-    curl ca-certificates libicu-dev >/dev/null
+    curl ca-certificates libicu-dev gettext >/dev/null
 "$here/install-dotnet.sh"
 
 work=$(mktemp -d)
